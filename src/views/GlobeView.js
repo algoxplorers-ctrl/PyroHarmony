@@ -47,7 +47,7 @@ export class GlobeView {
     this.scene = new THREE.Scene(); this.camera = new THREE.PerspectiveCamera(40, w / h, 0.1, 1000);
     this.zoomTarget = w < 768 ? 3.85 : 3.25; this.camera.position.set(0, 0, this.zoomTarget);
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2)); this.renderer.setSize(w, h);
+    const isMob = w < 960 || (window.innerWidth < 960); this.renderer.setPixelRatio(isMob ? Math.min(window.devicePixelRatio || 1, 1.5) : Math.min(window.devicePixelRatio || 1, 2.0)); this.renderer.setSize(w, h);
     this.container.innerHTML = ''; this.container.appendChild(this.renderer.domElement);
     this.labelLayer = document.createElement('div'); this.labelLayer.className = 'sat-labels-overlay';
     this.container.appendChild(this.labelLayer); this._buildZoomHud();
@@ -93,12 +93,12 @@ export class GlobeView {
     this.bordersMat = new THREE.LineBasicMaterial({ color: 0x7dd3fc, transparent: true, opacity: 0.75, depthTest: true });
     const parseGeoJson = (data) => {
       if (!data || !Array.isArray(data.features)) return;
-      const verts = [], bc = document.createElement('canvas'); bc.width = 4096; bc.height = 2048;
+      const verts = [], bc = document.createElement('canvas'); const isSmall = (window.innerWidth || 1024) < 1024; bc.width = isSmall ? 2048 : 4096; bc.height = isSmall ? 1024 : 2048;
       const bctx = bc.getContext('2d'); bctx.lineJoin = 'round'; bctx.lineCap = 'round';
       const addRing = (ring) => {
         bctx.beginPath();
         for (let i = 0; i < ring.length; i++) {
-          const [lon, lat] = ring[i], x = ((lon + 180) / 360) * 4096, y = ((90 - lat) / 180) * 2048;
+          const [lon, lat] = ring[i], x = ((lon + 180) / 360) * bc.width, y = ((90 - lat) / 180) * bc.height;
           if (i === 0 || Math.abs(lon - ring[i - 1][0]) >= 150) bctx.moveTo(x, y); else bctx.lineTo(x, y);
           if (i < ring.length - 1) {
             const [lon2, lat2] = ring[i + 1], steps = Math.max(1, Math.ceil(Math.hypot(lon2 - lon, lat2 - lat) / 2.0));

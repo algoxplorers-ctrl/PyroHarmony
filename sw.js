@@ -7,7 +7,7 @@
  * @license MIT
  */
 
-const CACHE_NAME = 'pyroharmony-pwa-v2.0.10';
+const CACHE_NAME = 'pyroharmony-pwa-v2.0.11';
 
 const CORE_ASSETS = [
   './',

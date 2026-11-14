@@ -61,7 +61,7 @@ body {
 
 /* FULLSCREEN 3D STAGE & SATELLITE LABELS */
 .space-stage { position: fixed; top: 62px; bottom: 68px; left: 0; right: 0; }
-.fullscreen-globe-canvas { width: 100%; height: 100%; position: relative; cursor: grab; touch-action: none; }
+.fullscreen-globe-canvas { width: 100%; height: 100%; position: relative; cursor: grab; touch-action: none; background: #030712; }
 .sat-labels-overlay { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
 .sat-floating-tag { position: absolute; top: 0; left: 0; background: rgba(7, 12, 24, 0.85); border: 1px solid rgba(148, 163, 184, 0.4); color: #f8fafc; font-family: monospace; font-size: 0.62rem; padding: 2px 6px; border-radius: 4px; white-space: nowrap; }
 .country-floating-tag { position: absolute; top: 0; left: 0; background: rgba(4, 15, 35, 0.78); border: 1px solid rgba(56, 189, 248, 0.55); color: #e0f2fe; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.03em; padding: 2px 7px; border-radius: 5px; white-space: nowrap; transform: translate(-50%, -50%); transition: opacity 0.15s ease; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.65); }
@@ -172,7 +172,7 @@ body {
   .top-action-btn, .fps-telemetry-box { padding: 5px 9px; font-size: 0.7rem; }
 
   .space-stage { position: relative; top: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; padding-bottom: 105px; }
-  .fullscreen-globe-canvas { width: 100%; height: 350px; flex-shrink: 0; }
+  .fullscreen-globe-canvas { width: 100%; height: 350px; flex-shrink: 0; background: #030712; }
 
   .floating-glass-panel { position: relative; top: auto; left: auto; right: auto; width: calc(100% - 24px); max-height: none; margin: 8px 12px; overflow: visible; }
   .right-tactical-panel { order: 2; }

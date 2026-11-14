@@ -45,18 +45,22 @@ export class AOIController {
     if (!this.selectEl) return;
     const lang = i18n.getLang();
     const currentVal = this.activeBiomeId;
+    const autoRotLabel = i18n.t('hud.auto_rotation_opt');
+    const autoSelected = currentVal === 'auto_rotation' ? 'selected' : '';
 
-    this.selectEl.innerHTML = Object.values(BIOME_CATALOG)
+    const biomeOpts = Object.values(BIOME_CATALOG)
       .map((b) => {
         const label = lang === 'es' ? b.nameEs : b.nameEn;
         const selected = b.id === currentVal ? 'selected' : '';
         return `<option value="${b.id}" ${selected}>${label}</option>`;
       })
       .join('');
+
+    this.selectEl.innerHTML = `<option value="auto_rotation" ${autoSelected}>${autoRotLabel}</option>` + biomeOpts;
   }
 
   setBiome(biomeId) {
-    if (BIOME_CATALOG[biomeId]) {
+    if (BIOME_CATALOG[biomeId] || biomeId === 'auto_rotation') {
       this.activeBiomeId = biomeId;
       if (this.selectEl) this.selectEl.value = biomeId;
     }

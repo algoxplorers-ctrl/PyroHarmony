@@ -287,6 +287,7 @@ const DICTIONARY = Object.freeze({
     'status.elevated': 'Elevated Activity',
     'status.significant': 'Significant Anomaly (p < 0.05)',
     'status.extreme': 'Extreme Critical Anomaly (p < 0.01)',
+    'hud.auto_rotation_opt': '🌐 Planetary Auto-Rotation (Global View)',
     'modal.calendar_title': 'PHENOLOGICAL BURNING ACTIVITY CALENDAR (52 WEEKS × 27 YEARS · 2000–2026)',
     'modal.admin_title': 'ADMINISTRATION, BIOME CALIBRATION & WOLF AMENDMENT AUDIT',
     'tooltip.calendar_cell': 'Year {year} · Week {week} | Harmonized FRP: {frp} MW | Z-Score: {z} ({status})'
@@ -331,6 +332,7 @@ const DICTIONARY = Object.freeze({
     'status.elevated': 'Actividad Elevada',
     'status.significant': 'Anomalía Significativa (p < 0.05)',
     'status.extreme': 'Anomalía Extrema Crítica (p < 0.01)',
+    'hud.auto_rotation_opt': '🌐 Rotación Automática (Vista Global)',
     'modal.calendar_title': 'CALENDARIO FENOLÓGICO DE ACTIVIDAD DE QUEMA (52 SEMANAS × 27 AÑOS · 2000–2026)',
     'modal.admin_title': 'ADMINISTRACIÓN, CALIBRACIÓN DE BIOMAS Y AUDITORÍA ENMIENDA WOLF',
     'tooltip.calendar_cell': 'Año {year} · Semana {week} | FRP Armonizado: {frp} MW | Z-Score: {z} ({status})'
@@ -1095,6 +1097,7 @@ class GlobeView {
     this.activeSatIds = new Set(['terra', 'aqua', 'suomi_npp', 'noaa_20']);
     this.currentBins = [];
     this.lastBiomeId = null;
+    this.autoRotate = false;
     this.clockStart = performance.now();
     this.frameCount = 0;
     this.lastFpsCheck = performance.now();
@@ -1276,10 +1279,14 @@ class GlobeView {
       this.prevMouse = { x: e.clientX, y: e.clientY };
     });
   }
+  setAutoRotate(enabled) {
+    this.autoRotate = !!enabled;
+    if (this.aoiRingMesh) this.aoiRingMesh.visible = !this.autoRotate;
+  }
   updateTelemetry(snapshot) {
     this.activeSatIds = new Set(snapshot.activeSatellites.map((s) => s.id));
     this.currentBins = snapshot.harmonizedGrid.bins || [];
-    if (this.lastBiomeId !== snapshot.biome.id) {
+    if (!this.autoRotate && this.lastBiomeId !== snapshot.biome.id) {
       this.lastBiomeId = snapshot.biome.id;
       this.rotationTarget.y = ((-snapshot.biome.lon - 90) * Math.PI) / 180;
       this.rotationTarget.x = (snapshot.biome.lat * Math.PI) / 180;
@@ -1326,6 +1333,9 @@ class GlobeView {
       this.lastFpsCheck = now;
     }
     const elapsed = (now - this.clockStart) * 0.001;
+    if (this.autoRotate && !this.isDragging) {
+      this.rotationTarget.y += 0.0015;
+    }
     this.earthGroup.rotation.y += (this.rotationTarget.y - this.earthGroup.rotation.y) * 0.1;
     this.earthGroup.rotation.x += (this.rotationTarget.x - this.earthGroup.rotation.x) * 0.1;
     if (this.cloudsMesh) this.cloudsMesh.rotation.y += 0.00025;
@@ -1801,18 +1811,22 @@ class AOIController {
     if (!this.selectEl) return;
     const lang = i18n.getLang();
     const currentVal = this.activeBiomeId;
+    const autoRotLabel = i18n.t('hud.auto_rotation_opt');
+    const autoSelected = currentVal === 'auto_rotation' ? 'selected' : '';
 
-    this.selectEl.innerHTML = Object.values(BIOME_CATALOG)
+    const biomeOpts = Object.values(BIOME_CATALOG)
       .map((b) => {
         const label = lang === 'es' ? b.nameEs : b.nameEn;
         const selected = b.id === currentVal ? 'selected' : '';
         return `<option value="${b.id}" ${selected}>${label}</option>`;
       })
       .join('');
+
+    this.selectEl.innerHTML = `<option value="auto_rotation" ${autoSelected}>${autoRotLabel}</option>` + biomeOpts;
   }
 
   setBiome(biomeId) {
-    if (BIOME_CATALOG[biomeId]) {
+    if (BIOME_CATALOG[biomeId] || biomeId === 'auto_rotation') {
       this.activeBiomeId = biomeId;
       if (this.selectEl) this.selectEl.value = biomeId;
     }
@@ -2067,12 +2081,18 @@ class AppController {
   }
 
   handleBiomeChange(biomeId) {
+    if (biomeId === 'auto_rotation') {
+      this.globeView.setAutoRotate(true);
+      return;
+    }
+    this.globeView.setAutoRotate(false);
     this.state.biomeId = biomeId;
     this.globeView.lastBiomeId = null;
     this.recomputeMatrixAndRefresh();
   }
 
   handleBenchmarkJump(biomeId, year, week) {
+    this.globeView.setAutoRotate(false);
     this.state.biomeId = biomeId;
     this.state.year = year;
     this.state.week = week;

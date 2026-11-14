@@ -49,6 +49,7 @@ const DICTIONARY = Object.freeze({
     'status.elevated': 'Elevated Activity',
     'status.significant': 'Significant Anomaly (p < 0.05)',
     'status.extreme': 'Extreme Critical Anomaly (p < 0.01)',
+    'hud.auto_rotation_opt': '🌐 Planetary Auto-Rotation (Global View)',
     'modal.calendar_title': 'PHENOLOGICAL BURNING ACTIVITY CALENDAR (52 WEEKS × 27 YEARS · 2000–2026)',
     'modal.admin_title': 'ADMINISTRATION, BIOME CALIBRATION & WOLF AMENDMENT AUDIT',
     'tooltip.calendar_cell': 'Year {year} · Week {week} | Harmonized FRP: {frp} MW | Z-Score: {z} ({status})'
@@ -93,6 +94,7 @@ const DICTIONARY = Object.freeze({
     'status.elevated': 'Actividad Elevada',
     'status.significant': 'Anomalía Significativa (p < 0.05)',
     'status.extreme': 'Anomalía Extrema Crítica (p < 0.01)',
+    'hud.auto_rotation_opt': '🌐 Rotación Automática (Vista Global)',
     'modal.calendar_title': 'CALENDARIO FENOLÓGICO DE ACTIVIDAD DE QUEMA (52 SEMANAS × 27 AÑOS · 2000–2026)',
     'modal.admin_title': 'ADMINISTRACIÓN, CALIBRACIÓN DE BIOMAS Y AUDITORÍA ENMIENDA WOLF',
     'tooltip.calendar_cell': 'Año {year} · Semana {week} | FRP Armonizado: {frp} MW | Z-Score: {z} ({status})'

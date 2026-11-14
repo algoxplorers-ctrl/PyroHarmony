@@ -120,12 +120,18 @@ export class AppController {
   }
 
   handleBiomeChange(biomeId) {
+    if (biomeId === 'auto_rotation') {
+      this.globeView.setAutoRotate(true);
+      return;
+    }
+    this.globeView.setAutoRotate(false);
     this.state.biomeId = biomeId;
     this.globeView.lastBiomeId = null;
     this.recomputeMatrixAndRefresh();
   }
 
   handleBenchmarkJump(biomeId, year, week) {
+    this.globeView.setAutoRotate(false);
     this.state.biomeId = biomeId;
     this.state.year = year;
     this.state.week = week;

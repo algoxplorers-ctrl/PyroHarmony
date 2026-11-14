@@ -23,6 +23,7 @@ export class GlobeView {
     this.activeSatIds = new Set(['terra', 'aqua', 'suomi_npp', 'noaa_20']);
     this.currentBins = [];
     this.lastBiomeId = null;
+    this.autoRotate = false;
     this.clockStart = performance.now();
     this.frameCount = 0;
     this.lastFpsCheck = performance.now();
@@ -204,10 +205,14 @@ export class GlobeView {
       this.prevMouse = { x: e.clientX, y: e.clientY };
     });
   }
+  setAutoRotate(enabled) {
+    this.autoRotate = !!enabled;
+    if (this.aoiRingMesh) this.aoiRingMesh.visible = !this.autoRotate;
+  }
   updateTelemetry(snapshot) {
     this.activeSatIds = new Set(snapshot.activeSatellites.map((s) => s.id));
     this.currentBins = snapshot.harmonizedGrid.bins || [];
-    if (this.lastBiomeId !== snapshot.biome.id) {
+    if (!this.autoRotate && this.lastBiomeId !== snapshot.biome.id) {
       this.lastBiomeId = snapshot.biome.id;
       this.rotationTarget.y = ((-snapshot.biome.lon - 90) * Math.PI) / 180;
       this.rotationTarget.x = (snapshot.biome.lat * Math.PI) / 180;
@@ -254,6 +259,9 @@ export class GlobeView {
       this.lastFpsCheck = now;
     }
     const elapsed = (now - this.clockStart) * 0.001;
+    if (this.autoRotate && !this.isDragging) {
+      this.rotationTarget.y += 0.0015;
+    }
     this.earthGroup.rotation.y += (this.rotationTarget.y - this.earthGroup.rotation.y) * 0.1;
     this.earthGroup.rotation.x += (this.rotationTarget.x - this.earthGroup.rotation.x) * 0.1;
     if (this.cloudsMesh) this.cloudsMesh.rotation.y += 0.00025;

@@ -44,7 +44,7 @@ export class TimelineView {
       this.calMasterSlider.value = String(idx);
     }
     if (this.calYearLabel) this.calYearLabel.textContent = String(year);
-    if (this.calWeekLabel) this.calWeekLabel.textContent = ${week} / 52;
+    if (this.calWeekLabel) this.calWeekLabel.textContent = `${week} / 52`;
 
     if (this.yearValueEl) {
       this.yearValueEl.textContent = String(year);

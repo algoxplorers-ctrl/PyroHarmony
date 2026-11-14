@@ -253,6 +253,7 @@ const DICTIONARY = Object.freeze({
     'hud.audio_btn': 'Audio',
     'hud.sitrep_btn': 'SitRep',
     'hud.admin_btn': 'Admin',
+    'hud.install_btn': 'Install App',
     'hud.sat_constellation_4': '4 Satellites (Quad Constellation)',
     'hud.sat_constellation_3': '3 Satellites (Terra · Aqua · Suomi)',
     'hud.sat_constellation_2': '2 Satellites (Terra · Aqua MODIS)',
@@ -296,6 +297,7 @@ const DICTIONARY = Object.freeze({
     'hud.audio_btn': 'Audio',
     'hud.sitrep_btn': 'SitRep',
     'hud.admin_btn': 'Admin',
+    'hud.install_btn': 'Instalar App',
     'hud.sat_constellation_4': '4 Satélites (Constelación Cuádruple)',
     'hud.sat_constellation_3': '3 Satélites (Terra · Aqua · Suomi)',
     'hud.sat_constellation_2': '2 Satélites (Terra · Aqua MODIS)',
@@ -2015,10 +2017,19 @@ class AppController {
   init() {
     i18n.applyToDOM();
     this._bindHeaderModalsAndExports();
+    this._initPwaAndServiceWorker();
 
     this.globeView.init();
     this.aoiController.init();
     this.timelineController.init();
+
+    // Check URL shortcut (?benchmark=pantanal2020)
+    if (window.location.search.includes('benchmark=pantanal2020')) {
+      const bm = APP_METADATA.BENCHMARK_CASE;
+      this.state.biomeId = bm.biomeId;
+      this.state.year = bm.year;
+      this.state.week = bm.week;
+    }
 
     this.calendarView.bindCellSelect((year, week) => {
       this.timelineController.setYearWeek(year, week);
@@ -2030,6 +2041,33 @@ class AppController {
     });
 
     this.recomputeMatrixAndRefresh();
+  }
+
+  _initPwaAndServiceWorker() {
+    if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    }
+    this.deferredInstallPrompt = null;
+    const installBtn = document.getElementById('btn-install-pwa');
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      this.deferredInstallPrompt = e;
+    });
+    if (installBtn) {
+      installBtn.addEventListener('click', async () => {
+        if (this.deferredInstallPrompt) {
+          this.deferredInstallPrompt.prompt();
+          await this.deferredInstallPrompt.userChoice;
+          this.deferredInstallPrompt = null;
+        } else {
+          const msg =
+            i18n.getLang() === 'es'
+              ? 'Para instalar PyroHarmony como App:\n• Android/PC (Chrome/Edge): Menú (⋮) ➔ "Instalar aplicación".\n• iPhone/iPad (Safari): Botón Compartir ➔ "Agregar a inicio".'
+              : 'To install PyroHarmony as a Native App:\n• Android/Desktop (Chrome/Edge): Browser Menu (⋮) ➔ "Install app".\n• iPhone/iPad (Safari): Share button ➔ "Add to Home Screen".';
+          alert(msg);
+        }
+      });
+    }
   }
 
   handleBiomeChange(biomeId) {

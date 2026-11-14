@@ -2,8 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>PyroHarmony v2.0.0 · MODIS &amp; VIIRS Radiative Harmonization | AlgoXplorers</title>
+  <meta name="description" content="NASA Space Apps Challenge 2026: Biophysical Harmonization of MODIS & VIIRS Hot Spots and LACES Tactical Radar." />
+  <meta name="theme-color" content="#070c18" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="PyroHarmony" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" type="image/svg+xml" href="assets/icons/icon.svg" />
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.png" />
   <link rel="stylesheet" href="src/styles/main.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
 </head>
@@ -41,6 +49,10 @@
       <button type="button" id="btn-export-sitrep" class="top-action-btn">
         <span class="btn-icon">📄</span>
         <span data-i18n="hud.sitrep_btn">SitRep</span>
+      </button>
+      <button type="button" id="btn-install-pwa" class="top-action-btn btn-calendar-primary" title="Install PyroHarmony PWA (Offline Tactical Mode)">
+        <span class="btn-icon">📲</span>
+        <span data-i18n="hud.install_btn">Install App</span>
       </button>
       <button type="button" id="btn-open-admin" class="top-action-btn btn-admin-primary">
         <span class="btn-icon">⚙️</span>
@@ -152,15 +164,15 @@
       </div>
       <div class="thermal-power-box" style="margin-bottom:12px;">
         <div style="font-size:0.76rem;color:#38bdf8;font-weight:700;margin-bottom:4px;">
-          ☁️ SUPABASE CLOUD TELEMETRY NODE (100% US Wolf Amendment Verified)
+          ☁️ SUPABASE CLOUD &amp; TACTICAL OFFLINE PWA NODE
         </div>
         <div style="font-size:0.74rem;font-family:monospace;color:#cbd5e1;">
           URL: https://feptrjorbyjmxweefpby.supabase.co
         </div>
         <div id="supabase-live-status" style="font-size:0.74rem;font-family:monospace;color:#10b981;margin-top:4px;">
-          🟢 Publishable Key Configured · Ready for Telemetry Sync
+          🟢 Publishable Key &amp; PWA Service Worker Ready
         </div>
-        <div style="margin-top:8px;display:flex;gap:8px;">
+        <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">
           <button type="button" id="btn-test-supabase" class="top-action-btn btn-calendar-primary">⚡ Test / Sync Supabase</button>
         </div>
       </div>

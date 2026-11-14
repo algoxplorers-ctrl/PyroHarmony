@@ -1,0 +1,57 @@
+{
+  "id": "/index.html",
+  "name": "PyroHarmony v2.0.0 — NASA MODIS & VIIRS Harmonization",
+  "short_name": "PyroHarmony",
+  "description": "Biophysical Harmonization of MODIS & VIIRS Hot Spots (2000-2026) and Tactical LACES Wildfire Radar — Team AlgoXplorers (Argentina)",
+  "lang": "en",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#030712",
+  "theme_color": "#070c18",
+  "categories": ["science", "education", "utilities", "weather"],
+  "icons": [
+    {
+      "src": "assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Pantanal 2020 Benchmark (W35)",
+      "short_name": "Pantanal 2020",
+      "description": "Jump to Ground Truth Benchmark (Year 2020, Week 35, Z = +2.82)",
+      "url": "./index.html?benchmark=pantanal2020",
+      "icons": [{ "src": "assets/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Executive Team Dossier",
+      "short_name": "Dossier",
+      "description": "Open AlgoXplorers Executive Dossier",
+      "url": "./DOSSIER_ENTREGA_EQUIPO.html",
+      "icons": [{ "src": "assets/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "240s Video Teleprompter",
+      "short_name": "Teleprompter",
+      "description": "Open 240-Second NASA Pitch Teleprompter",
+      "url": "./VIDEO_PITCH_PROMPTER.html",
+      "icons": [{ "src": "assets/icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

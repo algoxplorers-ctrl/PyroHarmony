@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b1d3a" />
+      <stop offset="100%" stop-color="#030712" />
+    </linearGradient>
+    <linearGradient id="flameGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ff3d00" />
+      <stop offset="55%" stop-color="#ff9100" />
+      <stop offset="100%" stop-color="#ffd600" />
+    </linearGradient>
+    <linearGradient id="orbitGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00e5ff" />
+      <stop offset="100%" stop-color="#3b82f6" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bgGrad)" stroke="#00e5ff" stroke-width="10" stroke-opacity="0.4" />
+  <ellipse cx="256" cy="266" rx="188" ry="82" fill="none" stroke="url(#orbitGrad)" stroke-width="14" transform="rotate(-24 256 266)" stroke-dasharray="28 12" />
+  <path d="M262 84 C262 84 364 166 364 274 C364 344 314 404 256 404 C198 404 148 344 148 274 C148 218 184 176 204 152 C204 152 198 202 228 218 C214 166 262 84 262 84 Z" fill="url(#flameGrad)" />
+  <path d="M256 218 C256 218 308 262 308 316 C308 352 284 382 256 382 C228 382 204 352 204 316 C204 282 232 252 256 218 Z" fill="#fff8e1" opacity="0.88" />
+  <circle cx="418" cy="194" r="18" fill="#00e676" />
+</svg>

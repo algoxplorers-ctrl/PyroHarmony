@@ -66,10 +66,19 @@ export class AppController {
   init() {
     i18n.applyToDOM();
     this._bindHeaderModalsAndExports();
+    this._initPwaAndServiceWorker();
 
     this.globeView.init();
     this.aoiController.init();
     this.timelineController.init();
+
+    // Check URL shortcut (?benchmark=pantanal2020)
+    if (window.location.search.includes('benchmark=pantanal2020')) {
+      const bm = APP_METADATA.BENCHMARK_CASE;
+      this.state.biomeId = bm.biomeId;
+      this.state.year = bm.year;
+      this.state.week = bm.week;
+    }
 
     this.calendarView.bindCellSelect((year, week) => {
       this.timelineController.setYearWeek(year, week);
@@ -81,6 +90,33 @@ export class AppController {
     });
 
     this.recomputeMatrixAndRefresh();
+  }
+
+  _initPwaAndServiceWorker() {
+    if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    }
+    this.deferredInstallPrompt = null;
+    const installBtn = document.getElementById('btn-install-pwa');
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      this.deferredInstallPrompt = e;
+    });
+    if (installBtn) {
+      installBtn.addEventListener('click', async () => {
+        if (this.deferredInstallPrompt) {
+          this.deferredInstallPrompt.prompt();
+          await this.deferredInstallPrompt.userChoice;
+          this.deferredInstallPrompt = null;
+        } else {
+          const msg =
+            i18n.getLang() === 'es'
+              ? 'Para instalar PyroHarmony como App:\n• Android/PC (Chrome/Edge): Menú (⋮) ➔ "Instalar aplicación".\n• iPhone/iPad (Safari): Botón Compartir ➔ "Agregar a inicio".'
+              : 'To install PyroHarmony as a Native App:\n• Android/Desktop (Chrome/Edge): Browser Menu (⋮) ➔ "Install app".\n• iPhone/iPad (Safari): Share button ➔ "Add to Home Screen".';
+          alert(msg);
+        }
+      });
+    }
   }
 
   handleBiomeChange(biomeId) {

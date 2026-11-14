@@ -1,11 +1,12 @@
-/**
+﻿/**
  * @file src/views/GlobeView.js
  * @description 3D NASA Blue Marble Earth View with Political Country Borders, Zoom-Adaptive
- * Country Labels, AOI Target Ring, Polar Orbital Rings, 3D Satellites, and Hotspots.
+ * Country Labels, AOI Target Ring, Polar Orbital Rings, Realistic 3D Satellites, and Hotspots.
+ * @team AlgoXplorers (Argentina)
+ * @license MIT
  */
 import { SATELLITE_FLEET, WORLD_GEOJSON_URLS, WORLD_COUNTRIES } from '../config/constants.js';
 import { i18n } from '../config/i18n.js';
-
 export class GlobeView {
   constructor(containerId, fpsElementId) {
     this.container = document.getElementById(containerId);
@@ -21,7 +22,11 @@ export class GlobeView {
     this.prevMouse = { x: 0, y: 0 }; this.rotationTarget = { x: 0.22, y: -1.35 };
     this.zoomTarget = 3.25; this.zoomReadoutEl = null; this.lastBiomeId = null; this.autoRotate = false;
   }
-  init() { if (this.container && window.THREE) { this._initThreeScene(); this._bindPointerControls(); this._animate(); } }
+  init() {
+    if (this.container && window.THREE) {
+      this._initThreeScene(); this._bindPointerControls(); this._animate();
+    }
+  }
   _latLonToVec3(THREE, lat, lon, r = 1.004) {
     const phi = ((90 - lat) * Math.PI) / 180, theta = ((lon + 180) * Math.PI) / 180;
     return new THREE.Vector3(-r * Math.sin(phi) * Math.cos(theta), r * Math.cos(phi), r * Math.sin(phi) * Math.sin(theta));
@@ -67,9 +72,7 @@ export class GlobeView {
     loader.load('https://unpkg.com/three-globe@2.31.0/example/img/earth-blue-marble.jpg', (tex) => { earthMat.map = tex; earthMat.needsUpdate = true; });
     this.earthGroup.add(new THREE.Mesh(new THREE.SphereGeometry(1.0, 64, 64), earthMat));
     const cloudMat = new THREE.MeshLambertMaterial({ color: 0xffffff, transparent: true, opacity: 0.16, depthWrite: false });
-    loader.load('https://unpkg.com/three-globe@2.31.0/example/img/earth-clouds.png', (cTex) => {
-      cloudMat.map = cTex; cloudMat.alphaMap = cTex; cloudMat.opacity = 0.35; cloudMat.needsUpdate = true;
-    });
+    loader.load('https://unpkg.com/three-globe@2.31.0/example/img/earth-clouds.png', (cTex) => { cloudMat.map = cTex; cloudMat.alphaMap = cTex; cloudMat.opacity = 0.35; cloudMat.needsUpdate = true; });
     this.cloudsMesh = new THREE.Mesh(new THREE.SphereGeometry(1.014, 48, 48), cloudMat);
     this.earthGroup.add(this.cloudsMesh);
     this.earthGroup.add(new THREE.Mesh(new THREE.SphereGeometry(1.055, 48, 48), new THREE.MeshBasicMaterial({ color: 0x1d70ff, transparent: true, opacity: 0.16, side: THREE.BackSide, depthWrite: false })));
@@ -84,7 +87,7 @@ export class GlobeView {
   }
   _buildZoomHud() {
     const hud = document.createElement('div'); hud.className = 'globe-zoom-controls';
-    hud.innerHTML = `<button type="button" class="globe-zoom-btn" title="Zoom Out">−</button><span class="globe-zoom-readout">🌍 Rueda: Acercar País</span><button type="button" class="globe-zoom-btn" title="Zoom In">+</button>`;
+    hud.innerHTML = `<button type="button" class="globe-zoom-btn" title="Zoom Out">−</button><span class="globe-zoom-readout">🌐 Rueda: Acercar País</span><button type="button" class="globe-zoom-btn" title="Zoom In">+</button>`;
     const [btnOut, btnIn] = hud.querySelectorAll('button');
     this.zoomReadoutEl = hud.querySelector('.globe-zoom-readout');
     btnOut.addEventListener('click', () => { this.zoomTarget = Math.min(4.2, this.zoomTarget + 0.35); });
@@ -122,8 +125,7 @@ export class GlobeView {
             }
           }
         }
-        bctx.strokeStyle = 'rgba(2, 6, 23, 0.85)'; bctx.lineWidth = 4.5; bctx.stroke();
-        bctx.strokeStyle = 'rgba(103, 232, 249, 0.95)'; bctx.lineWidth = 2.2; bctx.stroke();
+        bctx.strokeStyle = 'rgba(2, 6, 23, 0.85)'; bctx.lineWidth = 4.5; bctx.stroke(); bctx.strokeStyle = 'rgba(103, 232, 249, 0.95)'; bctx.lineWidth = 2.2; bctx.stroke();
       };
       data.features.forEach((feat) => {
         const g = feat.geometry; if (!g) return;
@@ -131,10 +133,10 @@ export class GlobeView {
         if (/falkland|malvinas/i.test(name)) name = 'Islas Malvinas';
         const polys = g.type === 'Polygon' ? [g.coordinates] : g.type === 'MultiPolygon' ? g.coordinates : [];
         let bestRing = null;
-        polys.forEach((poly) => poly.forEach((ring) => { addRing(ring); if (!bestRing || ring.length > bestRing.length) bestRing = ring; }));
+        polys.forEach((p) => p.forEach((ring) => { addRing(ring); if (!bestRing || ring.length > bestRing.length) bestRing = ring; }));
         if (name && bestRing && bestRing.length > 3) {
           let minLat = 90, maxLat = -90, minLon = 180, maxLon = -180;
-          bestRing.forEach(([lon, lat]) => { if (lat < minLat) minLat = lat; if (lat > maxLat) maxLat = lat; if (lon < minLon) minLon = lon; if (lon > maxLon) maxLon = lon; });
+          bestRing.forEach(([lon, lat]) => { minLat = Math.min(minLat, lat); maxLat = Math.max(maxLat, lat); minLon = Math.min(minLon, lon); maxLon = Math.max(maxLon, lon); });
           this._addCountryLabelNode(THREE, (minLat + maxLat) * 0.5, (minLon + maxLon) * 0.5, name, name, Math.hypot(maxLat - minLat, maxLon - minLon));
         }
       });
@@ -145,8 +147,7 @@ export class GlobeView {
         this.earthGroup.add(new THREE.LineSegments(geo, this.bordersMat));
       }
     };
-    fetch(WORLD_GEOJSON_URLS[0]).then((r) => r.json()).then(parseGeoJson)
-      .catch(() => fetch(WORLD_GEOJSON_URLS[1]).then((r) => r.json()).then(parseGeoJson).catch(() => {}));
+    fetch(WORLD_GEOJSON_URLS[0]).then((r) => r.json()).then(parseGeoJson).catch(() => fetch(WORLD_GEOJSON_URLS[1]).then((r) => r.json()).then(parseGeoJson).catch(() => {}));
   }
   _buildStarfield(THREE) {
     const starGeo = new THREE.BufferGeometry(), pos = new Float32Array(1400 * 3);
@@ -163,7 +164,17 @@ export class GlobeView {
       for (let i = 0; i <= 96; i++) { const a = (i / 96) * Math.PI * 2; pts.push(new THREE.Vector3(Math.cos(a) * altRadius, Math.sin(a) * altRadius, 0)); }
       orbitPivot.add(new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: sat.colorHex, transparent: true, opacity: 0.42 })));
       const satNode = new THREE.Group(), coneH = altRadius - 1.0;
-      satNode.add(new THREE.Mesh(new THREE.BoxGeometry(0.036, 0.036, 0.065), new THREE.MeshBasicMaterial({ color: 0xe2e8f0 })));
+      // Realistic Spacecraft Bus: Multi-Layer Insulation (Gold for EOS MODIS, Silver/Titanium for JPSS VIIRS)
+      const busMat = new THREE.MeshStandardMaterial({ color: sat.sensor === 'VIIRS' ? 0xd1d5db : 0xd97706, metalness: 0.85, roughness: 0.25 });
+      satNode.add(new THREE.Mesh(new THREE.BoxGeometry(0.042, 0.038, 0.065), busMat));
+      // Photovoltaic Solar Arrays
+      const panelMat = new THREE.MeshStandardMaterial({ color: 0x1e3a8a, emissive: 0x0f2757, metalness: 0.8, roughness: 0.2 });
+      const leftWing = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.003, 0.042), panelMat); leftWing.position.set(-0.088, 0, 0); const rightWing = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.003, 0.042), panelMat); rightWing.position.set(0.088, 0, 0);
+      satNode.add(leftWing, rightWing);
+      // High-Gain Communication Dish & Nadir Optical Barrel
+      const dish = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.002, 0.008, 16), new THREE.MeshStandardMaterial({ color: 0xf8fafc, metalness: 0.7, roughness: 0.3 })); dish.position.set(0, 0.024, 0.015); dish.rotation.x = Math.PI / 4; satNode.add(dish);
+      const lens = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.01, 0.012, 12), new THREE.MeshBasicMaterial({ color: sat.colorHex }));
+      lens.position.set(0, -0.024, 0); satNode.add(lens);
       const cone = new THREE.Mesh(new THREE.ConeGeometry(sat.sensor === 'VIIRS' ? 0.17 : 0.125, coneH, 28, 1, true), new THREE.MeshBasicMaterial({ color: sat.colorHex, transparent: true, opacity: 0.25, side: THREE.DoubleSide }));
       cone.position.y = -coneH / 2; satNode.add(cone);
       const labelEl = document.createElement('div'); labelEl.className = 'sat-floating-tag';
@@ -180,8 +191,7 @@ export class GlobeView {
     this.earthGroup.add(this.hotspotModisMesh, this.hotspotViirsMesh, this.aoiRingMesh);
   }
   _bindPointerControls() {
-    this.container.addEventListener('pointerdown', (e) => { this.isDragging = true; this.prevMouse = { x: e.clientX, y: e.clientY }; });
-    window.addEventListener('pointerup', () => (this.isDragging = false));
+    this.container.addEventListener('pointerdown', (e) => { this.isDragging = true; this.prevMouse = { x: e.clientX, y: e.clientY }; }); window.addEventListener('pointerup', () => (this.isDragging = false));
     window.addEventListener('pointermove', (e) => {
       if (!this.isDragging) return;
       const sens = 0.0045 * (this.camera ? this.camera.position.z / 3.25 : 1);
@@ -275,24 +285,12 @@ export class GlobeView {
         }
       }
     });
-    candidates.sort((a, b) => (a.c === bestCountry ? -1 : b.c === bestCountry ? 1 : b.score - a.score));
-    const placed = [], minDx = zDist > 2.1 ? 92 : 74, minDy = zDist > 2.1 ? 28 : 22;
+    candidates.sort((a, b) => (a.c === bestCountry ? -1 : b.c === bestCountry ? 1 : b.score - a.score)); const placed = [], minDx = zDist > 2.1 ? 92 : 74, minDy = zDist > 2.1 ? 28 : 22;
     candidates.forEach(({ c, sx, sy }) => {
       if (c !== bestCountry && placed.some((p) => Math.abs(sx - p.x) < minDx && Math.abs(sy - p.y) < minDy)) return;
-      placed.push({ x: sx, y: sy });
-      c.el.textContent = isEs ? c.nameEs : c.nameEn;
-      c.el.style.display = 'block'; c.el.style.left = `${sx}px`; c.el.style.top = `${sy}px`;
+      placed.push({ x: sx, y: sy }); c.el.textContent = isEs ? c.nameEs : c.nameEn; c.el.style.display = 'block'; c.el.style.left = `${sx}px`; c.el.style.top = `${sy}px`;
     });
-    if (bestCountry) {
-      bestCountry.el.classList.add('country-tag-focused');
-      if (this.zoomReadoutEl) this.zoomReadoutEl.textContent = `📍 ${isEs ? bestCountry.nameEs : bestCountry.nameEn}`;
-    } else if (this.zoomReadoutEl) {
-      this.zoomReadoutEl.textContent = isEs ? '🌍 Rueda / + : Ver Países' : '🌍 Scroll / + : Show Countries';
-    }
+    if (bestCountry) { bestCountry.el.classList.add('country-tag-focused'); if (this.zoomReadoutEl) this.zoomReadoutEl.textContent = `📍 ${isEs ? bestCountry.nameEs : bestCountry.nameEn}`; } else if (this.zoomReadoutEl) { this.zoomReadoutEl.textContent = isEs ? '🌐 Rueda / + : Ver Países' : '🌐 Scroll / + : Show Countries'; }
   }
-  dispose() {
-    if (!this.scene) return;
-    this.scene.traverse((o) => { if (o.geometry) o.geometry.dispose(); if (o.material) o.material.dispose(); });
-    if (this.renderer) this.renderer.dispose();
-  }
+  dispose() { if (!this.scene) return; this.scene.traverse((o) => { if (o.geometry) o.geometry.dispose(); if (o.material) o.material.dispose(); }); if (this.renderer) this.renderer.dispose(); }
 }

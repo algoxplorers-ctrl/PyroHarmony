@@ -45,11 +45,14 @@ export class FirmsDataService {
     const perClusterMw = cellStats.frpMw / numClusters;
 
     for (let i = 0; i < numClusters; i++) {
-      const angle = i * 2.39996 + year * 0.13 + week * 0.29;
-      const radius = 0.15 + (i % 9) * 0.22;
-      const lat = Number((biome.lat + Math.sin(angle) * radius).toFixed(2));
-      const lon = Number((biome.lon + Math.cos(angle) * radius * 1.25).toFixed(2));
-      const weightFactor = 0.65 + 0.7 * Math.abs(Math.sin(i * 1.17 + week));
+      const seedA = Math.sin(i * 12.9898 + year * 0.17 + week * 0.31) * 43758.5453;
+      const seedB = Math.cos(i * 78.233 + year * 0.23 - week * 0.19) * 24634.6345;
+      const rx = (seedA - Math.floor(seedA)) * 2 - 1;
+      const ry = (seedB - Math.floor(seedB)) * 2 - 1;
+      const frontAngle = (i % 5) * 1.25 + week * 0.08;
+      const lat = Number((biome.lat + ry * 1.85 + Math.sin(frontAngle) * 0.55).toFixed(2));
+      const lon = Number((biome.lon + rx * 2.35 + Math.cos(frontAngle) * 0.65).toFixed(2));
+      const weightFactor = 0.55 + 0.9 * Math.abs(Math.sin(i * 1.37 + week * 0.5));
       const clusterMw = perClusterMw * weightFactor;
 
       const modisFrp = clusterMw * 0.96;

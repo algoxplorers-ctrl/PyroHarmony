@@ -1,0 +1,274 @@
+/**
+ * @file src/styles/main.css
+ * @description Fullscreen Space Observatory & Glassmorphism HUD stylesheet for PyroHarmony v2.0.0,
+ * matching the exact visual layout of the AlgoXplorers NASA Mission Control UI.
+ * @team AlgoXplorers (Argentina)
+ */
+
+:root {
+  --bg-space: #030712;
+  --bg-header: #070c18;
+  --bg-glass: rgba(11, 18, 34, 0.84);
+  --border-glass: rgba(56, 189, 248, 0.22);
+  --cyan-title: #22d3ee;
+  --green-badge: #10b981;
+  --text-light: #f8fafc;
+  --text-dim: #94a3b8;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: radial-gradient(circle at 50% 45%, #0a1936 0%, #030712 72%);
+  color: var(--text-light);
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* TOP HEADER BAR */
+.top-hud-bar { position: fixed; top: 0; left: 0; right: 0; height: 62px; background: var(--bg-header); border-bottom: 1px solid rgba(30, 58, 138, 0.45); display: flex; align-items: center; justify-content: space-between; padding: 0 18px; z-index: 100; }
+.hud-left-brand { display: flex; align-items: center; gap: 11px; }
+.flame-logo-box { width: 34px; height: 34px; border-radius: 9px; background: linear-gradient(135deg, #ff5722, #f59e0b); display: grid; place-items: center; font-size: 1.1rem; box-shadow: 0 0 14px rgba(255, 87, 34, 0.45); }
+.pyro-title-text { font-size: 1.32rem; font-weight: 800; background: linear-gradient(90deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.sat-constellation-pill { background: rgba(30, 58, 138, 0.35); border: 1px solid rgba(59, 130, 246, 0.45); color: #60a5fa; font-size: 0.72rem; padding: 4px 10px; border-radius: 6px; font-weight: 600; }
+.hud-center-aoi { display: flex; align-items: center; gap: 8px; background: #0f172a; border: 1px solid rgba(71, 85, 105, 0.55); padding: 6px 12px; border-radius: 8px; }
+.aoi-label { font-size: 0.78rem; color: var(--text-dim); font-weight: 600; }
+.aoi-select { background: transparent; color: var(--text-light); border: none; font-size: 0.82rem; font-weight: 700; outline: none; cursor: pointer; }
+.aoi-select option { background: #0f172a; color: #fff; }
+
+.hud-right-actions { display: flex; align-items: center; gap: 8px; }
+.top-action-btn {
+  background: #131c2e;
+  color: #e2e8f0;
+  border: 1px solid rgba(71, 85, 105, 0.5);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.top-action-btn:hover { border-color: #38bdf8; background: #1e293b; }
+.btn-calendar-primary, .btn-admin-primary, .btn-active-blue {
+  background: linear-gradient(180deg, #1d4ed8, #1e40af);
+  border-color: #3b82f6;
+  color: #ffffff;
+}
+.fps-telemetry-box {
+  background: rgba(6, 78, 59, 0.4);
+  border: 1px solid rgba(16, 185, 129, 0.45);
+  color: #10b981;
+  font-family: monospace;
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 6px 10px;
+  border-radius: 7px;
+}
+
+/* FULLSCREEN 3D STAGE & SATELLITE LABELS */
+.space-stage { position: fixed; top: 62px; bottom: 68px; left: 0; right: 0; }
+.fullscreen-globe-canvas { width: 100%; height: 100%; position: relative; cursor: grab; }
+.sat-labels-overlay { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.sat-floating-tag {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(7, 12, 24, 0.85);
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  color: #f8fafc;
+  font-family: monospace;
+  font-size: 0.62rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+/* FLOATING GLASSMORPHISM PANELS */
+.floating-glass-panel {
+  position: absolute;
+  top: 18px;
+  background: var(--bg-glass);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-glass);
+  border-radius: 11px;
+  padding: 15px 16px;
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.65);
+  z-index: 30;
+}
+.left-telemetry-panel { left: 18px; width: 325px; max-height: calc(100% - 36px); overflow-y: auto; }
+.right-tactical-panel { right: 18px; width: 345px; }
+
+.panel-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 11px;
+}
+.panel-title-cyan {
+  color: var(--cyan-title);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.pill-badge-green {
+  background: rgba(6, 78, 59, 0.55);
+  border: 1px solid #10b981;
+  color: #34d399;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+.pill-badge-purple {
+  background: rgba(88, 28, 135, 0.45);
+  border: 1px solid #a855f7;
+  color: #c084fc;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.thermal-power-box {
+  background: rgba(15, 23, 42, 0.78);
+  border: 1px solid rgba(51, 65, 85, 0.65);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+}
+.power-main-row { display: flex; justify-content: space-between; align-items: baseline; }
+.power-label { font-size: 0.78rem; color: #cbd5e1; }
+.power-value { font-size: 1.18rem; font-weight: 800; color: #ffffff; }
+.power-sub-row { font-size: 0.68rem; color: #64748b; font-family: monospace; margin-top: 4px; }
+
+/* SEMICIRCULAR GAUGE */
+.gauge-card-block { text-align: center; margin: 4px 0 10px 0; }
+.anomaly-gauge-svg { width: 100%; max-width: 225px; height: auto; margin: 0 auto; display: block; }
+.gauge-readout-center { margin-top: -12px; }
+.gauge-z-main { font-size: 1.35rem; font-weight: 800; font-family: monospace; }
+.gauge-z-status { font-size: 0.8rem; font-weight: 700; margin-top: 2px; }
+.gauge-z-pval { font-size: 0.72rem; color: var(--text-dim); font-family: monospace; margin-top: 2px; }
+
+.panel-divider { border: none; border-top: 1px solid rgba(51, 65, 85, 0.6); margin: 12px 0; }
+.discrepancy-list-card {
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(51, 65, 85, 0.6);
+  border-radius: 8px;
+  padding: 9px 11px;
+}
+.disc-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; font-size: 0.75rem; }
+.disc-row-label { color: #94a3b8; }
+.disc-row-val { font-family: monospace; font-weight: 700; color: #f8fafc; }
+.val-orange { color: #f97316; font-size: 0.92rem; }
+.val-cyan { color: #22d3ee; font-size: 0.92rem; }
+.val-amber { color: #facc15; }
+.val-green { color: #34d399; font-size: 0.68rem; }
+
+.benchmark-jump-btn {
+  width: 100%;
+  margin-top: 10px;
+  padding: 7px 10px;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid #f59e0b;
+  color: #fde68a;
+  border-radius: 7px;
+  font-size: 0.73rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* RIGHT PANEL LACES RADAR */
+.laces-alert-box { border-radius: 8px; padding: 11px 13px; margin-bottom: 10px; }
+.laces-standby { background: rgba(6, 78, 59, 0.28); border: 1px solid rgba(16, 185, 129, 0.45); }
+.laces-watch { background: rgba(120, 53, 15, 0.35); border: 1px solid #f59e0b; }
+.laces-critical { background: rgba(127, 29, 29, 0.45); border: 1px solid #ef4444; }
+.laces-status-header { font-size: 0.78rem; font-weight: 800; color: #10b981; margin-bottom: 5px; }
+.laces-watch .laces-status-header { color: #fbbf24; }
+.laces-critical .laces-status-header { color: #f87171; }
+.laces-status-desc { font-size: 0.76rem; color: #e2e8f0; line-height: 1.45; }
+.laces-rule-box {
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(51, 65, 85, 0.6);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.laces-rule-title { font-size: 0.74rem; color: #94a3b8; margin-bottom: 5px; }
+.laces-rule-text { font-size: 0.74rem; color: #cbd5e1; line-height: 1.45; }
+
+/* BOTTOM HISTORICAL TIMELINE DOCK */
+.bottom-timeline-dock {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 68px;
+  background: var(--bg-header);
+  border-top: 1px solid rgba(30, 58, 138, 0.45);
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 0 22px;
+  z-index: 100;
+}
+.transport-controls { display: flex; gap: 6px; }
+.transport-btn {
+  width: 34px;
+  height: 34px;
+  background: #131c2e;
+  color: #e2e8f0;
+  border: 1px solid rgba(71, 85, 105, 0.55);
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.timeline-scrubber-track { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.timeline-labels-row {
+  display: flex;
+  justify-content: space-between;
+  font-family: monospace;
+  font-size: 0.78rem;
+  color: #94a3b8;
+}
+.timeline-center-title { color: #64748b; }
+.master-range-slider { width: 100%; accent-color: #00e5ff; cursor: pointer; }
+
+/* MODALS (CALENDAR & ADMIN) */
+.glass-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 7, 18, 0.78);
+  backdrop-filter: blur(6px);
+  display: none;
+  place-items: center;
+  z-index: 200;
+}
+.glass-modal-backdrop.modal-open { display: grid; }
+.glass-modal-window {
+  background: #0b1324;
+  border: 1px solid #38bdf8;
+  border-radius: 12px;
+  padding: 18px 22px;
+  width: 92vw;
+  max-width: 1020px;
+}
+.modal-admin-size { max-width: 620px; }
+.modal-header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; color: #38bdf8; }
+.modal-close-btn { background: transparent; border: none; color: #fff; font-size: 1.1rem; cursor: pointer; }
+.modal-sliders-subrow { display: flex; gap: 16px; align-items: center; margin-bottom: 10px; font-size: 0.8rem; }
+.calendar-matrix-grid { display: flex; flex-direction: column; gap: 2px; max-height: 360px; overflow-y: auto; }
+.calendar-year-row { display: flex; align-items: center; gap: 6px; }
+.calendar-year-label { width: 38px; font-size: 0.68rem; font-family: monospace; color: #94a3b8; }
+.calendar-weeks-strip { display: grid; grid-template-columns: repeat(52, 1fr); gap: 2px; flex: 1; }
+.calendar-cell { height: 10px; border: none; border-radius: 2px; cursor: pointer; }
+.calendar-cell.selected-cell { outline: 2px solid #fff; }
+.admin-links-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.admin-doc-card { background: #131c2e; border: 1px solid #38bdf8; color: #fff; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 0.85rem; }
+.floating-tooltip { position: fixed; display: none; background: #040914; border: 1px solid #38bdf8; color: #fff; padding: 6px 10px; border-radius: 6px; font-size: 0.74rem; font-family: monospace; pointer-events: none; z-index: 999; }

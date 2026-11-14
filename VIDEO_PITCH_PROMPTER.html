@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teleprompter Interactivo (240s) · PyroHarmony v2.0.0 | AlgoXplorers</title>
+  <style>
+    body { background:#030712; color:#f8fafc; font-family:'Segoe UI',system-ui,sans-serif; margin:0; padding:20px; }
+    .top-bar { position:sticky; top:0; background:rgba(6,13,28,0.96); border:1px solid #00e5ff; border-radius:10px; padding:12px 18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; z-index:50; }
+    .timer { font-family:monospace; font-size:1.8rem; font-weight:800; color:#00e676; }
+    .btn { background:rgba(0,229,255,0.16); color:#fff; border:1px solid #00e5ff; padding:8px 14px; border-radius:6px; cursor:pointer; font-weight:700; text-decoration:none; }
+    .btn:hover { background:#00e5ff; color:#030712; }
+    .prompter-stage { max-width:900px; margin:24px auto; font-size:1.35rem; line-height:1.75; }
+    .segment { background:#0b172d; border-left:5px solid #00e5ff; border-radius:8px; padding:18px 22px; margin-bottom:20px; }
+    .segment-meta { font-size:0.9rem; font-family:monospace; color:#00e5ff; margin-bottom:6px; text-transform:uppercase; }
+    .cue { color:#ffd600; font-size:0.95rem; font-family:monospace; display:block; margin-top:6px; }
+  </style>
+</head>
+<body>
+  <div class="top-bar">
+    <div>
+      <strong>🎬 TELEPROMPTER PITCH OFICIAL (240 SEGUNDOS / 4 MINUTOS)</strong>
+      <div style="font-size:0.8rem;color:#94a3b8;">Equipo AlgoXplorers (Argentina) · PyroHarmony v2.0.0</div>
+    </div>
+    <div class="timer" id="clock-display">00:00 / 04:00</div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn" id="btn-start">▶ Iniciar / Pausar</button>
+      <button class="btn" id="btn-reset">↺ Reiniciar</button>
+      <a class="btn" href="index.html">⬅ Ir a la App</a>
+    </div>
+  </div>
+
+  <div class="prompter-stage" id="prompter-stage">
+    <div class="segment">
+      <div class="segment-meta">[00:00 – 00:45] BLOQUE 1 · EL PROBLEMA GLOBAL Y EL SESGO INSTRUMENTAL (José Alex Fernández Montellanos @fajjaf)</div>
+      "Imaginen mirar un mapa satelital desde el año 2012 y concluir que los incendios del planeta se cuadruplicaron de la noche a la mañana. No fue el fuego el que cambió: cambió el lente. Durante 26 años, la NASA monitoreó el planeta con MODIS, cuyo píxel mide 1 kilómetro cuadrado, y desde 2012 sumó VIIRS, con píxeles de 375 metros: un área 7 veces más pequeña. Como resultado, VIIRS detecta entre 3 y 5 veces más focos individuales sobre el mismo incendio. Somos el equipo AlgoXplorers de Argentina, y creamos PyroHarmony para armonizar 26 años de historia climática."
+      <span class="cue">[ACCIÓN EN PANTALLA: Mostrar Globo 3D en index.html con los conos Nadir de MODIS (2.330 km) y VIIRS (3.040 km).]</span>
+    </div>
+
+    <div class="segment">
+      <div class="segment-meta">[00:45 – 01:35] BLOQUE 2 · FÍSICA DE STEFAN-BOLTZMANN Y ECUACIÓN MIR DE KAUFMAN &amp; WOOSTER (Carlos Vizzioli @cvizzioli)</div>
+      "¿Por qué no basta con contar píxeles o promediar temperaturas en grados Celsius? Por la ley de Stefan-Boltzmann y el problema del sub-píxel demostrado por Dozier: una llama real a 800 °C que ocupa el 0.01% de un píxel de 1 km² rodeada de vegetación a 21 °C produce apenas 21.3 °C aparentes. En PyroHarmony abandonamos el conteo bruto y medimos la Potencia Radiativa del Fuego en Megawatts mediante la formulación en 4 micrómetros de Kaufman y Wooster. Agregamos los datos en una malla homogénea de 0.1 grados y aplicamos regresión ortogonal por bioma bajo una restricción física inquebrantable: alfa más beta igual a 1.00, con R cuadrado superior a 0.85."
+      <span class="cue">[ACCIÓN EN PANTALLA: Señalar la Sensor Discrepancy Card en Zona 3 mostrando α + β = 1.00 y conversión a kg/s de biomasa.]</span>
+    </div>
+
+    <div class="segment">
+      <div class="segment-meta">[01:35 – 02:25] BLOQUE 3 · CALENDARIO FENOLÓGICO, Z-SCORE Y BENCHMARK PANTANAL 2020 (Sánchez Obando Gisella Elizabeth @gisesanchezj)</div>
+      "Además, 500 Megawatts en plena sequía pueden ser normales, pero 500 Megawatts en época de lluvias son una catástrofe. Por eso diseñamos el Burning Activity Calendar de 52 semanas por 26 años usando el Z-Score térmico climatológico semanal. Al presionar el botón del Benchmark histórico del Megaincendio del Pantanal en la Semana 35 de 2020, nuestro velocímetro dispara exactamente Z = +2.82 con p menor a 0.005, validando nuestro algoritmo contra las alertas reales de emergencia de NASA FIRMS. Y todo el sistema es 100% bilingüe en tiempo real, iniciando en inglés nativo y conmutando al español sin recargar la página."
+      <span class="cue">[ACCIÓN EN PANTALLA: Clic en 'Pantanal 2020 Benchmark (W35)', mostrar velocímetro en Z = +2.82 y alternar botón EN/ES.]</span>
+    </div>
+
+    <div class="segment">
+      <div class="segment-meta">[02:25 – 03:15] BLOQUE 4 · RADAR TÁCTICO LACES DE 50 MINUTOS PARA BRIGADISTAS (Juan Carlos Fernandez @jcfernan99)</div>
+      "Llevamos la ciencia espacial directo al terreno operativo. Aprovechamos el desfase orbital de 50 minutos entre el paso de Suomi-NPP a las 13:30 y NOAA-20 a las 14:20 para medir la aceleración radiativa del frente de fuego e integrarla al protocolo internacional de seguridad LACES para combatientes forestales del SNMF en Argentina, IBAMA en Brasil, CONAF en Chile y USFS en Estados Unidos, generando reportes tácticos SitRep descargables con un solo clic."
+      <span class="cue">[ACCIÓN EN PANTALLA: Mostrar el Radar LACES de 50 minutos y descargar el archivo SitRep .txt y la malla .geojson.]</span>
+    </div>
+
+    <div class="segment">
+      <div class="segment-meta">[03:15 – 04:00] BLOQUE 5 · ARQUITECTURA MVC, ENMIENDA WOLF Y CIENCIA ABIERTA FAIR (Maximiliano Guevara @omegaredone)</div>
+      "Bajo estándares de ingeniería NASA NPR 7150.2, construimos una arquitectura Modelo-Vista-Controlador estricta con módulos menores a 300 líneas de código, empaquetados en un bundle autónomo que corre a 60 FPS en WebGL con gestión limpia de memoria GPU. Cumplimos al 100% con la Enmienda Wolf utilizando exclusivamente satélites, datos y tecnologías de Estados Unidos y código abierto MIT bajo los principios FAIR y los ODS 13 y 15. Con PyroHarmony, dejamos de contar píxeles fragmentados para medir la verdadera energía vital de la Tierra. Muchas gracias."
+      <span class="cue">[ACCIÓN EN PANTALLA: Cierre con vista completa de las 4 Zonas de Comando y créditos del equipo AlgoXplorers.]</span>
+    </div>
+  </div>
+
+  <script>
+    let seconds = 0;
+    let intervalId = null;
+    const display = document.getElementById('clock-display');
+    const fmt = (s) => `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+
+    document.getElementById('btn-start').addEventListener('click', () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+        return;
+      }
+      intervalId = setInterval(() => {
+        if (seconds < 240) {
+          seconds++;
+          display.textContent = `${fmt(seconds)} / 04:00`;
+          window.scrollBy({ top: 1.8, behavior: 'smooth' });
+        } else {
+          clearInterval(intervalId);
+          intervalId = null;
+        }
+      }, 1000);
+    });
+
+    document.getElementById('btn-reset').addEventListener('click', () => {
+      clearInterval(intervalId);
+      intervalId = null;
+      seconds = 0;
+      display.textContent = '00:00 / 04:00';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>

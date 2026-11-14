@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PyroHarmony v2.0.0 · MODIS &amp; VIIRS Radiative Harmonization | AlgoXplorers</title>
+  <link rel="stylesheet" href="src/styles/main.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+</head>
+<body>
+  <!-- =====================================================================
+       ZONE 1: TOP COMMAND HEADER BAR (EXACT MISSION CONTROL AESTHETIC)
+       ===================================================================== -->
+  <header class="top-hud-bar" role="banner">
+    <div class="hud-left-brand">
+      <div class="flame-logo-box" aria-hidden="true">🔥</div>
+      <span class="pyro-title-text">PyroHarmony</span>
+      <span id="hud-sats-value" class="sat-constellation-pill">🛰️ 4 Satellites (Quad Constellation)</span>
+    </div>
+
+    <div class="hud-center-aoi">
+      <label for="select-biome" class="aoi-label" data-i18n="hud.aoi_label">AOI:</label>
+      <select id="select-biome" class="aoi-select" aria-label="Select Biome AOI"></select>
+    </div>
+
+    <div class="hud-right-actions">
+      <button type="button" id="btn-export-geojson" class="top-action-btn">
+        <span class="btn-icon">📁</span>
+        <span>GeoJSON</span>
+      </button>
+      <button type="button" id="btn-open-calendar" class="top-action-btn btn-calendar-primary">
+        <span class="btn-icon">📅</span>
+        <span data-i18n="hud.calendar_btn">Calendar 2000-2026</span>
+      </button>
+      <div id="hud-fps-value" class="fps-telemetry-box">60 FPS</div>
+      <button type="button" id="btn-toggle-audio" class="top-action-btn">
+        <span class="btn-icon">🔊</span>
+        <span data-i18n="hud.audio_btn">Audio</span>
+      </button>
+      <button type="button" id="btn-toggle-lang" class="top-action-btn btn-lang-box">EN</button>
+      <button type="button" id="btn-export-sitrep" class="top-action-btn">
+        <span class="btn-icon">📄</span>
+        <span data-i18n="hud.sitrep_btn">SitRep</span>
+      </button>
+      <button type="button" id="btn-open-admin" class="top-action-btn btn-admin-primary">
+        <span class="btn-icon">⚙️</span>
+        <span data-i18n="hud.admin_btn">Admin</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- =====================================================================
+       ZONE 2: FULL-SCREEN 3D SPACE & NASA BLUE MARBLE GLOBE
+       ===================================================================== -->
+  <main class="space-stage">
+    <div id="globe-canvas-container" class="fullscreen-globe-canvas" aria-label="3D Interactive Earth"></div>
+
+    <!-- ===================================================================
+         ZONE 3 (LEFT): RADIATIVE TELEMETRY (FRP) & SENSOR DISCREPANCY PANEL
+         =================================================================== -->
+    <aside class="floating-glass-panel left-telemetry-panel" aria-label="Radiative Telemetry Panel">
+      <div class="panel-section-header">
+        <span class="panel-title-cyan">📡 <span data-i18n="left.rad_title">RADIATIVE TELEMETRY (FRP)</span></span>
+        <span id="telemetry-regime-badge" class="pill-badge-green" data-i18n="left.badge_harmonized">HARMONIZED</span>
+      </div>
+
+      <div class="thermal-power-box">
+        <div class="power-main-row">
+          <span class="power-label" data-i18n="left.total_power">Total Thermal Power:</span>
+          <span id="telemetry-total-mw" class="power-value">65.41 MW</span>
+        </div>
+        <div id="telemetry-sub-mw" class="power-sub-row">MODIS: 41 MW | VIIRS: 78.8 MW</div>
+      </div>
+
+      <!-- Semicircular Z-Score Gauge -->
+      <div id="anomaly-gauge-container"></div>
+
+      <hr class="panel-divider" />
+
+      <div class="panel-section-header">
+        <span class="panel-title-cyan">⚖️ <span data-i18n="left.disc_title">OPTICAL VS. PHYSICAL DISCREPANCY</span></span>
+        <span class="pill-badge-green" data-i18n="left.badge_multisensor">MULTI-SENSOR</span>
+      </div>
+
+      <div id="sensor-discrepancy-container"></div>
+
+      <button type="button" id="btn-benchmark-pantanal" class="benchmark-jump-btn">
+        🔥 <span data-i18n="left.benchmark_btn">Pantanal 2020 Benchmark (W35 · Z = +2.82)</span>
+      </button>
+    </aside>
+
+    <!-- ===================================================================
+         ZONE 3 (RIGHT): TACTICAL BURNOVER RADAR (LACES PROTOCOL)
+         =================================================================== -->
+    <aside class="floating-glass-panel right-tactical-panel" aria-label="Tactical Burnover Radar">
+      <div class="panel-section-header">
+        <span class="panel-title-cyan">🚒 <span data-i18n="right.radar_title">TACTICAL BURNOVER RADAR</span></span>
+        <span class="pill-badge-purple">LACES</span>
+      </div>
+
+      <div id="laces-radar-container"></div>
+    </aside>
+  </main>
+
+  <!-- =====================================================================
+       ZONE 4: BOTTOM HISTORICAL TIMELINE DOCK (2000 - 2026)
+       ===================================================================== -->
+  <footer class="bottom-timeline-dock" role="contentinfo">
+    <div class="transport-controls">
+      <button type="button" id="btn-step-prev" class="transport-btn" title="Previous Week">⏮</button>
+      <button type="button" id="btn-timeline-play" class="transport-btn" title="Play / Pause">▶</button>
+      <button type="button" id="btn-step-next" class="transport-btn" title="Next Week">⏭</button>
+      <button type="button" id="btn-speed-toggle" class="transport-btn speed-btn" title="Playback Speed">1x</button>
+    </div>
+
+    <div class="timeline-scrubber-track">
+      <div class="timeline-labels-row">
+        <span><span data-i18n="bottom.year_prefix">Year:</span> <strong id="label-year-val">2026</strong></span>
+        <span class="timeline-center-title" data-i18n="bottom.timeline_title">Historical Timeline 2000 - 2026</span>
+        <span><span data-i18n="bottom.week_prefix">Week:</span> <strong id="label-week-val">36 / 52</strong></span>
+      </div>
+      <input type="range" id="slider-master-timeline" class="master-range-slider" min="0" max="1403" value="1387" aria-label="Historical Timeline 2000 to 2026" />
+    </div>
+  </footer>
+
+  <!-- =====================================================================
+       MODAL 1: PHENOLOGICAL BURNING ACTIVITY CALENDAR (2000-2026)
+       ===================================================================== -->
+  <div id="modal-calendar" class="glass-modal-backdrop" role="dialog" aria-modal="true">
+    <div class="glass-modal-window">
+      <div class="modal-header-bar">
+        <strong data-i18n="modal.calendar_title">PHENOLOGICAL BURNING ACTIVITY CALENDAR (52 WEEKS × 27 YEARS · 2000–2026)</strong>
+        <button type="button" id="btn-close-calendar" class="modal-close-btn">✕</button>
+      </div>
+      <div class="modal-sliders-subrow">
+        <label>Year: <input type="range" id="slider-year" min="2000" max="2026" value="2026" /></label>
+        <label>Week: <input type="range" id="slider-week" min="1" max="52" value="36" /></label>
+        <button type="button" id="btn-export-csv" class="top-action-btn">📊 Export CSV</button>
+      </div>
+      <div id="burning-calendar-container"></div>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       MODAL 2: ADMIN, CALIBRATION & DOCUMENTATION HUB
+       ===================================================================== -->
+  <div id="modal-admin" class="glass-modal-backdrop" role="dialog" aria-modal="true">
+    <div class="glass-modal-window modal-admin-size">
+      <div class="modal-header-bar">
+        <strong data-i18n="modal.admin_title">ADMINISTRATION, BIOME CALIBRATION &amp; WOLF AMENDMENT AUDIT</strong>
+        <button type="button" id="btn-close-admin" class="modal-close-btn">✕</button>
+      </div>
+      <p style="font-size:0.85rem;color:#94a3b8;margin-bottom:14px;">
+        PyroHarmony v2.0.0 · Team AlgoXplorers (Argentina) · 100% US/NASA Wolf Amendment Compliant · Kaufman &amp; Wooster 4 µm MIR Law (α + β = 1.00).
+      </p>
+      <div class="admin-links-grid">
+        <a href="DOSSIER_ENTREGA_EQUIPO.html" class="admin-doc-card">📂 Executive Team Dossier</a>
+        <a href="GUIA_CIENTIFICA_PYROHARMONY.html" class="admin-doc-card">📘 Scientific White Paper</a>
+        <a href="GUIA_INTERPRETACION_MAQUETA.html" class="admin-doc-card">🧭 4-Zone Command Manual</a>
+        <a href="VIDEO_PITCH_PROMPTER.html" class="admin-doc-card">🎬 240s Video Teleprompter</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="calendar-floating-tooltip" class="floating-tooltip" role="tooltip"></div>
+  <script src="app.bundle.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manual Técnico de las 4 Zonas de Comando · PyroHarmony v2.0.0</title>
+  <style>
+    body { background:#050b18; color:#e2e8f0; font-family:'Segoe UI',system-ui,sans-serif; line-height:1.65; max-width:980px; margin:0 auto; padding:28px 20px; }
+    h1, h2, h3 { color:#00e5ff; }
+    .zone-card { background:#0c1930; border:1px solid rgba(0,229,255,0.28); border-radius:10px; padding:18px 22px; margin:16px 0; }
+    .step-badge { display:inline-block; background:#00e676; color:#040914; font-weight:800; padding:2px 9px; border-radius:4px; margin-right:8px; }
+    .nav-bar { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px; }
+    .btn { background:rgba(0,229,255,0.14); color:#fff; border:1px solid #00e5ff; padding:7px 14px; border-radius:6px; text-decoration:none; font-weight:600; }
+  </style>
+</head>
+<body>
+  <div class="nav-bar">
+    <a class="btn" href="index.html">⬅ Volver al Centro de Comando (App)</a>
+    <a class="btn" href="DOSSIER_ENTREGA_EQUIPO.html">📂 Dossier Ejecutivo</a>
+    <a class="btn" href="GUIA_CIENTIFICA_PYROHARMONY.html">📘 White Paper Científico</a>
+  </div>
+
+  <h1>🧭 Manual Técnico de Interpretación de la Maqueta (Las 4 Zonas de Comando)</h1>
+  <p><strong>Sistema:</strong> PyroHarmony v2.0.0 · <strong>Equipo:</strong> AlgoXplorers (Argentina) · <strong>NASA Space Apps Challenge 2026</strong></p>
+
+  <div class="zone-card">
+    <h2>ZONA 1 · HUD Superior de Telemetría y Conmutador Bilingüe (EN / ES)</h2>
+    <p>
+      El panel superior consolida las métricas globales de misión en tiempo real: el bioma activo (AOI), la Potencia Radiativa del Fuego Armonizada Total en Megawatts (MW), los satélites activos en órbita según el año histórico, el contador de rendimiento WebGL a 60 FPS y el botón <code>#btn-toggle-lang</code> que inicia en inglés (<code>EN</code>) y traduce instantáneamente toda la interfaz al español (<code>ES</code>) sin recargar la página.
+    </p>
+  </div>
+
+  <div class="zone-card">
+    <h2>ZONA 2 · Globo 3D Heliosincrónico y Conos de Barrido Nadir</h2>
+    <p>
+      Representa en tres dimensiones el planeta Tierra con textura NASA Blue Marble y atmósfera Rayleigh, junto con las órbitas polares heliosincrónicas a <code>98.2°</code> de inclinación para <strong>Terra (10:30 AM)</strong>, <strong>Aqua (13:30 PM)</strong>, <strong>Suomi-NPP (13:30 PM)</strong> y <strong>NOAA-20 (+50 min)</strong>. Incluye los conos de barrido Nadir a escala real (<code>2.330 km</code> para MODIS vs. <code>3.040 km</code> para VIIRS) y renderiza las celdas de calor de <code>0.1° × 0.1°</code> mediante <code>InstancedMesh</code> con recuperación automática de contexto GPU (<code>webglcontextlost</code>).
+    </p>
+  </div>
+
+  <div class="zone-card">
+    <h2>ZONA 3 · Panel de Control, Velocímetro Z-Score y Radar Táctico LACES</h2>
+    <p>
+      Integra el <strong>Velocímetro SVG Semicircular de Anomalía</strong> (con marcas en <code>-2σ, 0μ, +1σ, +2σ, +3σ</code>), la <strong>Tarjeta de Discrepancia de Sensores</strong> (que demuestra cómo el sesgo óptico de conteo de <code>3x a 5x</code> se resuelve al medir Megawatts bajo la ley de conservación <code>α + β = 1.00</code>), el <strong>Radar Táctico de Bomberos (Protocolo LACES)</strong> basado en la ventana orbital de 50 minutos entre Suomi-NPP y NOAA-20, y los botones de descarga de <strong>SitRep (.txt)</strong>, <strong>GeoJSON (.geojson)</strong> y <strong>CSV (.csv)</strong>.
+    </p>
+  </div>
+
+  <div class="zone-card">
+    <h2>ZONA 4 · Scrubber Temporal (2000–2026) y Burning Activity Calendar</h2>
+    <p>
+      El deslizador multidecadal (con etiquetas <code>Year:</code> y <code>Week:</code>) activa dinámicamente cada satélite según su año real de lanzamiento (2000 Terra, 2002 Aqua, 2012 Suomi-NPP, 2017 NOAA-20). Debajo, la matriz interactiva de <strong>52 semanas × 27 años (1.404 celdas)</strong> muestra el mapa de calor del Z-Score climatológico semanal con tooltips dinámicos traducibles.
+    </p>
+  </div>
+
+  <div class="zone-card">
+    <h2>Protocolo de Validación en 3 Etapas</h2>
+    <p><span class="step-badge">ETAPA 1</span> <strong>Evolución Orbital (2000 ➔ 2026):</strong> Deslizar el año desde 2000 hasta 2026 para observar la incorporación secuencial de Terra, Aqua, Suomi-NPP y NOAA-20 y el cambio automático entre el Proxy Retrospectivo (2000–2011) y el Régimen Armonizado Bulsensor (2012–2026).</p>
+    <p><span class="step-badge">ETAPA 2</span> <strong>Validación Ground Truth (Pantanal 2020, Semana 35):</strong> Hacer clic en el botón <em>Pantanal 2020 Benchmark (W35)</em> del HUD y verificar que el velocímetro dispare exactamente <code>Z = +2.82 (p &lt; 0.005)</code> con alerta crítica LACES.</p>
+    <p><span class="step-badge">ETAPA 3</span> <strong>Ciencia Abierta (FAIR) y Bilingüismo:</strong> Alternar el idioma entre <code>EN</code> y <code>ES</code> y exportar el reporte táctico SitRep y la malla GeoJSON.</p>
+  </div>
+</body>
+</html>

@@ -121,6 +121,7 @@ export class AppController {
 
   handleBiomeChange(biomeId) {
     this.state.biomeId = biomeId;
+    this.globeView.lastBiomeId = null;
     this.recomputeMatrixAndRefresh();
   }
 
@@ -128,6 +129,7 @@ export class AppController {
     this.state.biomeId = biomeId;
     this.state.year = year;
     this.state.week = week;
+    this.globeView.lastBiomeId = null;
     this.recomputeMatrixAndRefresh();
   }
 

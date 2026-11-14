@@ -201,6 +201,16 @@ export class AppController {
       closeAdminBtn.addEventListener('click', () => adminModal.classList.remove('modal-open'));
     }
 
+    const supaBtn = document.getElementById('btn-test-supabase');
+    const supaStatus = document.getElementById('supabase-live-status');
+    if (supaBtn && supaStatus) {
+      supaBtn.addEventListener('click', async () => {
+        supaStatus.textContent = '⏳ Connecting to https://feptrjorbyjmxweefpby.supabase.co ...';
+        const res = await FirmsDataService.verifyAndSyncSupabase(this.state.currentSnapshot);
+        supaStatus.textContent = `🟢 ${res.status}`;
+      });
+    }
+
     const sitrepBtn = document.getElementById('btn-export-sitrep');
     if (sitrepBtn) {
       sitrepBtn.addEventListener('click', () => {

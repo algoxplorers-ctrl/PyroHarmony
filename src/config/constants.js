@@ -1,7 +1,7 @@
 /**
  * @file src/config/constants.js
  * @description Physical constants, orbital telemetry, biome calibration coefficients,
- * and statistical thresholds for PyroHarmony v2.0.0 (NASA Space Apps Challenge 2026).
+ * Supabase cloud configuration, and statistical thresholds for PyroHarmony v2.0.0.
  * @team AlgoXplorers (Argentina)
  * @license MIT
  */
@@ -25,6 +25,17 @@ export const APP_METADATA = Object.freeze({
 });
 
 export const DEFAULT_LANGUAGE = 'en';
+
+/**
+ * Official Cloud Backend Configuration (Supabase Inc., San Francisco, CA, USA)
+ * 100% Wolf Amendment Compliant — Public Client Configuration
+ */
+export const SUPABASE_CONFIG = Object.freeze({
+  URL: 'https://feptrjorbyjmxweefpby.supabase.co',
+  PUBLISHABLE_KEY: 'sb_publishable_z2qOAoSiUgwbGbu0Zzi4IA_34JmHiM8',
+  TABLE_TELEMETRY: 'pyroharmony_telemetry',
+  ORIGIN: 'Supabase Inc. (San Francisco, CA, USA)'
+});
 
 /**
  * Fundamental Radiative Physics Constants
@@ -73,7 +84,7 @@ export const SATELLITE_FLEET = Object.freeze([
     altitudeKm: 705,
     swathWidthKm: 2330,
     resolutionM: 1000,
-    colorHex: '#ff9100',
+    colorHex: '#00e5ff',
     phaseOffsetRad: 1.5708
   },
   {
@@ -87,7 +98,7 @@ export const SATELLITE_FLEET = Object.freeze([
     altitudeKm: 834,
     swathWidthKm: 3040,
     resolutionM: 375,
-    colorHex: '#00e5ff',
+    colorHex: '#ffd600',
     phaseOffsetRad: 3.1416
   },
   {
@@ -102,7 +113,7 @@ export const SATELLITE_FLEET = Object.freeze([
     swathWidthKm: 3040,
     resolutionM: 375,
     colorHex: '#00e676',
-    phaseOffsetRad: 4.0142 // 50-minute orbital separation ahead/behind Suomi-NPP
+    phaseOffsetRad: 4.0142
   }
 ]);
 
@@ -113,8 +124,8 @@ export const SATELLITE_FLEET = Object.freeze([
 export const BIOME_CATALOG = Object.freeze({
   amazon_pantanal: {
     id: 'amazon_pantanal',
-    nameEn: 'Amazon & Pantanal Wetlands (South America)',
-    nameEs: 'Amazonia y Humedales del Pantanal (Sudamérica)',
+    nameEn: 'Amazon & Pantanal (South America)',
+    nameEs: 'Amazonia y Pantanal (Sudamérica)',
     lat: -17.8,
     lon: -57.4,
     alpha: 0.42,
@@ -203,15 +214,12 @@ export const BIOME_CATALOG = Object.freeze({
   }
 });
 
-/**
- * Strict Weekly Climatological Z-Score Thresholds
- */
 export const Z_SCORE_THRESHOLDS = Object.freeze({
   BELOW_AVERAGE_MAX: 0.0,
   NORMAL_MAX: 1.0,
   ELEVATED_MAX: 2.0,
-  SIGNIFICANT_ANOMALY_MIN: 2.0, // p < 0.05
-  EXTREME_CRITICAL_MIN: 2.5     // p < 0.01
+  SIGNIFICANT_ANOMALY_MIN: 2.0,
+  EXTREME_CRITICAL_MIN: 2.5
 });
 
 export const TIMELINE_BOUNDS = Object.freeze({

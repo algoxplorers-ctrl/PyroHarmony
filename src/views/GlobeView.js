@@ -1,4 +1,4 @@
-﻿/**
+﻿﻿/**
  * @file src/views/GlobeView.js
  * @description 3D NASA Blue Marble Earth View with Political Country Borders, Zoom-Adaptive
  * Country Labels, Geodesic AOI Tactical Radar Ring, Realistic 3D Satellites, and FRP Hotspots.
@@ -30,7 +30,17 @@ export class GlobeView {
     const c = document.createElement('canvas'); c.width = 2048; c.height = 1024;
     const ctx = c.getContext('2d'), ocean = ctx.createLinearGradient(0, 0, 0, 1024);
     ocean.addColorStop(0, '#04122c'); ocean.addColorStop(0.5, '#092c66'); ocean.addColorStop(1, '#04122c');
-    ctx.fillStyle = ocean; ctx.fillRect(0, 0, 2048, 1024); return new THREE.CanvasTexture(c);
+    ctx.fillStyle = ocean; ctx.fillRect(0, 0, 2048, 1024);
+    const drawLand = (pts, fill, stroke) => {
+      ctx.beginPath(); pts.forEach(([x, y], idx) => (idx === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y)));
+      ctx.closePath(); ctx.fillStyle = fill; ctx.fill(); ctx.strokeStyle = stroke; ctx.lineWidth = 2; ctx.stroke();
+    };
+    drawLand([[320,160],[540,140],[620,270],[540,390],[490,460],[430,410],[350,280]], '#2d5a3c', '#52796f');
+    drawLand([[520,470],[660,520],[710,630],[640,810],[560,890],[530,740],[495,570]], '#1f4e3d', '#40916c');
+    drawLand([[940,340],[1140,360],[1210,540],[1120,770],[1010,760],[960,560],[890,450]], '#4a5d3f', '#748cab');
+    drawLand([[950,170],[1350,140],[1680,220],[1620,420],[1320,440],[1120,330],[960,290]], '#2b4c3f', '#52796f');
+    drawLand([[1520,620],[1710,610],[1740,760],[1560,780]], '#5c4d3c', '#8d6e63');
+    return new THREE.CanvasTexture(c);
   }
   _initThreeScene() {
     const THREE = window.THREE, w = this.container.clientWidth || window.innerWidth, h = this.container.clientHeight || window.innerHeight;

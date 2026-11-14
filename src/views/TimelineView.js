@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file src/views/TimelineView.js
  * @description Renders the bottom Historical Timeline dock (2000-2026) and Top HUD
  * satellite constellation badge. Pure View layer.
@@ -17,6 +17,9 @@ export class TimelineView {
     this.yearValueEl = document.getElementById(elements.yearValueId);
     this.weekValueEl = document.getElementById(elements.weekValueId);
     this.hudSatsEl = document.getElementById(elements.hudSatsId);
+    this.calMasterSlider = document.getElementById('slider-cal-master');
+    this.calYearLabel = document.getElementById('label-cal-year');
+    this.calWeekLabel = document.getElementById('label-cal-week');
   }
 
   /**
@@ -33,12 +36,15 @@ export class TimelineView {
     if (this.weekSlider && Number(this.weekSlider.value) !== week) {
       this.weekSlider.value = String(week);
     }
-    if (this.masterSlider) {
-      const idx = (year - TIMELINE_BOUNDS.MIN_YEAR) * 52 + (week - 1);
-      if (Number(this.masterSlider.value) !== idx) {
-        this.masterSlider.value = String(idx);
-      }
+    const idx = (year - TIMELINE_BOUNDS.MIN_YEAR) * 52 + (week - 1);
+    if (this.masterSlider && Number(this.masterSlider.value) !== idx) {
+      this.masterSlider.value = String(idx);
     }
+    if (this.calMasterSlider && Number(this.calMasterSlider.value) !== idx) {
+      this.calMasterSlider.value = String(idx);
+    }
+    if (this.calYearLabel) this.calYearLabel.textContent = String(year);
+    if (this.calWeekLabel) this.calWeekLabel.textContent = ${week} / 52;
 
     if (this.yearValueEl) {
       this.yearValueEl.textContent = String(year);

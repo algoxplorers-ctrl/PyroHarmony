@@ -1,4 +1,10 @@
-﻿(function () {
+﻿/*!
+ * PyroHarmony v2.0.0 — Autonomous Production Bundle (app.bundle.js)
+ * NASA Space Apps Challenge 2026: "Harmonization of MODIS and VIIRS Hot Spots"
+ * Team AlgoXplorers (Argentina): @fajjaf, @cvizzioli, @gisesanchezj, @jcfernan99, @omegaredone
+ * Architecture: Strict MVC (<300 lines/module) | 100% Wolf Amendment Compliant | License: MIT
+ */
+(function () {
   "use strict";
 
   // =========================================================================
@@ -1139,7 +1145,7 @@ class FirmsDataService {
   // =========================================================================
   // MODULE: src/views/GlobeView.js
   // =========================================================================
-/**
+﻿/**
  * @file src/views/GlobeView.js
  * @description 3D NASA Blue Marble Earth View with Political Country Borders, Zoom-Adaptive
  * Country Labels, Geodesic AOI Tactical Radar Ring, Realistic 3D Satellites, and FRP Hotspots.
@@ -1777,6 +1783,9 @@ class TimelineView {
     this.yearValueEl = document.getElementById(elements.yearValueId);
     this.weekValueEl = document.getElementById(elements.weekValueId);
     this.hudSatsEl = document.getElementById(elements.hudSatsId);
+    this.calMasterSlider = document.getElementById('slider-cal-master');
+    this.calYearLabel = document.getElementById('label-cal-year');
+    this.calWeekLabel = document.getElementById('label-cal-week');
   }
 
   /**
@@ -1793,12 +1802,15 @@ class TimelineView {
     if (this.weekSlider && Number(this.weekSlider.value) !== week) {
       this.weekSlider.value = String(week);
     }
-    if (this.masterSlider) {
-      const idx = (year - TIMELINE_BOUNDS.MIN_YEAR) * 52 + (week - 1);
-      if (Number(this.masterSlider.value) !== idx) {
-        this.masterSlider.value = String(idx);
-      }
+    const idx = (year - TIMELINE_BOUNDS.MIN_YEAR) * 52 + (week - 1);
+    if (this.masterSlider && Number(this.masterSlider.value) !== idx) {
+      this.masterSlider.value = String(idx);
     }
+    if (this.calMasterSlider && Number(this.calMasterSlider.value) !== idx) {
+      this.calMasterSlider.value = String(idx);
+    }
+    if (this.calYearLabel) this.calYearLabel.textContent = String(year);
+    if (this.calWeekLabel) this.calWeekLabel.textContent = ${week} / 52;
 
     if (this.yearValueEl) {
       this.yearValueEl.textContent = String(year);
@@ -1918,6 +1930,11 @@ class TimelineController {
     this.prevBtn = document.getElementById('btn-step-prev');
     this.nextBtn = document.getElementById('btn-step-next');
     this.speedBtn = document.getElementById('btn-speed-toggle');
+    this.calMasterSlider = document.getElementById('slider-cal-master');
+    this.calPlayBtn = document.getElementById('btn-cal-play');
+    this.calPrevBtn = document.getElementById('btn-cal-prev');
+    this.calNextBtn = document.getElementById('btn-cal-next');
+    this.calSpeedBtn = document.getElementById('btn-cal-speed');
     this.onTimeChange = onTimeChange;
 
     this.currentYear = 2026;
@@ -1966,10 +1983,25 @@ class TimelineController {
         this.speedMultiplier =
           this.speedMultiplier === 1 ? 2 : this.speedMultiplier === 2 ? 4 : 1;
         this.speedBtn.textContent = `${this.speedMultiplier}x`;
-        if (this.playTimer) {
-          this.togglePlayback();
-          this.togglePlayback();
-        }
+        if (this.playTimer) { this.togglePlayback(); this.togglePlayback(); }
+      });
+    }
+    if (this.calMasterSlider) {
+      const totalWeeks = (TIMELINE_BOUNDS.MAX_YEAR - TIMELINE_BOUNDS.MIN_YEAR + 1) * 52 - 1;
+      this.calMasterSlider.min = '0';
+      this.calMasterSlider.max = String(totalWeeks);
+      this.calMasterSlider.addEventListener('input', (ev) => {
+        const idx = Number(ev.target.value);
+        this.setYearWeek(TIMELINE_BOUNDS.MIN_YEAR + Math.floor(idx / 52), (idx % 52) + 1);
+      });
+    }
+    if (this.calPlayBtn) this.calPlayBtn.addEventListener('click', () => this.togglePlayback());
+    if (this.calPrevBtn) this.calPrevBtn.addEventListener('click', () => this.stepWeeks(-1));
+    if (this.calNextBtn) this.calNextBtn.addEventListener('click', () => this.stepWeeks(1));
+    if (this.calSpeedBtn) {
+      this.calSpeedBtn.addEventListener('click', () => {
+        if (this.speedBtn) this.speedBtn.click();
+        this.calSpeedBtn.textContent = ${this.speedMultiplier}x;
       });
     }
   }
@@ -2004,11 +2036,11 @@ class TimelineController {
     if (this.playTimer) {
       clearInterval(this.playTimer);
       this.playTimer = null;
-      if (this.playBtn) this.playBtn.textContent = '▶';
+      if (this.playBtn) this.playBtn.textContent = '▶'; if (this.calPlayBtn) this.calPlayBtn.textContent = '▶';
       return;
     }
 
-    if (this.playBtn) this.playBtn.textContent = '⏸';
+    if (this.playBtn) this.playBtn.textContent = '⏸'; if (this.calPlayBtn) this.calPlayBtn.textContent = '⏸';
     this.playTimer = setInterval(() => {
       this.stepWeeks(1);
     }, Math.round(420 / this.speedMultiplier));

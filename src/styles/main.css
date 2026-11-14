@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file src/styles/main.css
  * @description Fullscreen Space Observatory & Glassmorphism HUD stylesheet for PyroHarmony v2.0.0,
  * featuring desktop Mission Control floating HUD and responsive Mobile/Tablet stacked layout.
@@ -182,4 +182,32 @@ body {
   .timeline-scrubber-track { width: 100%; order: 1; }
   .transport-controls { width: 100%; justify-content: flex-start; order: 2; }
   .timeline-center-title { display: none; }
+}
+
+/* CALENDAR MODAL TIMELINE DOCK (CLONED FROM PLANET DOCK) */
+.calendar-timeline-dock {
+  background: rgba(11, 20, 38, 0.95);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+}
+.calendar-dock-actions { display: flex; align-items: center; }
+@media (max-width: 960px) {
+  .calendar-timeline-dock { flex-direction: column; gap: 8px; padding: 10px; }
+  .calendar-timeline-dock .timeline-scrubber-track { width: 100%; order: 1; }
+  .calendar-timeline-dock .transport-controls { width: 100%; justify-content: flex-start; order: 2; }
+  .calendar-dock-actions { width: 100%; justify-content: flex-end; order: 3; }
+}
+.calendar-year-row.active-year-row {
+  background: rgba(0, 229, 255, 0.12);
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.25);
+}
+.calendar-year-row.active-year-row .calendar-year-label {
+  color: #00e5ff;
+  font-weight: 800;
 }

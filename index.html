@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -144,10 +144,24 @@
         <strong data-i18n="modal.calendar_title">PHENOLOGICAL BURNING ACTIVITY CALENDAR (52 WEEKS × 27 YEARS · 2000–2026)</strong>
         <button type="button" id="btn-close-calendar" class="modal-close-btn">✕</button>
       </div>
-      <div class="modal-sliders-subrow">
-        <label>Year: <input type="range" id="slider-year" min="2000" max="2026" value="2026" /></label>
-        <label>Week: <input type="range" id="slider-week" min="1" max="52" value="36" /></label>
-        <button type="button" id="btn-export-csv" class="top-action-btn">📊 Export CSV</button>
+            <div class="calendar-timeline-dock">
+        <div class="transport-controls">
+          <button type="button" id="btn-cal-prev" class="transport-btn" title="Previous Week">⏮</button>
+          <button type="button" id="btn-cal-play" class="transport-btn" title="Play / Pause">▶</button>
+          <button type="button" id="btn-cal-next" class="transport-btn" title="Next Week">⏭</button>
+          <button type="button" id="btn-cal-speed" class="transport-btn speed-btn" title="Playback Speed">1x</button>
+        </div>
+        <div class="timeline-scrubber-track">
+          <div class="timeline-labels-row">
+            <span><span>Year:</span> <strong id="label-cal-year">2026</strong></span>
+            <span class="timeline-center-title">Calendar Timeline Sync (2000 - 2026)</span>
+            <span><span>Week:</span> <strong id="label-cal-week">36 / 52</strong></span>
+          </div>
+          <input type="range" id="slider-cal-master" class="master-range-slider" min="0" max="1403" value="1387" aria-label="Calendar Timeline Scrubber" />
+        </div>
+        <div class="calendar-dock-actions">
+          <button type="button" id="btn-export-csv" class="top-action-btn">📊 Export CSV</button>
+        </div>
       </div>
       <div id="burning-calendar-container"></div>
     </div>

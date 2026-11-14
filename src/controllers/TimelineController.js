@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file src/controllers/TimelineController.js
  * @description Controller orchestrating the bottom Historical Timeline dock (2000-2026),
  * transport buttons (Prev, Play/Pause, Next, 1x/2x/4x Speed), and Calendar modal sliders.
@@ -17,6 +17,11 @@ export class TimelineController {
     this.prevBtn = document.getElementById('btn-step-prev');
     this.nextBtn = document.getElementById('btn-step-next');
     this.speedBtn = document.getElementById('btn-speed-toggle');
+    this.calMasterSlider = document.getElementById('slider-cal-master');
+    this.calPlayBtn = document.getElementById('btn-cal-play');
+    this.calPrevBtn = document.getElementById('btn-cal-prev');
+    this.calNextBtn = document.getElementById('btn-cal-next');
+    this.calSpeedBtn = document.getElementById('btn-cal-speed');
     this.onTimeChange = onTimeChange;
 
     this.currentYear = 2026;
@@ -65,10 +70,25 @@ export class TimelineController {
         this.speedMultiplier =
           this.speedMultiplier === 1 ? 2 : this.speedMultiplier === 2 ? 4 : 1;
         this.speedBtn.textContent = `${this.speedMultiplier}x`;
-        if (this.playTimer) {
-          this.togglePlayback();
-          this.togglePlayback();
-        }
+        if (this.playTimer) { this.togglePlayback(); this.togglePlayback(); }
+      });
+    }
+    if (this.calMasterSlider) {
+      const totalWeeks = (TIMELINE_BOUNDS.MAX_YEAR - TIMELINE_BOUNDS.MIN_YEAR + 1) * 52 - 1;
+      this.calMasterSlider.min = '0';
+      this.calMasterSlider.max = String(totalWeeks);
+      this.calMasterSlider.addEventListener('input', (ev) => {
+        const idx = Number(ev.target.value);
+        this.setYearWeek(TIMELINE_BOUNDS.MIN_YEAR + Math.floor(idx / 52), (idx % 52) + 1);
+      });
+    }
+    if (this.calPlayBtn) this.calPlayBtn.addEventListener('click', () => this.togglePlayback());
+    if (this.calPrevBtn) this.calPrevBtn.addEventListener('click', () => this.stepWeeks(-1));
+    if (this.calNextBtn) this.calNextBtn.addEventListener('click', () => this.stepWeeks(1));
+    if (this.calSpeedBtn) {
+      this.calSpeedBtn.addEventListener('click', () => {
+        if (this.speedBtn) this.speedBtn.click();
+        this.calSpeedBtn.textContent = ${this.speedMultiplier}x;
       });
     }
   }
@@ -103,11 +123,11 @@ export class TimelineController {
     if (this.playTimer) {
       clearInterval(this.playTimer);
       this.playTimer = null;
-      if (this.playBtn) this.playBtn.textContent = '▶';
+      if (this.playBtn) this.playBtn.textContent = '▶'; if (this.calPlayBtn) this.calPlayBtn.textContent = '▶';
       return;
     }
 
-    if (this.playBtn) this.playBtn.textContent = '⏸';
+    if (this.playBtn) this.playBtn.textContent = '⏸'; if (this.calPlayBtn) this.calPlayBtn.textContent = '⏸';
     this.playTimer = setInterval(() => {
       this.stepWeeks(1);
     }, Math.round(420 / this.speedMultiplier));

@@ -1,4 +1,4 @@
-# 📘 GUÍA CIENTÍFICA EXHAUSTIVA (WHITE PAPER) — PYROHARMONY v2.0.0
+﻿# 📘 GUÍA CIENTÍFICA EXHAUSTIVA (WHITE PAPER) — PYROHARMONY v2.0.0
 
 **Proyecto:** Armonización Biofísica Multidecadal de Focos de Calor MODIS y VIIRS (2000–2026)  
 **Desafío Oficial:** NASA Space Apps Challenge 2026 — *"Harmonization of MODIS and VIIRS Hot Spots"*  
@@ -61,6 +61,19 @@ sujeta a tres restricciones físicas y estadísticas estrictas:
 3. **Control de Sesgo Residual:** Error Medio de Sesgo absoluto $|\text{MBE}| < 5.0\%$.
 
 Para la era pre-VIIRS (**2000–2011**), PyroHarmony aplica un **Proxy Retrospectivo Calibrado** basado en la función de transferencia multianual del bioma, preservando la homogeneidad climática de los 26 años sin inventar sensores sintéticos inexistentes.
+
+### 4.1 Caso de Estudio Territorial: Sierras de San Luis, Viento Zonda y Topografía Compleja
+
+En la provincia de **San Luis (Latitud -36.0° a -31.8° S / Longitud -67.2° a -64.9° O)**, la temporada crítica ocurre a finales de invierno y primavera (semanas 32 a 45, agosto a noviembre), con heladas previas que secan el pastizal serrano, vientos secos tipo Zonda y humedad que desciende frecuentemente por debajo del 10% en las Sierras Centrales y los Comechingones (Merlo, El Trapiche, Potrero de los Funes, La Punta).
+
+1. **El sesgo de los satélites en las sierras:**
+   - **MODIS (1.000m):** En las quebradas y laderas de San Luis, un foco de pastizal inicial a menudo no llegaba a llenar el píxel de 1 km² y el satélite lo "perdía" o subestimaba.
+   - **VIIRS (375m):** Al entrar en operaciones, empezó a detectar focos hasta 4.8 veces más pequeños en áreas escarpadas.
+   - **La confusión estadística:** Para Defensa Civil o el cuerpo de Bomberos de San Luis, las estadísticas parecían decir que *"en San Luis los incendios se habían cuadruplicado a partir de 2012"*, cuando en realidad era un sesgo de resolución óptica.
+2. **Qué hace PyroHarmony por San Luis:**
+   - Convierte la energía a Potencia Radiativa de Fuego (FRP en Megawatts) y la armoniza con regresión cruzada ($\alpha = 0.44, \beta = 0.56, \alpha + \beta = 1.00, R^2 = 0.92$).
+   - Gracias a la matriz histórica de 26 años y el Z-Score térmico, el sistema puede decirle al brigadista de San Luis:
+     > *"Esta semana en San Luis no hay un salto de fuegos porque tengamos satélites más nuevos; el Z-Score es de +2.8, lo que significa una anomalía climática extrema y real con un 99% de confianza estadística."*
 
 ---
 

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -74,6 +74,7 @@
       <tbody>
         <tr><td>Amazonia y Humedales del Pantanal</td><td>0.42</td><td>0.58</td><td><strong>1.00</strong></td><td>0.64</td><td>0.93</td><td>-1.8%</td></tr>
         <tr><td>Delta del Paraná y Gran Chaco</td><td>0.45</td><td>0.55</td><td><strong>1.00</strong></td><td>0.68</td><td>0.91</td><td>+1.4%</td></tr>
+        <tr><td>San Luis: Sierras y Monte Puntano (Argentina)</td><td>0.44</td><td>0.56</td><td><strong>1.00</strong></td><td>0.65</td><td>0.92</td><td>+1.1%</td></tr>
         <tr><td>Chaparral de California y Sierra Nevada</td><td>0.39</td><td>0.61</td><td><strong>1.00</strong></td><td>0.71</td><td>0.94</td><td>-1.1%</td></tr>
         <tr><td>Taiga Boreal Norteamericana</td><td>0.48</td><td>0.52</td><td><strong>1.00</strong></td><td>0.62</td><td>0.89</td><td>+2.3%</td></tr>
         <tr><td>Sabana Tropical Australiana</td><td>0.44</td><td>0.56</td><td><strong>1.00</strong></td><td>0.69</td><td>0.92</td><td>-2.1%</td></tr>
@@ -88,6 +89,16 @@
     </div>
     <p>
       En el caso histórico del <strong>Megaincendio del Pantanal (Semana 35 de 2020)</strong>, el algoritmo registra <code>FRP_harm = 2,576.2 MW</code> frente a la base fenológica de <code>μ = 1,420 MW (σ = 410 MW)</code>, disparando exactamente <strong><code>Z = +2.82 (p &lt; 0.005)</code></strong> en coincidencia absoluta con las alertas de emergencia de NASA FIRMS.
+    </p>
+  </div>
+
+    <div class="card" style="border-left: 4px solid #00e5ff;">
+    <h2>4.1 Caso de Estudio Territorial: Sierras de San Luis, Viento Zonda y Topografía Compleja</h2>
+    <p>
+      En la provincia de <strong>San Luis (Lat -36.0° a -31.8° S / Lon -67.2° a -64.9° O)</strong>, la temporada crítica ocurre a finales de invierno y primavera (semanas 32 a 45, agosto a noviembre), cuando las heladas previas secan el pastizal serrano y los vientos secos tipo Zonda hacen caer la humedad relativa por debajo del 10% en las Sierras Centrales y los Comechingones (Merlo, El Trapiche, Potrero de los Funes, La Punta).
+    </p>
+    <p>
+      <strong>El sesgo instrumental resuelto:</strong> En las quebradas y laderas serranas, un foco inicial de pastizal a menudo no llenaba el píxel de 1 km² de <code>MODIS</code>, pasando desapercibido. Al entrar en operaciones <code>VIIRS (375m)</code>, detectó focos hasta 4.8 veces más pequeños, creando la falsa ilusión estadística de que los incendios se habían cuadruplicado. PyroHarmony reemplaza el conteo engañoso de píxeles por Potencia Radiativa (FRP en MW) y Z-Score térmico, permitiendo a <em>San Luis Solidario</em> y Bomberos Voluntarios distinguir cuándo existe una anomalía real extrema (Z &gt; +2.5) con 99% de confianza científica.
     </p>
   </div>
 

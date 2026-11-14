@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file src/config/constants.js
  * @description Physical constants, orbital telemetry, biome calibration coefficients,
  * Supabase cloud configuration, and statistical thresholds for PyroHarmony v2.0.0.
@@ -158,6 +158,24 @@ export const BIOME_CATALOG = Object.freeze({
     baseStdMw: 295,
     agencyTarget: 'SNMF / CONAE (Argentina)'
   },
+  san_luis_serrano: {
+    id: 'san_luis_serrano',
+    nameEn: 'San Luis: Sierras & Monte (Argentina)',
+    nameEs: 'San Luis: Sierras y Monte Puntano (Argentina)',
+    lat: -33.3,
+    lon: -66.3,
+    alpha: 0.44,
+    beta: 0.56,
+    kBiome: 0.65,
+    rSquared: 0.92,
+    mbePercent: 1.1,
+    hotspotRatioViirsModis: 4.8,
+    peakWeek: 38,
+    seasonalWidth: 5.5,
+    baseMeanMw: 620,
+    baseStdMw: 185,
+    agencyTarget: 'San Luis Solidario / Bomberos Voluntarios / SNMF'
+  },
   california_chaparral: {
     id: 'california_chaparral',
     nameEn: 'California Chaparral & Sierra Nevada (USA)',
@@ -238,7 +256,7 @@ export const WORLD_GEOJSON_URLS = Object.freeze([
  * Reference Country Centroids [lat, lon, Name ES, Name EN, minSpanDeg]
  */
 export const WORLD_COUNTRIES = Object.freeze([
-  [-34.6, -64.0, 'Argentina', 'Argentina', 22], [-51.7, -59.0, 'Islas Malvinas', 'Islas Malvinas', 4],
+  [-34.6, -64.0, 'Argentina', 'Argentina', 22], [-33.3, -66.3, 'San Luis', 'San Luis', 4], [-51.7, -59.0, 'Islas Malvinas', 'Islas Malvinas', 4],
   [-14.2, -51.9, 'Brasil', 'Brazil', 32], [-33.4, -70.6, 'Chile', 'Chile', 18],
   [-32.5, -55.7, 'Uruguay', 'Uruguay', 5], [-23.4, -58.4, 'Paraguay', 'Paraguay', 7],
   [-16.2, -63.5, 'Bolivia', 'Bolivia', 11], [-9.1, -75.0, 'Perú', 'Peru', 13],

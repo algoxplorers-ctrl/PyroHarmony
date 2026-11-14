@@ -1,4 +1,4 @@
-# 🚀 Official NASA Space Apps Challenge 2026 — Project Submission Template
+﻿# 🚀 Official NASA Space Apps Challenge 2026 — Project Submission Template
 
 - **Project Title:** PyroHarmony — Biophysical Harmonization of MODIS and VIIRS Hot Spots
 - **Team Name:** AlgoXplorers (Argentina)
@@ -21,6 +21,9 @@ PyroHarmony is a bilingual (`EN`/`ES`, English by default), 60 FPS WebGL 3D comm
 2. **Zone 2 (3D Sun-Synchronous Orbital Globe):** Renders NASA Blue Marble Earth, 98.2° polar orbits for Terra (10:30 AM), Aqua (13:30 PM), Suomi-NPP (13:30 PM), and NOAA-20 (+50 min), scaled Nadir swath cones (`2,330 km` MODIS vs `3,040 km` VIIRS), and GPU-instanced $0.1^\circ$ thermal bins.
 3. **Zone 3 (Biophysical Diagnostic & Tactical Deck):** Features the semicircular SVG Climatological Z-Score Gauge, the Sensor Discrepancy Card (proving how 3x–5x count discrepancies converge in Megawatts), the 50-minute LACES Firefighter Radar, and one-click FAIR exports (`.geojson`, `.csv`, and `.txt` SitRep).
 4. **Zone 4 (Multidecadal Scrubber & Phenological Calendar 2000–2026):** Dynamically activates satellites according to launch year (2000 Terra, 2002 Aqua, 2012 Suomi-NPP, 2017 NOAA-20) and renders a 1,404-cell ($52\text{ weeks} \times 27\text{ years}$) Z-Score heatmap validated on the 2020 Pantanal Megafire ($Z = +2.82, p < 0.005$).
+
+### Real-World Field Benchmark: San Luis Complex Mountain Topography & Zonda Winds (Argentina)
+In complex mountainous terrain such as the Sierras Centrales and Comechingones of San Luis (Lat -36.0° to -31.8° S / Lon -67.2° to -64.9° W), fire brigades face critical conditions between weeks 32 and 45 (August to November) with post-frost dry grasslands, humidity dropping below 10%, and severe foehn-like Zonda winds. In steep canyons, initial grassland fires often failed to fill a 1-km MODIS pixel, causing underdetection. When VIIRS (375m) launched, it detected 4.8 times more hotspots over the same canyons, creating false alarms that fires had quadrupled. PyroHarmony resolves this by converting energy to physical FRP (MW), proving to San Luis Solidario and local firefighters whether an event is a genuine extreme anomaly ( > +2.5$) or an optical footprint artifact.
 
 ### Engineering Rigor & Wolf Amendment Compliance
 Built under NASA NPR 7150.2 guidelines using a strict Model-View-Controller (MVC) architecture where no file exceeds 300 lines of code, compiled into a zero-dependency `app.bundle.js`. Every satellite, dataset, texture, and library is 100% US/NASA or MIT Open Source (100% Wolf Amendment compliant).

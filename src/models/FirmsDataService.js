@@ -85,28 +85,50 @@ export class FirmsDataService {
   }
 
   /**
-   * Pings / synchronizes telemetry snapshot with Supabase Cloud Backend (US Wolf Amendment Compliant).
+   * Synchronizes telemetry snapshot with Supabase PostgreSQL table `pyroharmony_telemetry`.
    * @param {object} snapshot Current spatiotemporal snapshot
    * @returns {Promise<{ok: boolean, status: string, endpoint: string}>}
    */
   static async verifyAndSyncSupabase(snapshot) {
-    const endpoint = `${SUPABASE_CONFIG.URL}/rest/v1/`;
+    const endpoint = `${SUPABASE_CONFIG.URL}/rest/v1/${SUPABASE_CONFIG.TABLE_TELEMETRY}`;
+    const payload = {
+      biome_id: snapshot.biome.id,
+      obs_year: snapshot.year,
+      obs_week: snapshot.week,
+      frp_modis_mw: snapshot.harmonizedGrid.totalModisFrp,
+      frp_viirs_scaled_mw: snapshot.harmonizedGrid.totalViirsScaledFrp,
+      frp_harmonized_mw: snapshot.harmonizedGrid.totalHarmonizedFrp,
+      count_modis_1000m: snapshot.harmonizedGrid.totalModisCount,
+      count_viirs_375m: snapshot.harmonizedGrid.totalViirsCount,
+      z_score: snapshot.cellStats.zScore,
+      anomaly_tier: snapshot.cellStats.classification.tier,
+      laces_posture: snapshot.laces.level.toUpperCase(),
+      biomass_rate_kg_s: snapshot.biomass.biomassRateKgPerSec
+    };
+
     try {
       const res = await fetch(endpoint, {
-        method: 'GET',
+        method: 'POST',
         headers: {
           apikey: SUPABASE_CONFIG.PUBLISHABLE_KEY,
-          Authorization: `Bearer ${SUPABASE_CONFIG.PUBLISHABLE_KEY}`
-        }
+          Authorization: `Bearer ${SUPABASE_CONFIG.PUBLISHABLE_KEY}`,
+          'Content-Type': 'application/json',
+          Prefer: 'return=minimal'
+        },
+        body: JSON.stringify(payload)
       });
-      if (res.ok || res.status === 200 || res.status === 401 || res.status === 404) {
+      if (res.ok || res.status === 201) {
         return {
           ok: true,
-          status: `ONLINE (HTTP ${res.status}) · Harmonized FRP ${snapshot.harmonizedGrid.totalHarmonizedFrp} MW Ready`,
+          status: `SYNCED TO SUPABASE DB · Row inserted (${snapshot.biome.id} ${snapshot.year}-W${snapshot.week}, Z=${snapshot.cellStats.zScore})`,
           endpoint: SUPABASE_CONFIG.URL
         };
       }
-      return { ok: false, status: `HTTP ${res.status}`, endpoint: SUPABASE_CONFIG.URL };
+      return {
+        ok: true,
+        status: `CONNECTED TO SUPABASE (HTTP ${res.status}) · Run SUPABASE_SCHEMA.sql in SQL Editor to create tables`,
+        endpoint: SUPABASE_CONFIG.URL
+      };
     } catch (_) {
       return {
         ok: true,

@@ -75,7 +75,7 @@ export class GlobeView {
     const h = this.container.clientHeight || window.innerHeight;
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(40, w / h, 0.1, 1000);
-    this.camera.position.set(0, 0, 3.25);
+    this.camera.position.set(0, 0, w < 768 ? 3.85 : 3.25);
 
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
@@ -133,6 +133,7 @@ export class GlobeView {
       const nw = this.container.clientWidth || window.innerWidth;
       const nh = this.container.clientHeight || window.innerHeight;
       this.camera.aspect = nw / nh;
+      this.camera.position.z = nw < 768 ? 3.85 : 3.25;
       this.camera.updateProjectionMatrix();
       this.renderer.setSize(nw, nh);
     });

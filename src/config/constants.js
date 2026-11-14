@@ -228,3 +228,36 @@ export const TIMELINE_BOUNDS = Object.freeze({
   OVERLAP_START_YEAR: 2012,
   WEEKS_PER_YEAR: 52
 });
+
+export const WORLD_GEOJSON_URLS = Object.freeze([
+  'https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_110m_admin_0_countries.geojson',
+  'https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson'
+]);
+
+/**
+ * Reference Country Centroids [lat, lon, Name ES, Name EN, minSpanDeg]
+ */
+export const WORLD_COUNTRIES = Object.freeze([
+  [-34.6, -64.0, 'Argentina', 'Argentina', 22], [-51.7, -59.0, 'Islas Malvinas', 'Islas Malvinas', 4],
+  [-14.2, -51.9, 'Brasil', 'Brazil', 32], [-33.4, -70.6, 'Chile', 'Chile', 18],
+  [-32.5, -55.7, 'Uruguay', 'Uruguay', 5], [-23.4, -58.4, 'Paraguay', 'Paraguay', 7],
+  [-16.2, -63.5, 'Bolivia', 'Bolivia', 11], [-9.1, -75.0, 'Perú', 'Peru', 13],
+  [-1.8, -78.1, 'Ecuador', 'Ecuador', 6], [4.5, -74.2, 'Colombia', 'Colombia', 11],
+  [6.4, -66.5, 'Venezuela', 'Venezuela', 10], [23.6, -102.5, 'México', 'Mexico', 18],
+  [39.8, -98.5, 'Estados Unidos', 'United States', 35], [56.1, -106.3, 'Canadá', 'Canada', 40],
+  [40.4, -3.7, 'España', 'Spain', 9], [46.2, 2.2, 'Francia', 'France', 10],
+  [51.1, 10.4, 'Alemania', 'Germany', 9], [41.8, 12.5, 'Italia', 'Italy', 9],
+  [54.0, -2.0, 'Reino Unido', 'United Kingdom', 8], [52.0, 19.1, 'Polonia', 'Poland', 7],
+  [48.3, 31.1, 'Ucrania', 'Ukraine', 12], [61.5, 90.0, 'Rusia', 'Russia', 50],
+  [38.9, 35.2, 'Turquía', 'Turkey', 12], [26.8, 30.8, 'Egipto', 'Egypt', 11],
+  [28.0, 1.6, 'Argelia', 'Algeria', 18], [31.7, -7.0, 'Marruecos', 'Morocco', 9],
+  [9.0, 8.6, 'Nigeria', 'Nigeria', 11], [-4.0, 21.7, 'R. D. del Congo', 'DR Congo', 16],
+  [9.1, 40.4, 'Etiopía', 'Ethiopia', 11], [-6.3, 34.8, 'Tanzania', 'Tanzania', 10],
+  [-11.2, 17.8, 'Angola', 'Angola', 12], [-29.0, 24.0, 'Sudáfrica', 'South Africa', 14],
+  [-18.7, 46.8, 'Madagascar', 'Madagascar', 10], [23.8, 45.0, 'Arabia Saudita', 'Saudi Arabia', 16],
+  [32.4, 53.6, 'Irán', 'Iran', 14], [30.3, 69.3, 'Pakistán', 'Pakistan', 11],
+  [21.0, 78.0, 'India', 'India', 24], [35.8, 104.1, 'China', 'China', 34],
+  [46.8, 103.8, 'Mongolia', 'Mongolia', 16], [48.0, 66.9, 'Kazajistán', 'Kazakhstan', 20],
+  [-2.5, 118.0, 'Indonesia', 'Indonesia', 22], [36.2, 138.2, 'Japón', 'Japan', 10],
+  [-25.2, 133.7, 'Australia', 'Australia', 32], [-40.9, 174.8, 'Nueva Zelanda', 'New Zealand', 9]
+]);

@@ -1,5 +1,9 @@
 # 🛰️ PyroHarmony v2.0.0 — Biophysical Harmonization of MODIS & VIIRS Hot Spots
 
+<p align="center">
+  <img src="assets/icons/logo-official.png" alt="PyroHarmony Official Logo — NASA Space Apps 2026" width="260" style="border-radius: 18px;" />
+</p>
+
 [![NASA Space Apps 2026](https://img.shields.io/badge/NASA_Space_Apps-2026_Official_Challenge-0B3D91?style=for-the-badge&logo=nasa)](https://www.spaceappschallenge.org/)
 [![Version](https://img.shields.io/badge/SemVer-v2.0.0_Production-00E676?style=for-the-badge)](./CHANGELOG.md)
 [![Architecture](https://img.shields.io/badge/Architecture-Strict_MVC_(%3C300_LOC)-00E5FF?style=for-the-badge)](./REPLICATION_PLAYBOOK.md)

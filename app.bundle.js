@@ -2112,28 +2112,30 @@ class AppController {
       this.state.week = bm.week;
     }
 
-    this.calendarView.bindCellSelect((year, week) => {
-      this.timelineController.setYearWeek(year, week);
-    });
+    this.calendarView.bindCellSelect((year, week) => this.timelineController.setYearWeek(year, week));
 
-    i18n.onChange(() => {
-      this.aoiController.populateBiomeOptions();
-      this.refreshAllViews(true);
-    });
+    i18n.onChange(() => { this.aoiController.populateBiomeOptions(); this.refreshAllViews(true); });
 
     this.recomputeMatrixAndRefresh();
   }
 
   _initPwaAndServiceWorker() {
     if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
-      navigator.serviceWorker.register('./sw.js').catch(() => {});
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (!refreshing) { refreshing = true; window.location.reload(); }
+      });
+      navigator.serviceWorker.register('./sw.js').then((reg) => {
+        if (navigator.onLine) reg.update().catch(() => {});
+        setInterval(() => { if (navigator.onLine) reg.update().catch(() => {}); }, 120000);
+        document.addEventListener('visibilitychange', () => {
+          if (document.visibilityState === 'visible' && navigator.onLine) reg.update().catch(() => {});
+        });
+      }).catch(() => {});
     }
     this.deferredInstallPrompt = null;
     const installBtn = document.getElementById('btn-install-pwa');
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      this.deferredInstallPrompt = e;
-    });
+    window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); this.deferredInstallPrompt = e; });
     if (installBtn) {
       installBtn.addEventListener('click', async () => {
         if (this.deferredInstallPrompt) {
@@ -2141,11 +2143,8 @@ class AppController {
           await this.deferredInstallPrompt.userChoice;
           this.deferredInstallPrompt = null;
         } else {
-          const msg =
-            i18n.getLang() === 'es'
-              ? 'Para instalar PyroHarmony como App:\n• Android/PC (Chrome/Edge): Menú (⋮) ➔ "Instalar aplicación".\n• iPhone/iPad (Safari): Botón Compartir ➔ "Agregar a inicio".'
-              : 'To install PyroHarmony as a Native App:\n• Android/Desktop (Chrome/Edge): Browser Menu (⋮) ➔ "Install app".\n• iPhone/iPad (Safari): Share button ➔ "Add to Home Screen".';
-          alert(msg);
+          const isEs = i18n.getLang() === 'es';
+          alert(isEs ? 'Para instalar PyroHarmony:\n• Android/Chrome: Menú (⋮) -> "Instalar aplicación".\n• iPhone/Safari: Compartir -> "Agregar a inicio".' : 'To install PyroHarmony:\n• Android/Chrome: Menu (⋮) -> "Install app".\n• iPhone/Safari: Share -> "Add to Home Screen".');
         }
       });
     }

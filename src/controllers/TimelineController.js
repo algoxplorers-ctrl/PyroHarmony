@@ -88,7 +88,7 @@ export class TimelineController {
     if (this.calSpeedBtn) {
       this.calSpeedBtn.addEventListener('click', () => {
         if (this.speedBtn) this.speedBtn.click();
-        this.calSpeedBtn.textContent = ${this.speedMultiplier}x;
+        this.calSpeedBtn.textContent = `${this.speedMultiplier}x`;
       });
     }
   }

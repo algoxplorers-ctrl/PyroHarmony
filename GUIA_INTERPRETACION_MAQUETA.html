@@ -337,10 +337,7 @@
       <button onclick="window.print()" class="btn btn-primary">
         🖨️ Guardar en PDF / Imprimir
       </button>
-      <a href="COMMAND_MANUAL_4_ZONES.html" class="btn btn-outline">
-        🌐 Switch to English
-      </a>
-      <a href="index.html" class="btn btn-outline">
+      <a href="/" class="btn btn-outline">
         ⬅ Ir a la Aplicación
       </a>
     </div>
@@ -363,7 +360,7 @@
     <h2>1. Declaración de Alcance y Propósito del Sistema</h2>
     <div class="highlight-box">
       <strong>🎯 Propósito de la Plataforma:</strong><br>
-      PyroHarmony es una <strong>plataforma de armonización de datos biofísicos, modelado termodinámico y visualización geoespacial tridimensional</strong> diseñada para resolver la discontinuidad histórica de dos décadas entre los sensores MODIS y VIIRS.<br>
+      PyroHarmony es una <strong>plataforma de armonización de datos biofísicos, modelado termodinámico y visualización geoespacial tridimensional</strong> diseñada para resolver la discontinuidad histórica de 20 años entre los sensores MODIS y VIIRS.<br>
       Su objetivo central es demostrar la viabilidad de integrar telemetría heterogénea mediante la potencia radiativa del fuego (FRP en MW) y la detección de anomalías con un Z-Score climatológico estacional.
     </div>
     <ul>
@@ -418,7 +415,7 @@
           <div class="mockup-subtext">
             <strong>• Anomaly Gauge:</strong> Velocímetro semicircular de Z-Score climatológico.<br>
             <strong>• Sensor Discrepancy Card:</strong> Comparativa MODIS vs VIIRS (resolución del sesgo de píxeles).<br>
-            <strong>• Selector de Biomas:</strong> Amazonía, Pantanal, San Luis (Sierras y Monte), Chaco, Taiga.<br>
+            <strong>• Selector de Biomas:</strong> Amazonía, Chaco, California, Australia, Taiga.<br>
             <strong>• Generador SitRep:</strong> Reporte técnico descargable para brigadistas.
           </div>
         </div>
@@ -456,7 +453,7 @@
 
     <h3><span class="zone-badge z-gauge">ZONA 3</span> Sensor Discrepancy Card & Anomaly Gauge</h3>
     <ul>
-      <li><strong>Resolución del Sesgo Instrumental:</strong> Evidencia cuantitativamente la divergencia entre sensores: mientras el recuento de focos térmicos brutos se incrementa artificialmente entre 3x y 5x con VIIRS (375 m vs. 1.000 m), el <strong>FRP Armonizado en Megawatts</strong> se mantiene en el mismo orden de magnitud biofísico bajo la ley de conservación $\alpha + \beta = 1{,}00$.</li>
+      <li><strong>Resolución del Sesgo Instrumental:</strong> Evidencia cuantitativamente la divergencia entre sensores: mientras el recuento de focos térmicos brutos se incrementa artificialmente entre 3x y 5x con VIIRS (375 m vs. 1.000 m), el <strong>FRP Armonizado en Megawatts</strong> se mantiene en el mismo orden de magnitud biofísico.</li>
       <li><strong>Velocímetro Anomaly Gauge:</strong> Mide el desvío climatológico estandarizado $Z = \frac{\text{FRP}_{\text{harm}} - \mu}{\sigma}$ respecto al histórico de esa misma semana:
         <br>
         <span class="badge-pill pill-green">Z ≤ 0.0 (Bajo / Normal)</span>
@@ -467,15 +464,6 @@
       </li>
     </ul>
 
-    <!-- INTEGRACIÓN DE SAN LUIS EN LA ZONA 3 -->
-    <div class="highlight-box">
-      <strong>🏔️ Validación Territorial San Luis en Zona 3:</strong><br>
-      Al seleccionar la región de <strong>San Luis (Sierras y Monte)</strong>, el sistema ajusta los coeficientes ($\alpha = 0.44$, $\beta = 0.56$, $R^2 = 0.92$) para corregir la subdetección en laderas escarpadas bajo viento Zonda. En semanas críticas de sequía extrema, el velocímetro emite la alerta situacional validada:
-      <blockquote style="margin-top: 8px; font-style: italic; color: var(--accent-cyan); font-weight: 600;">
-        «El incremento de calor observado esta semana en San Luis no es un error óptico por cambio de satélites: el Z-Score de +2.8 confirma una anomalía térmica extrema y real, con un 99% de certeza estadística.»
-      </blockquote>
-    </div>
-
     <h3><span class="zone-badge z-cal">ZONA 4</span> Burning Activity Calendar (52 Semanas × 26 Años)</h3>
     <ul>
       <li><strong>Fenología del Fuego:</strong> Permite identificar con precisión en qué semanas del año inicia, alcanza su pico y finaliza la temporada de incendios de cada bioma.</li>
@@ -483,31 +471,10 @@
     </ul>
   </div>
 
-  <!-- SECCIÓN 4: RECORRIDO EN VIVO Y PROTO-USUARIOS -->
+  <!-- SECCIÓN 4: RECORRIDO EN VIVO -->
   <div class="card">
-    <h2>4. Metodología de Validación Operativa y Los 3 Proto-usuarios</h2>
-    <p>El flujo operativo del sistema responde directamente a los requerimientos de tres niveles de usuarios institucionales del mundo real:</p>
-
-    <!-- LOS 3 PROTO-USUARIOS -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; margin-bottom: 22px;">
-      <div style="background: rgba(11,61,145,0.25); border: 1px solid var(--card-border); border-radius: 10px; padding: 14px 16px;">
-        <strong style="color: var(--accent-cyan);">🔥 Nivel 1: Brigadista de Terreno</strong><br>
-        <span style="font-size: 0.85rem; color: var(--text-muted);">San Luis Solidario / Bomberos Voluntarios</span>
-        <p style="font-size: 0.88rem; margin-top: 8px; margin-bottom: 0;">Consulta el Anomaly Gauge y el radar táctico LACES (ventana de 50 min) para verificar si un frente térmico es seguro o exige repliegue inmediato.</p>
-      </div>
-      <div style="background: rgba(11,61,145,0.25); border: 1px solid var(--card-border); border-radius: 10px; padding: 14px 16px;">
-        <strong style="color: var(--accent-emerald);">🛰️ Nivel 2: Comandante Operativo</strong><br>
-        <span style="font-size: 0.85rem; color: var(--text-muted);">Servicio Nacional de Manejo del Fuego (SNMF)</span>
-        <p style="font-size: 0.88rem; margin-top: 8px; margin-bottom: 0;">Usa el mapa 3D y el generador de reportes SitRep para despachar aviones hidrantes y helibaldes hacia celdas de $11\text{ km}$ con anomalías $Z \ge 2.0$.</p>
-      </div>
-      <div style="background: rgba(11,61,145,0.25); border: 1px solid var(--card-border); border-radius: 10px; padding: 14px 16px;">
-        <strong style="color: var(--accent-purple);">🌱 Nivel 3: Científico Ambiental</strong><br>
-        <span style="font-size: 0.85rem; color: var(--text-muted);">NASA LCLUC / Ministerios de Ambiente</span>
-        <p style="font-size: 0.88rem; margin-top: 8px; margin-bottom: 0;">Audita el Burning Calendar de 26 años para estudiar cómo el cambio climático ha adelantado las semanas críticas de sequía de 2000 a 2026.</p>
-      </div>
-    </div>
-
-    <h3>Flujo de Demostración Operativa en 3 Etapas:</h3>
+    <h2>4. Metodología de Validación Operativa y Flujo de Demostración</h2>
+    <p>El flujo operativo del sistema puede verificarse mediante una secuencia analítica en tres etapas:</p>
 
     <div class="step-box">
       <div class="step-title">
@@ -515,7 +482,7 @@
         <span>Demostración de la Discrepancia Óptica Instrumental (Era MODIS vs. Era VIIRS)</span>
       </div>
       <p style="font-size: 0.92rem; color: var(--text-muted); margin-bottom: 0;">
-        Al seleccionar una región de estudio como <strong>Amazonía y Pantanal</strong> o <strong>San Luis</strong> y desplazar la línea temporal desde el año <strong>2010</strong> (era exclusiva de MODIS) hacia el año <strong>2014</strong> (era combinada con VIIRS), se evidencia cómo el recuento simple de focos térmicos se incrementa de 3 a 5 veces debido a la mayor resolución espacial (375 m vs. 1.000 m). Simultáneamente, se constata que la métrica de <strong>FRP Armonizado en Megawatts se preserva en una escala física continua y comparable</strong>, suprimiendo la discontinuidad instrumental.
+        Al seleccionar una región de estudio como <strong>Amazonía y Pantanal</strong> y desplazar la línea temporal desde el año <strong>2010</strong> (era exclusiva de MODIS) hacia el año <strong>2014</strong> (era combinada con VIIRS), se evidencia cómo el recuento simple de focos térmicos se incrementa de 3 a 5 veces debido a la mayor resolución espacial (375 m vs. 1.000 m). Simultáneamente, se constata que la métrica de <strong>FRP Armonizado en Megawatts se preserva en una escala física continua y comparable</strong>, suprimiendo la discontinuidad instrumental.
       </p>
     </div>
 
@@ -525,7 +492,7 @@
         <span>Evaluación de la Variabilidad Estacional Mediante Z-Score Climatológico</span>
       </div>
       <p style="font-size: 0.92rem; color: var(--text-muted); margin-bottom: 0;">
-        Al consultar una celda correspondiente a semanas de régimen húmedo (por ejemplo, Semana 15), el sistema indica variabilidad normal dentro del rango climatológico esperado. En contraste, al seleccionar una semana de régimen severo de sequía (por ejemplo, Semana 35 del año 2020 en Pantanal o Semana 38 en San Luis), el indicador de anomalía refleja una desviación superior a $Z \ge 2.0$ ($p < 0.05$), identificando estadísticamente un episodio fuera de la norma histórica de 26 años.
+        Al consultar una celda correspondiente a semanas de régimen húmedo (por ejemplo, Semana 15), el sistema indica variabilidad normal dentro del rango climatológico esperado. En contraste, al seleccionar una semana de régimen severo de sequía (por ejemplo, Semana 35 del año 2020), el indicador de anomalía refleja una desviación superior a $Z \ge 2.0$ ($p < 0.05$), identificando estadísticamente un episodio fuera de la norma histórica de 26 años.
       </p>
     </div>
 

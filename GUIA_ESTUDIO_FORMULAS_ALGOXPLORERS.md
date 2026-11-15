@@ -1,8 +1,7 @@
-# Machete Científico & Formulario Maestro — AlgoXplorers
-> **Formulario Maestro, Matemáticas y Física de PyroHarmony**  
+# Formulario Maestro, Matemáticas y Física de PyroHarmony
+> **Este documento es una guía pedagógica diseñada paso a paso para que todo el equipo (José Alex, Carlos, Gisella, Juan Carlos y Maximiliano) domine cada ecuación, entienda el porqué de cada número y pueda responder con seguridad ante cualquier pregunta técnica.**  
 > **NASA Space Apps Challenge 2026** | *Harmonization of MODIS and VIIRS Hot Spots*  
-> **Equipo:** AlgoXplorers (Argentina)  
-> **Autores:** José Alex Fernández Montellanos (`@fajjaf`), Carlos Vizzioli (`@cvizzioli`), Sánchez Obando Gisella Elizabeth (`@gisesanchezj`), Juan Carlos Fernandez (`@jcfernan99`), Maximiliano Guevara (`@omegaredone`)
+> **Equipo:** AlgoXplorers (Argentina)
 
 ---
 

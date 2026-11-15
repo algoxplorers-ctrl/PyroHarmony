@@ -1,15 +1,8 @@
-﻿/*!
- * PyroHarmony v2.0.0 — Autonomous Production Bundle (app.bundle.js)
- * NASA Space Apps Challenge 2026: "Harmonization of MODIS and VIIRS Hot Spots"
- * Team AlgoXplorers (Argentina): @fajjaf, @cvizzioli, @gisesanchezj, @jcfernan99, @omegaredone
- * Architecture: Strict MVC (<300 lines/module) | 100% Wolf Amendment Compliant | License: MIT
- */
+﻿/*! PyroHarmony v2.0.0 — Autonomous Bundle (app.bundle.js) | Team AlgoXplorers (Argentina) | MIT License */
 (function () {
   "use strict";
 
-  // =========================================================================
-  // MODULE: src/config/constants.js
-  // =========================================================================
+  // === MODULE: src/config/constants.js ===
 /**
  * @file src/config/constants.js
  * @description Physical constants, orbital telemetry, biome calibration coefficients,
@@ -293,9 +286,7 @@ const WORLD_COUNTRIES = Object.freeze([
 ]);
 
 
-  // =========================================================================
-  // MODULE: src/config/i18n.js
-  // =========================================================================
+  // === MODULE: src/config/i18n.js ===
 /**
  * @file src/config/i18n.js
  * @description Bilingual Internationalization Service (EN default / ES dynamic toggle)
@@ -465,9 +456,7 @@ const I18nManager = I18nService;
 const i18n = new I18nService(DEFAULT_LANGUAGE);
 
 
-  // =========================================================================
-  // MODULE: src/models/BiofireModel.js
-  // =========================================================================
+  // === MODULE: src/models/BiofireModel.js ===
 /**
  * @file src/models/BiofireModel.js
  * @description Pure biophysical radiative model implementing Stefan-Boltzmann sub-pixel
@@ -592,9 +581,7 @@ class BiofireModel {
 }
 
 
-  // =========================================================================
-  // MODULE: src/models/HarmonizationModel.js
-  // =========================================================================
+  // === MODULE: src/models/HarmonizationModel.js ===
 /**
  * @file src/models/HarmonizationModel.js
  * @description Spatial binning (0.1° x 0.1° homogeneous grid), orthogonal cross-sensor
@@ -756,9 +743,7 @@ class HarmonizationModel {
 }
 
 
-  // =========================================================================
-  // MODULE: src/models/ClimatologyModel.js
-  // =========================================================================
+  // === MODULE: src/models/ClimatologyModel.js ===
 /**
  * @file src/models/ClimatologyModel.js
  * @description Weekly Climatological Thermal Z-Score engine across the 52 weeks x 26 years
@@ -925,9 +910,7 @@ class ClimatologyModel {
 }
 
 
-  // =========================================================================
-  // MODULE: src/models/FirmsDataService.js
-  // =========================================================================
+  // === MODULE: src/models/FirmsDataService.js ===
 /**
  * @file src/models/FirmsDataService.js
  * @description Data ingestion, spatial synthesis, Supabase Cloud REST telemetry sync,
@@ -1142,9 +1125,7 @@ class FirmsDataService {
 }
 
 
-  // =========================================================================
-  // MODULE: src/views/GlobeView.js
-  // =========================================================================
+  // === MODULE: src/views/GlobeView.js ===
 ﻿/**
  * @file src/views/GlobeView.js
  * @description 3D NASA Blue Marble Earth View with Political Country Borders, Zoom-Adaptive
@@ -1433,9 +1414,7 @@ class GlobeView {
 }
 
 
-  // =========================================================================
-  // MODULE: src/views/AnomalyGaugeView.js
-  // =========================================================================
+  // === MODULE: src/views/AnomalyGaugeView.js ===
 /**
  * @file src/views/AnomalyGaugeView.js
  * @description Semicircular SVG Anomaly Speedometer View matching the exact PyroHarmony
@@ -1527,9 +1506,7 @@ class AnomalyGaugeView {
 }
 
 
-  // =========================================================================
-  // MODULE: src/views/SensorDiscrepancyView.js
-  // =========================================================================
+  // === MODULE: src/views/SensorDiscrepancyView.js ===
 /**
  * @file src/views/SensorDiscrepancyView.js
  * @description Renders the left-panel Radiative Telemetry summary, Optical vs. Physical
@@ -1648,9 +1625,7 @@ class SensorDiscrepancyView {
 }
 
 
-  // =========================================================================
-  // MODULE: src/views/CalendarView.js
-  // =========================================================================
+  // === MODULE: src/views/CalendarView.js ===
 /**
  * @file src/views/CalendarView.js
  * @description Renders the interactive 52 Weeks x 27 Years (2000-2026) Phenological
@@ -1771,9 +1746,7 @@ class CalendarView {
 }
 
 
-  // =========================================================================
-  // MODULE: src/views/TimelineView.js
-  // =========================================================================
+  // === MODULE: src/views/TimelineView.js ===
 /**
  * @file src/views/TimelineView.js
  * @description Renders the bottom Historical Timeline dock (2000-2026) and Top HUD
@@ -1845,9 +1818,7 @@ class TimelineView {
 }
 
 
-  // =========================================================================
-  // MODULE: src/controllers/AOIController.js
-  // =========================================================================
+  // === MODULE: src/controllers/AOIController.js ===
 /**
  * @file src/controllers/AOIController.js
  * @description Controller managing Biome Area of Interest (AOI) selection, bilingual
@@ -1918,9 +1889,7 @@ class AOIController {
 }
 
 
-  // =========================================================================
-  // MODULE: src/controllers/TimelineController.js
-  // =========================================================================
+  // === MODULE: src/controllers/TimelineController.js ===
 /**
  * @file src/controllers/TimelineController.js
  * @description Controller orchestrating the bottom Historical Timeline dock (2000-2026),
@@ -2064,9 +2033,7 @@ class TimelineController {
 }
 
 
-  // =========================================================================
-  // MODULE: src/controllers/AppController.js
-  // =========================================================================
+  // === MODULE: src/controllers/AppController.js ===
 /**
  * @file src/controllers/AppController.js
  * @description Root MVC Coordinator mediating between pure Models, declarative Views,
@@ -2364,9 +2331,7 @@ class AppController {
 }
 
 
-  // =========================================================================
-  // MODULE: src/main.js
-  // =========================================================================
+  // === MODULE: src/main.js ===
 /**
  * @file src/main.js
  * @description Application bootstrap entry point for PyroHarmony v2.0.0.

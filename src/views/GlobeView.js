@@ -73,12 +73,12 @@ export class GlobeView {
     this.scene.add(new THREE.AmbientLight(0x90b4e8, 0.85));
     const sun = new THREE.DirectionalLight(0xffffff, 1.15); sun.position.set(4, 2, 5); this.scene.add(sun);
     const loader = new THREE.TextureLoader(); loader.setCrossOrigin('anonymous');
-    const earthMat = new THREE.MeshPhongMaterial({ map: this._createHighResProceduralEarth(THREE), specular: new THREE.Color(0x1e3a5f), shininess: 12 });
+    const earthMat = new THREE.MeshPhongMaterial({ map: this._createHighResProceduralEarth(THREE), specular: new THREE.Color(0x0d1f3a), shininess: 9 });
     loader.load('https://unpkg.com/three-globe@2.31.0/example/img/earth-blue-marble.jpg', (tex) => { earthMat.map = tex; earthMat.needsUpdate = true; });
     this.earthSphereMesh = new THREE.Mesh(new THREE.SphereGeometry(1.0, 64, 64), earthMat);
     this.earthGroup.add(this.earthSphereMesh);
-    const cloudMat = new THREE.MeshLambertMaterial({ color: 0xffffff, transparent: true, opacity: 0.16, depthWrite: false });
-    loader.load('https://unpkg.com/three-globe@2.31.0/example/img/earth-clouds.png', (cTex) => { cloudMat.map = cTex; cloudMat.alphaMap = cTex; cloudMat.opacity = 0.35; cloudMat.needsUpdate = true; });
+    const cloudMat = new THREE.MeshLambertMaterial({ color: 0xffffff, transparent: true, opacity: 0.04, depthWrite: false });
+    loader.load('https://unpkg.com/three-globe@2.31.0/example/img/earth-clouds.png', (cTex) => { cloudMat.map = cTex; cloudMat.opacity = 0.05; cloudMat.needsUpdate = true; });
     this.cloudsMesh = new THREE.Mesh(new THREE.SphereGeometry(1.014, 48, 48), cloudMat); this.earthGroup.add(this.cloudsMesh);
     this.earthGroup.add(new THREE.Mesh(new THREE.SphereGeometry(1.055, 48, 48), new THREE.MeshBasicMaterial({ color: 0x1d70ff, transparent: true, opacity: 0.16, side: THREE.BackSide, depthWrite: false })));
     this._buildCountryBordersAndLabels(THREE); this._buildSanLuisCartography(THREE); this._buildOrbitsAndSatellites(THREE); this._buildHotspotMeshes(THREE);
@@ -618,7 +618,7 @@ export class GlobeView {
       this.earthGroup.rotation.x += (this.rotationTarget.x - this.earthGroup.rotation.x) * 0.1;
     }
     const zDist = this.camera.position.z;
-    if (this.cloudsMesh) { this.cloudsMesh.rotation.y += 0.00025; this.cloudsMesh.material.opacity = zDist < 1.9 ? 0.0 : zDist < 2.5 ? 0.10 : 0.32; }
+    if (this.cloudsMesh) { this.cloudsMesh.rotation.y += 0.00025; this.cloudsMesh.material.opacity = zDist < 1.9 ? 0.0 : 0.05; }
     const zoomFactor = Math.max(0, Math.min(1, (zDist - 1.35) / 1.75));
     if (this.bordersMat) this.bordersMat.opacity = 0.52 + 0.22 * zoomFactor;
     if (this.borderTexMat) this.borderTexMat.opacity = zDist < 1.75 ? 0.0 : 0.06 + 0.58 * zoomFactor;

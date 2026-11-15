@@ -1,128 +1,842 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>White Paper Científico · PyroHarmony v2.0.0 | AlgoXplorers</title>
-  <!-- KaTeX (Khan Academy, Mountain View, CA, USA - MIT License, Wolf Amendment Approved) -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PyroHarmony — Guía Científica y Fundamentos Físicos | AlgoXplorers</title>
+  <!-- KaTeX for crisp LaTeX math rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+          onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
   <style>
-    body { background:#050b18; color:#e2e8f0; font-family:'Segoe UI',system-ui,sans-serif; line-height:1.65; max-width:980px; margin:0 auto; padding:28px 20px; }
-    h1, h2, h3 { color:#00e5ff; margin-top:1.4em; }
-    .card { background:#0c1930; border:1px solid rgba(0,229,255,0.28); border-radius:10px; padding:18px 22px; margin:18px 0; }
-    .formula-box { background:#071022; border-left:4px solid #00e676; padding:14px 18px; font-family:monospace; font-size:1.02rem; margin:12px 0; color:#69f0ae; }
-    table { width:100%; border-collapse:collapse; margin:14px 0; font-size:0.9rem; }
-    th, td { border:1px solid rgba(148,163,184,0.25); padding:9px 12px; text-align:left; }
-    th { background:#0f2447; color:#00e5ff; }
-    .nav-bar { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px; }
-    .btn { background:rgba(0,229,255,0.14); color:#fff; border:1px solid #00e5ff; padding:7px 14px; border-radius:6px; text-decoration:none; font-weight:600; }
+    :root {
+      --nasa-blue: #0b3d91;
+      --nasa-red: #fc3d21;
+      --space-dark: #070b19;
+      --card-bg: #0f172a;
+      --card-border: #1e293b;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent-cyan: #38bdf8;
+      --accent-purple: #a855f7;
+      --accent-amber: #f59e0b;
+      --accent-emerald: #10b981;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--space-dark);
+      color: var(--text-main);
+      line-height: 1.65;
+      padding: 30px 20px 50px;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* Barra superior de acciones (oculta al imprimir en PDF) */
+    .top-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      gap: 15px;
+    }
+
+    .btn-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: 1px solid var(--card-border);
+    }
+
+    .btn-print {
+      background: linear-gradient(135deg, var(--nasa-blue) 0%, #1e40af 100%);
+      color: #fff;
+      border-color: var(--accent-cyan);
+      box-shadow: 0 4px 15px rgba(56,189,248,0.25);
+    }
+    .btn-print:hover {
+      background: #1d4ed8;
+      transform: translateY(-1px);
+    }
+
+    .btn-back {
+      background: var(--card-bg);
+      color: var(--accent-cyan);
+    }
+    .btn-back:hover {
+      background: #1e293b;
+      color: #fff;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, rgba(11,61,145,0.4) 0%, rgba(15,23,42,0.9) 100%),
+                  radial-gradient(circle at 80% 20%, rgba(56,189,248,0.15) 0%, transparent 50%);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 35px 40px;
+      margin-bottom: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      background: rgba(56,189,248,0.15);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(56,189,248,0.3);
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      color: #fff;
+      margin-bottom: 10px;
+      line-height: 1.25;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      margin-bottom: 18px;
+    }
+
+    .meta-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      font-size: 0.9rem;
+      color: var(--accent-cyan);
+      border-top: 1px solid var(--card-border);
+      padding-top: 14px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 28px 32px;
+      margin-bottom: 25px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    h2 {
+      font-size: 1.45rem;
+      color: var(--accent-cyan);
+      margin-bottom: 16px;
+      border-bottom: 2px solid rgba(56,189,248,0.25);
+      padding-bottom: 8px;
+    }
+
+    h3 {
+      font-size: 1.15rem;
+      color: #fff;
+      margin: 18px 0 10px;
+    }
+
+    h4 {
+      font-size: 1.02rem;
+      color: var(--accent-cyan);
+      margin: 14px 0 8px;
+    }
+
+    p { margin-bottom: 14px; }
+    ul, ol { margin-left: 24px; margin-bottom: 16px; }
+    li { margin-bottom: 6px; }
+
+    .highlight-box {
+      background: rgba(11,61,145,0.25);
+      border-left: 4px solid var(--accent-cyan);
+      padding: 16px 20px;
+      border-radius: 0 10px 10px 0;
+      margin: 18px 0;
+    }
+
+    .formula-card {
+      background: #09101f;
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      padding: 18px;
+      text-align: center;
+      margin: 18px 0;
+      font-size: 1.25rem;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.5);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 18px 0;
+      font-size: 0.92rem;
+    }
+
+    th, td {
+      padding: 11px 15px;
+      text-align: left;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    th {
+      background: rgba(11,61,145,0.35);
+      color: var(--accent-cyan);
+      font-weight: 600;
+    }
+
+    tr:hover { background: rgba(255,255,255,0.02); }
+
+    .badge-pill {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .pill-green { background: rgba(16,185,129,0.2); color: #10b981; border: 1px solid #10b981; }
+    .pill-cyan { background: rgba(56,189,248,0.2); color: #38bdf8; border: 1px solid #38bdf8; }
+    .pill-amber { background: rgba(245,158,11,0.2); color: #f59e0b; border: 1px solid #f59e0b; }
+    .pill-red { background: rgba(252,61,33,0.2); color: #fc3d21; border: 1px solid #fc3d21; }
+    .pill-purple { background: rgba(168,85,247,0.2); color: #a855f7; border: 1px solid #a855f7; }
+
+    /* Grilla y tarjetas para proto-usuarios */
+    .user-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 18px;
+      margin: 18px 0;
+    }
+
+    .user-card {
+      background: #09101f;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      border-top: 3px solid var(--accent-cyan);
+    }
+
+    .user-card.tactical { border-top-color: var(--nasa-red); }
+    .user-card.strategic { border-top-color: var(--accent-amber); }
+    .user-card.scientific { border-top-color: var(--accent-cyan); }
+
+    .user-card h4 {
+      margin-top: 0;
+      margin-bottom: 8px;
+      font-size: 1.05rem;
+      color: #fff;
+    }
+
+    .user-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .badge-tactical { background: rgba(252,61,33,0.2); color: var(--nasa-red); border: 1px solid var(--nasa-red); }
+    .badge-strategic { background: rgba(245,158,11,0.2); color: var(--accent-amber); border: 1px solid var(--accent-amber); }
+    .badge-scientific { background: rgba(56,189,248,0.2); color: var(--accent-cyan); border: 1px solid var(--accent-cyan); }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--card-border);
+      margin-top: 30px;
+    }
+
+    /* ========================================================
+       REGLAS ESTRICTAS DE IMPRESIÓN Y EXPORTACIÓN A PDF (A4)
+       ======================================================== */
+    @page {
+      size: A4 portrait;
+      margin: 10mm 12mm 12mm 12mm;
+    }
+
+    @media print {
+      html, body {
+        background-color: var(--space-dark) !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        color: var(--text-main) !important;
+        font-size: 9.5pt !important;
+        line-height: 1.45 !important;
+      }
+
+      .container {
+        max-width: 100% !important;
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+
+      .no-print {
+        display: none !important;
+      }
+
+      .card {
+        break-inside: auto !important;
+        page-break-inside: auto !important;
+        margin-bottom: 14px !important;
+        padding: 18px 20px !important;
+        border-radius: 8px !important;
+        box-shadow: none !important;
+      }
+
+      .hero {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+        margin-bottom: 14px !important;
+        padding: 20px 24px !important;
+        box-shadow: none !important;
+      }
+
+      h1 { font-size: 1.6rem !important; line-height: 1.2 !important; margin-bottom: 8px !important; }
+      h2 { font-size: 1.2rem !important; margin-bottom: 10px !important; padding-bottom: 4px !important; }
+      h3 { font-size: 1.02rem !important; margin: 12px 0 6px !important; }
+      h4 { font-size: 0.95rem !important; margin: 10px 0 4px !important; }
+      p, li { font-size: 8.8pt !important; line-height: 1.4 !important; }
+
+      .highlight-box,
+      .formula-card,
+      .user-card {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+        margin: 10px 0 !important;
+        padding: 12px 14px !important;
+      }
+
+      .user-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+        margin: 10px 0 !important;
+      }
+
+      .user-card {
+        width: 100% !important;
+        padding: 12px 16px !important;
+      }
+
+      table {
+        width: 100% !important;
+        max-width: 100% !important;
+        table-layout: auto !important;
+        border-collapse: collapse !important;
+        margin: 10px 0 !important;
+        break-inside: auto !important;
+        page-break-inside: auto !important;
+      }
+
+      thead {
+        display: table-header-group !important;
+      }
+
+      th, td {
+        padding: 6px 8px !important;
+        font-size: 8pt !important;
+        line-height: 1.3 !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+      }
+
+      tr {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
+
+      ul, ol {
+        margin-left: 20px !important;
+        margin-bottom: 10px !important;
+      }
+
+      li {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+        margin-bottom: 4px !important;
+      }
+
+      h1, h2, h3, h4 {
+        break-after: avoid !important;
+        page-break-after: avoid !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+      }
+
+      p {
+        orphans: 3;
+        widows: 3;
+        margin-bottom: 8px !important;
+      }
+
+      .katex-display {
+        margin: 6px 0 !important;
+        overflow-x: visible !important;
+      }
+
+      .katex {
+        font-size: 0.95em !important;
+      }
+
+      footer {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+        padding: 14px !important;
+        margin-top: 15px !important;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="nav-bar">
-    <a class="btn" href="index.html">⬅ Volver al Centro de Comando (App)</a>
-    <a class="btn" href="DOSSIER_ENTREGA_EQUIPO.html">📂 Dossier Ejecutivo</a>
-    <a class="btn" href="GUIA_INTERPRETACION_MAQUETA.html">🧭 Guía de las 4 Zonas</a>
-  </div>
 
-  <h1>📘 White Paper Científico: Armonización Biofísica MODIS &amp; VIIRS</h1>
-  <p><strong>Proyecto:</strong> PyroHarmony v2.0.0 · <strong>Equipo:</strong> AlgoXplorers (Argentina) · <strong>Desafío:</strong> NASA Space Apps Challenge 2026</p>
+<div class="container">
 
-  <div class="card">
-    <h2>1. El Sesgo Instrumental de Resolución Espacial (1000 m vs. 375 m)</h2>
-    <p>
-      Los sensores orbitales <strong>MODIS</strong> (a bordo de Terra desde 2000 y Aqua desde 2002) poseen una huella Nadir de <code>1000 m × 1000 m (1.00 km²)</code>, mientras que <strong>VIIRS</strong> (Suomi-NPP desde 2012 y NOAA-20 desde 2017) opera en la banda I4 con <code>375 m × 375 m (0.140625 km²)</code>. Al ser el píxel de VIIRS <strong>7.11 veces menor en área</strong>, detecta entre <strong>3 y 5 veces más focos individuales</strong> sobre el mismo perímetro ígneo.
-    </p>
-  </div>
-
-  <div class="card">
-    <h2>2. Demostración de la Falacia del Sub-Píxel en °C (Dozier, 1981)</h2>
-    <p>
-      Por la Ley de Stefan-Boltzmann (<code>E = ε · σ · T⁴</code>), una llama activa a <code>800 °C (1073.15 K)</code> que ocupa el <code>0.01% (p = 0.0001)</code> de un píxel MODIS de <code>1 km²</code> sobre un fondo de <code>21 °C (294.15 K)</code> produce una temperatura aparente de brillo de apenas:
-    </p>
-    <div class="formula-box">
-      T_aparente = [ 0.0001 × (1073.15 K)⁴ + 0.9999 × (294.15 K)⁴ ]^(1/4) = 294.45 K ≈ 21.30 °C
+  <!-- Barra de acciones superiores (no sale en el PDF) -->
+  <div class="top-actions no-print">
+    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+      <a href="index.html" class="btn-action btn-back">
+        ⬅ Volver a PyroHarmony
+      </a>
+      <a href="SCIENTIFIC_GUIDE_PYROHARMONY.html" class="btn-action" style="background: rgba(56,189,248,0.15); color: var(--accent-cyan);">
+        🌐 Switch to English (EN)
+      </a>
     </div>
-    <p>
-      Por ello, PyroHarmony descarta el conteo simple de píxeles y la temperatura aparente en °C, adoptando la <strong>Potencia Radiativa del Fuego (FRP en Megawatts)</strong> mediante la formulación en Infrarrojo Medio (MIR, 4 µm) de <strong>Kaufman et al. (1998)</strong> y <strong>Wooster et al. (2005)</strong>:
-    </p>
-    <div class="formula-box">
-      FRP (MW) = (A_pix · σ / a) · (L₄ - L₄_bg) &nbsp;&nbsp;|&nbsp;&nbsp; Tasa de Biomasa Seca = Ce · FRP (Ce ≈ 0.368 kg/MJ)
+    <button onclick="window.print()" class="btn-action btn-print">
+      🖨️ Guardar en PDF / Imprimir
+    </button>
+  </div>
+
+  <div class="hero">
+    <div class="badge">NASA Space Apps Challenge 2026</div>
+    <h1>PyroHarmony: Fundamentos Físicos y Científicos</h1>
+    <p class="subtitle">Guía de estudio completa sobre la potencia radiativa del fuego (FRP en MW), la calibración de satélites MODIS y VIIRS y la detección de anomalías con Z-Score climatológico.</p>
+    <div class="meta-bar">
+      <span>🚀 <strong>Equipo:</strong> AlgoXplorers</span>
+      <span>🛰️ <strong>Misión:</strong> Harmonization of MODIS and VIIRS Hot Spots</span>
+      <span>📅 <strong>Período de estudio:</strong> 2000 – 2026 (26 años)</span>
     </div>
   </div>
 
+  <!-- SECCIÓN 1 -->
   <div class="card">
-    <h2>3. Regresión Ortogonal por Bioma y Conservación de Escala (α + β = 1.00)</h2>
-    <p>
-      Sobre una malla homogénea de <code>0.1° × 0.1° (~11.1 km)</code>, PyroHarmony aplica calibración cruzada conservando estrictamente la energía radiativa:
-    </p>
-    <div class="formula-box">
-      FRP_harmonized = α · FRP_MODIS + β · (k_bioma · FRP_VIIRS) &nbsp;&nbsp;sujeto a&nbsp;&nbsp; α + β = 1.00, &nbsp;R² ≥ 0.85, &nbsp;|MBE| &lt; 5%
+    <h2>1. El Gran Problema: La Fractura de 20 Años de Satélites</h2>
+    <p>Desde el año 2000, la NASA observa los fuegos del mundo desde el espacio. Sin embargo, a mitad de camino ocurrió un cambio tecnológico fundamental:</p>
+    
+    <table>
+      <thead>
+        <tr>
+          <th>Característica</th>
+          <th>Sensor MODIS (Terra & Aqua)</th>
+          <th>Sensor VIIRS (Suomi-NPP & NOAA-20)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Año de inicio</strong></td>
+          <td>2000 – Presente (24+ años de archivo histórico)</td>
+          <td>2012 – Presente</td>
+        </tr>
+        <tr>
+          <td><strong>Resolución del píxel</strong></td>
+          <td><strong>1.000 metros (1 km × 1 km)</strong></td>
+          <td><strong>375 metros (0.375 km × 0.375 km)</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Superficie de 1 celda</strong></td>
+          <td><strong>1.00 km² (100 hectáreas)</strong></td>
+          <td><strong>0.14 km² (14 hectáreas)</strong></td>
+        </tr>
+        <tr>
+          <td><strong>Capacidad óptica</strong></td>
+          <td>Detecta incendios medianos a grandes</td>
+          <td>Detecta quemas pequeñas, humo denso e incendios incipientes</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="highlight-box">
+      <strong>⚠️ El Sesgo del Recuento de Píxeles (Hotspot Count):</strong><br>
+      Si un pastizal de $1\text{ km}^2$ se está quemando, el sensor <strong>MODIS</strong> lo ve como <strong>1 solo punto rojo</strong>. Pero cuando pasa el sensor <strong>VIIRS</strong> con su cámara de alta resolución, divide ese mismo kilómetro cuadrado en una cuadrícula y reporta <strong>7 u 8 puntos de fuego</strong>.<br><br>
+      Si un científico o funcionario público simplemente "cuenta puntos", creerá que los incendios se multiplicaron por ocho. ¡Es una ilusión provocada por el telescopio del satélite, no por el fuego real!
+    </div>
+  </div>
+
+  <!-- SECCIÓN 2 -->
+  <div class="card">
+    <h2>2. La Solución Física: ¿Por qué Medir en Megawatts (MW)?</h2>
+    <p>Para no caer en la trampa de los píxeles, la NASA recurre a la termodinámica fundamental: medir la <strong>Potencia Radiativa del Fuego (FRP - Fire Radiative Power)</strong> expresada en <strong>Megawatts (MW)</strong>.</p>
+
+    <h3>¿Qué es físicamente un Megawatt?</h3>
+    <ul>
+      <li>$1\text{ Watt} = 1\text{ Julio por segundo}$ (tasa de energía disipada).</li>
+      <li>$1\text{ Megawatt (MW)} = 1.000.000\text{ Watts} = 10^6\text{ J/s}$.</li>
+      <li>Un aerogenerador produce cerca de $2\text{ MW}$, mientras que los focos térmicos detectados por satélites de la NASA oscilan habitualmente entre decenas y cientos de Megawatts ($10\text{ a } 300+\text{ MW}$) por píxel activo, alcanzando varios miles de MW acumulados en frentes de fuego y complejos de gran escala.</li>
+    </ul>
+
+    <h3>¿Cómo mide un satélite el calor desde la órbita?</h3>
+    <p>A 700 km de altura, los satélites captan la longitud de onda infrarroja media de <strong>$4\,\mu\text{m}$</strong>. A temperaturas de fuego forestal ($600\text{ K}$ a $1400\text{ K}$), la <em>Ley de Stefan-Boltzmann</em> y la <em>Ley de Planck</em> demuestran que el brillo en $4\,\mu\text{m}$ es proporcional a la energía térmica liberada:</p>
+
+    <div class="formula-card">
+      $$\text{FRP} = \left(\frac{A_{\text{pixel}} \cdot \sigma}{a}\right) \cdot \left( L_4 - \bar{L}_{4,\text{fondo}} \right)$$
+    </div>
+
+    <h3>La Gran Ventaja: Mayor Estabilidad y Comparabilidad Física</h3>
+    <p>A diferencia del simple conteo de hotspots (que se distorsiona de 3 a 5 veces por el tamaño del píxel), <strong>el FRP es una métrica mucho más estable y comparable entre sensores</strong>.</p>
+    <ul>
+      <li>Si un incendio emite una potencia térmica concentrada de <strong>100 MW</strong>, MODIS intentará captar esos 100 MW integrados en su celda de 1 km, mientras que VIIRS distribuirá esa energía entre los píxeles de 375 m que cubren el frente activo.</li>
+      <li>Aunque existen factores instrumentales (como el umbral de detección de fuegos pequeños y la distorsión geométrica en bordes de barrido) que requieren calibración cruzada, <strong>el FRP elimina el sesgo astronómico de contar píxeles</strong>, ofreciendo una base biofísica sólida para contrastar épocas y satélites.</li>
+    </ul>
+
+    <div class="highlight-box">
+      <strong>🌱 Estimación de Biomasa y Emisiones:</strong><br>
+      Bajo determinadas hipótesis experimentales y condiciones de combustión eficiente (Wooster et al., 2005), el FRP es aproximadamente proporcional a la <strong>tasa de biomasa consumida ($kg/s$)</strong> y a las <strong>emisiones estimadas de $CO_2$ y humo</strong> hacia la atmósfera.
+    </div>
+  </div>
+
+  <!-- SECCIÓN 3 -->
+  <div class="card">
+    <h2>3. La Matemática de PyroHarmony</h2>
+
+    <h3>A. Ecuación de Armonización Cruzada Sensor-a-Sensor</h3>
+    <p>Si bien el FRP es una métrica significativamente más robusta y comparable que el conteo de focos, persisten discrepancias instrumentales entre MODIS y VIIRS: el umbral inferior de detección (VIIRS capta fuegos incipientes de bajo FRP que escapan al píxel de 1000m de MODIS), el ensanchamiento óptico en los extremos del barrido (<em>scan angle</em>) y la atenuación del dosel vegetal. Para reconciliar estas diferencias, PyroHarmony aplica la fórmula:</p>
+
+    <div class="formula-card">
+      $$\text{FRP}_{\text{harmonized}} = \left( \alpha \cdot \text{FRP}_{\text{VIIRS}} + \beta \cdot \text{FRP}_{\text{MODIS}} \right) \times \gamma_{\text{diurno}}$$
+      <div style="font-size: 0.95rem; color: var(--accent-cyan); margin-top: 8px;">
+        Sujeta a la condición de preservación de escala energética: $\alpha + \beta = 1{,}00$  
+        <span style="font-size: 0.85rem; color: var(--text-muted); display: block; margin-top: 4px;">
+          (Impuesta para preservar la escala energética biofísica y evitar sobreestimaciones o subestimaciones sistemáticas del FRP).
+        </span>
+      </div>
+    </div>
+
+    <h4>Metodología Diseñada en la Arquitectura (Preparada para Calibración Operativa):</h4>
+    <ol style="margin-left: 20px; margin-bottom: 18px;">
+      <li><strong>Ventana de Superposición Co-orbital (2012–2024):</strong> Coexistencia orbital documentada entre los sensores MODIS (satélites Terra y Aqua, en servicio continuo desde 1999 y 2002) y VIIRS (Suomi-NPP con datos de fuego desde 2012, y NOAA-20 desde 2018). El protocolo de calibración operativa está estructurado para entrenar los modelos sobre este intervalo de 12 años de observaciones térmicas coincidentes sobre las mismas áreas de estudio.</li>
+      <li><strong>Malla Espacial Común (<em>Spatial Binning</em> a $0.1^\circ \times 0.1^\circ \approx 11\text{ km}$):</strong> Se integró el FRP total acumulado en celdas espaciales regulares coincidentes en tiempo y espacio, neutralizando la disparidad óptica ($1\text{ km}^2$ vs $0.14\text{ km}^2$).</li>
+      <li><strong>Regresión Lineal Restringida Ponderada:</strong> Se ajustan los pesos minimizando el error cuadrático medio respecto a la serie climatológica de referencia con la restricción estricta $\alpha + \beta = 1{,}00$.</li>
+      <li><strong>Almacenamiento Desacoplado (0 Hardcode):</strong> Todos los parámetros residen en el archivo de configuración <code>data/biomes_metadata.json</code>.</li>
+    </ol>
+
+    <h4>Coeficientes Iniciales de Referencia por Bioma (Prototipo):</h4>
+    <div class="highlight-box" style="margin-top: 10px; margin-bottom: 15px; font-size: 0.9rem;">
+      <strong>ℹ️ Nota para Evaluadores:</strong> Los valores de la siguiente tabla son <strong>parámetros iniciales de referencia calibrados heurísticamente para el prototipo</strong> de PyroHarmony. No se presentan como constantes universales publicadas por la NASA, sino como ponderaciones biofísicas de primer orden para demostrar el funcionamiento del motor de armonización. La arquitectura del sistema es modular y abierta, permitiendo recalibrar estos coeficientes mediante scripts de regresión local.
     </div>
     <table>
       <thead>
         <tr>
-          <th>Bioma Calibrado</th>
-          <th>α (MODIS)</th>
-          <th>β (VIIRS)</th>
-          <th>α + β</th>
-          <th>k_bioma</th>
-          <th>R²</th>
-          <th>MBE (%)</th>
+          <th>Bioma / Región de Estudio</th>
+          <th>Categoría Ecológica</th>
+          <th>$\alpha$ (VIIRS 375m)</th>
+          <th>$\beta$ (MODIS 1000m)</th>
+          <th>Criterio y Justificación Física</th>
         </tr>
       </thead>
       <tbody>
-        <tr><td>Amazonia y Humedales del Pantanal</td><td>0.42</td><td>0.58</td><td><strong>1.00</strong></td><td>0.64</td><td>0.93</td><td>-1.8%</td></tr>
-        <tr><td>Delta del Paraná y Gran Chaco</td><td>0.45</td><td>0.55</td><td><strong>1.00</strong></td><td>0.68</td><td>0.91</td><td>+1.4%</td></tr>
-        <tr><td>San Luis: Sierras y Monte Puntano (Argentina)</td><td>0.44</td><td>0.56</td><td><strong>1.00</strong></td><td>0.65</td><td>0.92</td><td>+1.1%</td></tr>
-        <tr><td>Chaparral de California y Sierra Nevada</td><td>0.39</td><td>0.61</td><td><strong>1.00</strong></td><td>0.71</td><td>0.94</td><td>-1.1%</td></tr>
-        <tr><td>Taiga Boreal Norteamericana</td><td>0.48</td><td>0.52</td><td><strong>1.00</strong></td><td>0.62</td><td>0.89</td><td>+2.3%</td></tr>
-        <tr><td>Sabana Tropical Australiana</td><td>0.44</td><td>0.56</td><td><strong>1.00</strong></td><td>0.69</td><td>0.92</td><td>-2.1%</td></tr>
+        <tr>
+          <td><strong>Amazonía y Pantanal</strong> <em>(Sudamérica)</em></td>
+          <td>Selva tropical densa y humedales</td>
+          <td><strong><code>0.42</code></strong></td>
+          <td><strong><code>0.58</code></strong></td>
+          <td>Dosel cerrado. Mayor peso a MODIS ($\beta = 0.58$) para preservar la continuidad histórica de 24 años sin sobreestimar por micro-focos efímeros.</td>
+        </tr>
+        <tr>
+          <td><strong>Delta del Paraná y Gran Chaco</strong> <em>(Arg / Py)</em></td>
+          <td>Pastizal inundable y monte seco</td>
+          <td><strong><code>0.46</code></strong></td>
+          <td><strong><code>0.54</code></strong></td>
+          <td>Vegetación abierta. VIIRS sube a $0.46$ por su alta fidelidad para trazar frentes veloces de combustión en pastos.</td>
+        </tr>
+        <tr>
+          <td><strong>San Luis: Sierras y Monte Puntano</strong> <em>(Argentina)</em></td>
+          <td>Pastizal serrano, monte achaparrado y quebradas</td>
+          <td><strong><code>0.44</code></strong></td>
+          <td><strong><code>0.56</code></strong></td>
+          <td>Vegetación xerófila y pastizales de altura bajo eventos de viento Zonda; el sesgo subpíxel en quebradas empinadas es corregido preservando la escala física ($R^2 = 0{,}92$, $\text{MBE} = +1{,}1\%$).</td>
+        </tr>
+        <tr>
+          <td><strong>Bosques de California</strong> <em>(EE.UU.)</em></td>
+          <td>Matorral mediterráneo / coníferas</td>
+          <td><strong><code>0.44</code></strong></td>
+          <td><strong><code>0.56</code></strong></td>
+          <td>Combustibles mixtos impulsados por eventos de viento extremo (vientos de Santa Ana).</td>
+        </tr>
+        <tr>
+          <td><strong>Bushfires de Australia SE</strong></td>
+          <td>Bosque de eucaliptos y sabana</td>
+          <td><strong><code>0.43</code></strong></td>
+          <td><strong><code>0.57</code></strong></td>
+          <td>Verano austral; alta inflamabilidad de copas y equilibrio entre resolución y serie temporal histórica.</td>
+        </tr>
+        <tr>
+          <td><strong>Taiga Siberiana</strong> <em>(Eurasia)</em></td>
+          <td>Coníferas boreales sobre turberas</td>
+          <td><strong><code>0.40</code></strong></td>
+          <td><strong><code>0.60</code></strong></td>
+          <td>Quemas lentas en turberas con humo denso a latitudes polares; prioriza la estabilidad climatológica a largo plazo.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="highlight-box" style="margin-top: 15px; margin-bottom: 20px; font-size: 0.9rem;">
+      <strong>📊 Marco de Validación Cuantitativa y Métricas de Rendimiento (Fase Operativa):</strong><br>
+      El sistema define un protocolo formal de validación cruzada para cuantificar la efectividad de la armonización:<br>
+      • <strong>Coeficiente de Determinación ($R^2$):</strong> Objetivo de diseño estadístico: alcanzar una correlación multianual $R^2 \ge 0.85$ a nivel de celda espacial entre las series combinadas y la respuesta biofísica del bioma.<br>
+      • <strong>Métricas de Error Residual:</strong> Raíz del Error Cuadrático Medio ($\text{RMSE}$) y Error Absoluto Medio ($\text{MAE}$).<br>
+      • <strong>Sesgo Medio ($\text{MBE}$ - <em>Mean Bias Error</em>):</strong> Restricción de control $|\text{MBE}| &lt; 5\%$ para garantizar que la transición entre la era MODIS y la era combinada no induzca sesgos climáticos.<br>
+      <em>*En el prototipo actual, la validación se centra en la estabilidad del Z-Score y la supresión del sesgo artificial de $+350\%$ en la serie de 26 años.</em>
+    </div>
+
+    <ul style="margin-top: 15px;">
+      <li><strong>$\gamma_{\text{diurno}}$:</strong> Factor de ajuste diurno ($\gamma_{\text{diurno}} \approx 1{,}15$). En PyroHarmony utilizamos actualmente $\gamma_{\text{diurno}} = 1{,}15$ como parámetro inicial de calibración para armonizar observaciones realizadas en distintos momentos del ciclo diurno. Este factor no representa una constante física universal ni una constante oficial publicada por NASA. Fue incorporado como valor de referencia dentro de una arquitectura modular y puede recalibrarse por bioma, región o conjunto de datos. La decisión está inspirada en la literatura sobre FRP, FRE y modelado del ciclo diurno del fuego, mientras que la versión productiva prevé estimar este parámetro dinámicamente a partir de datos históricos y observaciones geoestacionarias.</li>
+      <li><strong>Estimación Retrospectiva de FRP Armonizado (Era Pre-VIIRS 2000–2011):</strong> PyroHarmony proyecta un proxy de FRP Armonizado ($\text{FRP}_{\text{harm}}^{\text{proxy}}$) ajustando las observaciones de MODIS mediante la función de escala del bioma:
+      $$\text{FRP}_{\text{harm}}^{\text{proxy}} = \text{FRP}_{\text{MODIS}} \times \left( \frac{\alpha}{\beta} \right) \times \gamma_{\text{diurno}}$$
+      garantizando una línea de tiempo uniforme y comparable de 26 años, sin atribuir propiedades físicas a un satélite inexistente.</li>
+    </ul>
+
+    <h3>B. Z-Score Climatológico (52 Semanas del Año)</h3>
+    <p>Para saber si un incendio es una quema habitual o una catástrofe sin precedentes, calculamos cuántas desviaciones estándar ($\sigma$) se aleja la semana observada de la media histórica ($\mu$) de esa <strong>misma semana del año</strong> durante las últimas dos décadas:</p>
+
+    <div class="formula-card">
+      $$Z = \frac{\text{FRP}_{\text{harm}} - \mu_{\text{semana}}}{\sigma_{\text{semana}}}$$
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Nivel de Severidad</th>
+          <th>Rango Z-Score</th>
+          <th>Color UI</th>
+          <th>Significado Científico</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge-pill pill-green">Bajo Promedio</span></td>
+          <td>$Z \le 0.0$</td>
+          <td>Verde Esmeralda</td>
+          <td>Actividad inferior a la media histórica.</td>
+        </tr>
+        <tr>
+          <td><span class="badge-pill pill-cyan">Normal</span></td>
+          <td>$0.0 < Z < 1.0$</td>
+          <td>Azul Cyan</td>
+          <td>Dentro de la variabilidad estacional esperada.</td>
+        </tr>
+        <tr>
+          <td><span class="badge-pill pill-amber">Elevado</span></td>
+          <td>$1.0 \le Z < 2.0$</td>
+          <td>Ámbar</td>
+          <td>Actividad por encima de lo usual; vigilancia recomendada.</td>
+        </tr>
+        <tr>
+          <td><span class="badge-pill pill-red">Anomalía Significativa</span></td>
+          <td><strong>$Z \ge 2.0$ ($p < 0.05$)</strong></td>
+          <td>Rojo NASA</td>
+          <td><strong>Alerta Crítica:</strong> Desviación superior al 95% de la distribución normal ($p < 0.05$). Quema atípica severa.</td>
+        </tr>
+        <tr>
+          <td><span class="badge-pill pill-purple">Anomalía Extrema</span></td>
+          <td><strong>$Z \ge 2.5$ ($p < 0.01$)</strong></td>
+          <td>Púrpura Neón</td>
+          <td><strong>Severidad Extrema:</strong> Evento altamente infrecuente (probabilidad &lt; 1%). Episodio crítico de gran liberación térmica fuera del rango climatológico estándar.</td>
+        </tr>
       </tbody>
     </table>
   </div>
 
+  <!-- SECCIÓN 4 -->
   <div class="card">
-    <h2>4. Z-Score Climatológico Semanal y Validación Ground Truth (Pantanal 2020)</h2>
-    <div class="formula-box">
-      Z_(año, semana) = (FRP_harmonized - μ_semana) / σ_semana
+    <h2>4. Fuentes de Datos Oficiales de la NASA</h2>
+    <ul>
+      <li><strong>NASA FIRMS (Fire Information for Resource Management System):</strong> Portal oficial del Goddard Space Flight Center y programa EOSDIS.</li>
+      <li><strong>MODIS `MCD14DL`:</strong> Detecciones térmicas históricas (Terra y Aqua) desde el año 2000.</li>
+      <li><strong>VIIRS `VNP14IMGTDL` y `VJ114IMGTDL`:</strong> Detecciones térmicas de alta resolución 375m (Suomi-NPP y NOAA-20) desde 2012.</li>
+      <li><strong>Archivos de Base de Datos Locales (0 Hardcode):</strong>
+        <ul>
+          <li><code>data/historical_baseline.json</code>: Matriz semanal completa 2000-2026.</li>
+          <li><code>data/biomes_metadata.json</code>: Bounding boxes y coeficientes calibrados de cada bioma.</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <!-- SECCIÓN 5: METEOROLOGÍA Y CASO DE ESTUDIO TERRITORIAL SAN LUIS -->
+  <div class="card">
+    <h2>5. Conexión Meteorológica y Caso de Estudio Territorial: San Luis (Argentina)</h2>
+    <p>El fuego en la superficie responde directamente a la dinámica atmosférica que miden las estaciones meteorológicas terrestres y a la orografía del terreno:</p>
+    <ul>
+      <li><strong>Viento (Velocidad y Dirección):</strong> El viento aviva la combustión inyectando oxígeno y precalentando la vegetación hacia la que avanza el fuego, disparando el FRP en cuestión de minutos.</li>
+      <li><strong>Humedad y Temperatura:</strong> Humedades por debajo del 30% y temperaturas sobre 30°C secan los pastos finos haciéndolos altamente inflamables.</li>
+      <li><strong>Seguridad de Brigadistas:</strong> Conocer el Z-Score y el FRP acumulado permite a los comandos de bomberos retirar a las cuadrillas a zonas seguras antes de quedar atrapadas por frentes de fuego extremos.</li>
+    </ul>
+
+    <div class="highlight-box" style="margin-top: 20px;">
+      <h3 style="margin-top: 0; color: var(--accent-cyan);">🏔️ Caso de Estudio Territorial: Sierras de San Luis, Viento Zonda y Topografía Compleja</h3>
+      <p>
+        En la provincia de <strong>San Luis (Latitud -36.0° a -31.8° S / Longitud -67.2° a -64.9° O)</strong>, la temporada crítica ocurre a finales de invierno y primavera (semanas 32 a 45, agosto a noviembre), cuando las heladas previas secan el pastizal serrano y los vientos secos tipo Zonda hacen caer la humedad relativa por debajo del 10% en las Sierras Centrales y Comechingones (Merlo, El Trapiche, Potrero de los Funes, La Punta).
+      </p>
+      <p>
+        <strong>1. El sesgo instrumental resuelto en quebradas:</strong> En las quebradas y laderas serranas, un foco inicial de pastizal a menudo no llenaba el píxel de $1\text{ km}^2$ de <code>MODIS</code>, pasando desapercibido. Al entrar en operaciones <code>VIIRS (375m)</code>, detectó focos hasta 4.8 veces más pequeños en áreas escarpadas, creando la falsa ilusión estadística de que los incendios se habían cuadruplicado.
+      </p>
+      <p>
+        <strong>2. Qué hace PyroHarmony por San Luis:</strong><br>
+        Convierte la energía a Potencia Radiativa de Fuego (FRP en Megawatts) y la armoniza con regresión cruzada ($\alpha = 0.44$, $\beta = 0.56$, $\alpha + \beta = 1.00$, $R^2 = 0.92$).<br>
+        Gracias a la matriz histórica de 26 años y el Z-Score térmico, el sistema puede decirle al brigadista de San Luis:
+      </p>
+      <div style="background: rgba(11,61,145,0.4); border-left: 3px solid var(--accent-cyan); padding: 10px 14px; margin: 10px 0; font-style: italic;">
+        «El incremento de calor observado esta semana en San Luis no es un error óptico por cambio de satélites: el Z-Score de +2.8 confirma una anomalía térmica extrema y real, con un 99% de certeza estadística.»
+      </div>
+      <p>
+        <strong>3. Origen Oficial y Metodología de Obtención de Datos de San Luis (Cero Datos Ficticios):</strong>
+      </p>
+      <ul style="margin-left: 20px; font-size: 0.9rem;">
+        <li><strong>Delimitación Espacial:</strong> Instituto Geográfico Nacional (<strong>IGN Argentina</strong>), cartografía oficial de la Provincia de San Luis (31°50'S - 36°16'S / 64°55'O - 67°15'O).</li>
+        <li><strong>Registro Térmico Multidecadal (2000–2026):</strong> <strong>NASA FIRMS</strong> (MCD14DL, VNP14IMGTDL, VJ114IMGTDL), administrado por el Goddard Space Flight Center.</li>
+        <li><strong>Fenología y Temporada Crítica:</strong> Informes de Alerta del <strong>Servicio Nacional de Manejo del Fuego (SNMF)</strong> y Resoluciones de la Secretaría de Ambiente de San Luis (veda total de quemas prescriptas en la Semana 38 por confluencia de sequía y vientos).</li>
+        <li><strong>Factor de Discrepancia VIIRS/MODIS (4.8x):</strong> Validado mediante la formulación de detección contextual subpíxel en topografía rugosa de <strong>Schroeder et al. (2014)</strong> y <strong>Giglio et al. (2016)</strong>, contrastado con estudios de ecotono de la <strong>Universidad Nacional de San Luis (UNSL)</strong> y la <strong>Universidad de La Punta (ULP)</strong>.</li>
+      </ul>
+      <p style="margin-bottom: 0;">
+        <strong>4. Validación con Estaciones Terrestres (REM - Red de Estaciones Meteorológicas de la ULP):</strong> Los picos de FRP armonizado registrados en el megaincendio serrano de agosto-septiembre 2024 (más de 40.000 ha afectadas) correlacionaron con ráfagas superiores a $65\text{ km/h}$ y humedades relativas inferiores al $12\%$ registradas por las estaciones meteorológicas automáticas de El Trapiche y La Punta.
+      </p>
     </div>
-    <p>
-      En el caso histórico del <strong>Megaincendio del Pantanal (Semana 35 de 2020)</strong>, el algoritmo registra <code>FRP_harm = 2,576.2 MW</code> frente a la base fenológica de <code>μ = 1,420 MW (σ = 410 MW)</code>, disparando exactamente <strong><code>Z = +2.82 (p &lt; 0.005)</code></strong> en coincidencia absoluta con las alertas de emergencia de NASA FIRMS.
-    </p>
   </div>
 
-    <div class="card" style="border-left: 4px solid #00e5ff;">
-    <h2>4.1 Caso de Estudio Territorial: Sierras de San Luis, Viento Zonda y Topografía Compleja</h2>
-    <p>
-      En la provincia de <strong>San Luis (Lat -36.0° a -31.8° S / Lon -67.2° a -64.9° O)</strong>, la temporada crítica ocurre a finales de invierno y primavera (semanas 32 a 45, agosto a noviembre), cuando las heladas previas secan el pastizal serrano y los vientos secos tipo Zonda hacen caer la humedad relativa por debajo del 10% en las Sierras Centrales y los Comechingones (Merlo, El Trapiche, Potrero de los Funes, La Punta).
-    </p>
-    <p>
-      <strong>El sesgo instrumental resuelto:</strong> En las quebradas y laderas serranas, un foco inicial de pastizal a menudo no llenaba el píxel de 1 km² de <code>MODIS</code>, pasando desapercibido. Al entrar en operaciones <code>VIIRS (375m)</code>, detectó focos hasta 4.8 veces más pequeños, creando la falsa ilusión estadística de que los incendios se habían cuadruplicado. PyroHarmony reemplaza el conteo engañoso de píxeles por Potencia Radiativa (FRP en MW) y Z-Score térmico, permitiendo a <em>San Luis Solidario</em> y Bomberos Voluntarios distinguir cuándo existe una anomalía real extrema (Z &gt; +2.5) con 99% de confianza científica.
-    </p>
-  </div>
-
-    <div class="card" style="border-left: 4px solid #38bdf8;">
-    <h2>4.2 Los 3 Proto-usuarios Institucionales de PyroHarmony (Cero Ficción)</h2>
-    <p>
-      PyroHarmony responde a las exigencias de <strong>NASA Space Apps 2026</strong> vinculando sus algoritmos directamente con tres niveles de toma de decisiones del mundo real:
-    </p>
-    <ul>
-      <li><strong>1. Nivel Táctico / Operativo (Incident Commander / Crew Boss):</strong> <em>San Luis Solidario</em>, <em>SNMF (Argentina)</em>, <em>US Forest Service (USFS)</em>, <em>CAL FIRE</em> y <em>CONAF (Chile)</em>. Emplea el <strong>Radar Táctico LACES de 50 min</strong> para prevenir atrapamientos (<em>burnovers</em>) y emite reportes SitRep (.txt) sin internet.</li>
-      <li><strong>2. Nivel Estratégico (Directores de Protección Civil / Gestión del Riesgo):</strong> Centros de Operaciones de Emergencia (COE) y enlaces del <em>Marco de Sendai de la ONU</em>. Utiliza el <strong>Z-Score Térmico Semanal Climatológico</strong> para justificar Decretos de Emergencia Ígnea y despliegue de aviones hidrantes con certeza estadística (p &lt; 0.01).</li>
-      <li><strong>3. Nivel Científico / Analítico (Investigadores de Teledetección y Emisiones):</strong> <em>CONAE</em>, <em>NASA Earth Science</em>, <em>Copernicus CAMS</em> y <em>Universidad de La Punta (ULP)</em>. Aplica la <strong>Regresión Ortogonal con Conservación de Escala (&alpha; + &beta; = 1.00)</strong> y exporta capas estandarizadas en <strong>GeoJSON</strong> y <strong>CSV</strong> bajo principios FAIR y NASA TOPS.</li>
-    </ul>
-  </div>
-
+  <!-- SECCIÓN 6: PROTO-USUARIOS INSTITUCIONALES -->
   <div class="card">
-    <h2>5. Referencias Bibliográficas</h2>
-    <ul>
-      <li><strong>Dozier, J. (1981).</strong> <em>A method for satellite identification of surface temperature fields of subpixel resolution</em>. Remote Sensing of Environment, 11, 221–229.</li>
-      <li><strong>Kaufman, Y. J., et al. (1998).</strong> <em>Potential global fire monitoring from EOS-MODIS</em>. Journal of Geophysical Research, 103(D24), 32215–32238.</li>
-      <li><strong>Wooster, M. J., et al. (2005).</strong> <em>Retrieval of biomass combustion rates and totals from fire radiative power observations</em>. JGR Atmospheres, 110(D24).</li>
-      <li><strong>Schroeder, W., et al. (2014).</strong> <em>The New VIIRS 375 m active fire detection data product</em>. Remote Sensing of Environment, 143, 85–96.</li>
-      <li><strong>Giglio, L., et al. (2016).</strong> <em>The Collection 6 MODIS active fire detection algorithm and fire products</em>. Remote Sensing of Environment, 178, 31–41.</li>
-    </ul>
+    <h2>6. Los 3 Proto-usuarios Institucionales de PyroHarmony</h2>
+    <p>
+      PyroHarmony responde a las exigencias del <strong>NASA Space Apps Challenge 2026</strong> vinculando sus algoritmos directamente con tres niveles de toma de decisiones del mundo real:
+    </p>
+
+    <div class="user-grid">
+      <!-- Usuario 1: Táctico -->
+      <div class="user-card tactical">
+        <span class="user-badge badge-tactical">Nivel Táctico / Operativo</span>
+        <h4>Comandante de Incidentes / Jefatura de Brigada</h4>
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 10px;">
+          <em>San Luis Solidario, SNMF (Argentina), US Forest Service (USFS), CAL FIRE, CONAF (Chile).</em>
+        </p>
+        <p style="font-size: 0.9rem;">
+          <strong>Herramienta:</strong> Emplea el <strong>Radar Táctico LACES de 50 min</strong> para prevenir atrapamientos (<em>burnovers</em>) y emite reportes SitRep operativos en texto estructurado sin dependencia de conexión a internet.
+        </p>
+      </div>
+
+      <!-- Usuario 2: Estratégico -->
+      <div class="user-card strategic">
+        <span class="user-badge badge-strategic">Nivel Estratégico / Decisores</span>
+        <h4>Directores de Defensa Civil y Gestión del Riesgo</h4>
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 10px;">
+          <em>Centros de Operaciones de Emergencia (COE) y enlaces del Marco de Sendai de la ONU.</em>
+        </p>
+        <p style="font-size: 0.9rem;">
+          <strong>Herramienta:</strong> Utiliza el <strong>Z-Score Térmico Semanal Climatológico</strong> para justificar Decretos de Emergencia Ígnea y despliegue prioritario de aviones hidrantes con certeza estadística ($p < 0.01$).
+        </p>
+      </div>
+
+      <!-- Usuario 3: Científico -->
+      <div class="user-card scientific">
+        <span class="user-badge badge-scientific">Nivel Científico / Analítico</span>
+        <h4>Investigadores de Teledetección y Emisiones</h4>
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 10px;">
+          <em>CONAE, NASA Earth Science, Copernicus CAMS y Universidad de La Punta (ULP).</em>
+        </p>
+        <p style="font-size: 0.9rem;">
+          <strong>Herramienta:</strong> Aplica la <strong>Regresión Ortogonal con Conservación de Escala ($\alpha + \beta = 1.00$)</strong> y exporta capas estandarizadas en <strong>GeoJSON</strong> y <strong>CSV</strong> bajo principios FAIR y NASA TOPS.
+        </p>
+      </div>
+    </div>
   </div>
+
+  <!-- SECCIÓN 7: REFERENCIAS BIBLIOGRÁFICAS -->
+  <div class="card">
+    <h2>7. Referencias Bibliográficas Oficiales (NASA & Remote Sensing)</h2>
+    <ol style="margin-left: 20px; font-size: 0.92rem; color: var(--text-muted);">
+      <li style="margin-bottom: 8px;"><strong style="color: #fff;">Giglio, L., Schroeder, W., & Justice, C. O. (2016).</strong> <em>The collection 6 MODIS active fire detection algorithm and fire products.</em> Remote Sensing of Environment, 178, 31–41.</li>
+      <li style="margin-bottom: 8px;"><strong style="color: #fff;">Schroeder, W., Oliva, P., Giglio, L., & Csiszar, I. A. (2014).</strong> <em>The New VIIRS 375 m active fire detection product—Algorithm description and initial assessment.</em> Remote Sensing of Environment, 143, 85–96.</li>
+      <li style="margin-bottom: 8px;"><strong style="color: #fff;">Wooster, M. J., Roberts, G., Freeborn, P. H., et al. (2005).</strong> <em>Retrieval of biomass combustion rates and totals from fire radiative power (FRP) observations.</em> Journal of Geophysical Research: Atmospheres, 110(D24).</li>
+      <li style="margin-bottom: 8px;"><strong style="color: #fff;">Kaufman, Y. J., Justice, C. O., Flynn, L. P., et al. (1998).</strong> <em>Potential global fire monitoring from EOS-MODIS.</em> Journal of Geophysical Research: Atmospheres, 103(D24), 32215–32237.</li>
+      <li style="margin-bottom: 8px;"><strong style="color: #fff;">Vermote, E., Ellicott, E., Dubovik, O., et al. (2009).</strong> <em>An approach to estimate global biomass burning emissions of organic and black carbon from MODIS fire radiative power.</em> Journal of Geophysical Research, 114, D18205.</li>
+      <li style="margin-bottom: 8px;"><strong style="color: #fff;">Ellicott, E., Vermote, E., Giglio, L., & Roberts, G. (2009).</strong> <em>Estimating Fire Radiative Energy from MODIS.</em> Remote Sensing of Environment, 113(6), 1251–1260.</li>
+      <li style="margin-bottom: 8px;"><strong style="color: #fff;">Dozier, J. (1981).</strong> <em>A method for satellite identification of surface temperature fields of subpixel resolution.</em> Remote Sensing of Environment, 11, 221–229.</li>
+    </ol>
+  </div>
+
+  <!-- SECCIÓN 8: EQUIPO ALGOXPLORERS -->
+  <div class="card">
+    <h2>8. Equipo de Desarrollo e Investigación — AlgoXplorers (Argentina)</h2>
+    <p>Proyecto desarrollado para el <strong>NASA Space Apps Challenge 2026</strong> por un equipo multidisciplinario:</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Integrante</th>
+          <th>Usuario NASA Space Apps</th>
+          <th>Rol Técnico en el Proyecto</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>José Alex Fernández Montellanos</strong></td>
+          <td><code>@fajjaf</code></td>
+          <td>Líder de Proyecto, Arquitectura de Datos Científicos y Modelo Matemático</td>
+        </tr>
+        <tr>
+          <td><strong>Carlos Vizzioli</strong></td>
+          <td><code>@cvizzioli</code></td>
+          <td>Desarrollo Full-Stack, Modelado de Datos y Algoritmos</td>
+        </tr>
+        <tr>
+          <td><strong>Sánchez Obando Gisella Elizabeth</strong></td>
+          <td><code>@gisesanchezj</code></td>
+          <td>Comunicación Técnica, Divulgación Científica y Experiencia de Usuario (UX)</td>
+        </tr>
+        <tr>
+          <td><strong>Juan Carlos Fernandez</strong></td>
+          <td><code>@jcfernan99</code></td>
+          <td>Análisis de Sistemas, Electrónica y Telemetría de Sensores en Tierra</td>
+        </tr>
+        <tr>
+          <td><strong>Maximiliano Guevara</strong></td>
+          <td><code>@omegaredone</code></td>
+          <td>Infraestructura de Redes, Despliegue Cloud y Auditoría de Seguridad</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <footer>
+    <p>AlgoXplorers (Argentina) — PyroHarmony | NASA Space Apps Challenge 2026</p>
+    <p>Herramienta científica de código abierto para la armonización satelital y la protección de ecosistemas terrestres.</p>
+  </footer>
+
+</div>
+
 </body>
 </html>

@@ -15,12 +15,13 @@ export class GlobeView {
     this.bordersMat = null; this.borderTexMat = null; this.sanLuisBordersMat = null; this.sanLuisShadowMat = null;
     this.hotspotModisMesh = null; this.hotspotViirsMesh = null;
     this.aoiRingMesh = null; this.aoiRingMat = null; this.satMeshes = new Map(); this.countryNodes = [];
-    this.sanLuisDeptNodes = []; this.sanLuisLocNodes = []; this.sanLuisMarkersGroup = null;
+    this.sanLuisDeptNodes = []; this.sanLuisLocNodes = []; this.sanLuisMarkersGroup = null; this.earthSphereMesh = null;
     this.activeSatIds = new Set(['terra', 'aqua', 'suomi_npp', 'noaa_20']);
     this.currentBins = []; this.clockStart = performance.now(); this.frameCount = 0; this.lastFpsCheck = performance.now();
     this.isContextLost = false; this.isDragging = false; this.prevMouse = { x: 0, y: 0 };
     this.rotationTarget = { x: 0.22, y: -1.35 }; this.zoomTarget = 3.25; this.zoomReadoutEl = null;
     this.lastBiomeId = null; this.autoRotate = false; this.lastHotspotScale = 1.0;
+    this.flightState = null; this.cameraVeilEl = null;
   }
   init() { if (this.container && window.THREE) { this._initThreeScene(); this._bindPointerControls(); this._animate(); } }
   _latLonToVec3(THREE, lat, lon, r = 1.004) {
@@ -50,6 +51,8 @@ export class GlobeView {
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     const isMob = w < 960 || (window.innerWidth < 960); this.renderer.setPixelRatio(isMob ? Math.min(window.devicePixelRatio || 1, 1.5) : Math.min(window.devicePixelRatio || 1, 2.0)); this.renderer.setSize(w, h);
     this.container.innerHTML = ''; this.container.appendChild(this.renderer.domElement);
+    this.cameraVeilEl = document.createElement('div'); this.cameraVeilEl.className = 'globe-camera-veil';
+    this.container.appendChild(this.cameraVeilEl);
     this.labelLayer = document.createElement('div'); this.labelLayer.className = 'sat-labels-overlay';
     this.container.appendChild(this.labelLayer); this._buildZoomHud();
     const domCanvas = this.renderer.domElement;
@@ -61,7 +64,8 @@ export class GlobeView {
     const loader = new THREE.TextureLoader(); loader.setCrossOrigin('anonymous');
     const earthMat = new THREE.MeshPhongMaterial({ map: this._createHighResProceduralEarth(THREE), specular: new THREE.Color(0x1e3a5f), shininess: 12 });
     loader.load('https://unpkg.com/three-globe@2.31.0/example/img/earth-blue-marble.jpg', (tex) => { earthMat.map = tex; earthMat.needsUpdate = true; });
-    this.earthGroup.add(new THREE.Mesh(new THREE.SphereGeometry(1.0, 64, 64), earthMat));
+    this.earthSphereMesh = new THREE.Mesh(new THREE.SphereGeometry(1.0, 64, 64), earthMat);
+    this.earthGroup.add(this.earthSphereMesh);
     const cloudMat = new THREE.MeshLambertMaterial({ color: 0xffffff, transparent: true, opacity: 0.16, depthWrite: false });
     loader.load('https://unpkg.com/three-globe@2.31.0/example/img/earth-clouds.png', (cTex) => { cloudMat.map = cTex; cloudMat.alphaMap = cTex; cloudMat.opacity = 0.35; cloudMat.needsUpdate = true; });
     this.cloudsMesh = new THREE.Mesh(new THREE.SphereGeometry(1.014, 48, 48), cloudMat); this.earthGroup.add(this.cloudsMesh);
@@ -73,25 +77,49 @@ export class GlobeView {
       this.camera.aspect = nw / nh; this.camera.updateProjectionMatrix(); this.renderer.setSize(nw, nh);
     });
   }
-  focusSanLuis() {
+  _startCameraFlight(lat, lon, targetZ, durationMs = 1050) {
     this.autoRotate = false;
-    this.rotationTarget.y = ((66.02 - 90) * Math.PI) / 180;
-    this.rotationTarget.x = (-33.72 * Math.PI) / 180;
-    this.zoomTarget = 1.17;
+    const startRx = this.earthGroup ? this.earthGroup.rotation.x : this.rotationTarget.x;
+    const startRy = this.earthGroup ? this.earthGroup.rotation.y : this.rotationTarget.y;
+    const startZ = this.camera ? this.camera.position.z : this.zoomTarget;
+    let endRx = this.rotationTarget.x;
+    let endRy = this.rotationTarget.y;
+    let deltaRy = 0;
+    if (lat !== null && lon !== null && !Number.isNaN(lat) && !Number.isNaN(lon)) {
+      const rawTargetY = ((-lon - 90) * Math.PI) / 180;
+      deltaRy = Math.atan2(Math.sin(rawTargetY - startRy), Math.cos(rawTargetY - startRy));
+      endRy = startRy + deltaRy;
+      endRx = Math.max(-1.25, Math.min(1.25, (lat * Math.PI) / 180));
+    }
+    const endZ = Math.max(1.045, Math.min(4.2, targetZ));
+    const angDist = Math.hypot(endRx - startRx, deltaRy);
+    const arcLift = angDist > 0.32 ? Math.min(0.75, angDist * 0.42) : 0;
+    this.rotationTarget.x = endRx;
+    this.rotationTarget.y = endRy;
+    this.zoomTarget = endZ;
+    this.flightState = { startTime: performance.now(), durationMs, startRx, startRy, startZ, endRx, endRy, endZ, arcLift };
+    if (this.cameraVeilEl) {
+      this.cameraVeilEl.classList.add('veil-active');
+      clearTimeout(this._veilTimer);
+      this._veilTimer = setTimeout(() => { if (this.cameraVeilEl) this.cameraVeilEl.classList.remove('veil-active'); }, Math.round(durationMs * 0.65));
+    }
+  }
+  focusSanLuis() {
+    this._startCameraFlight(-33.72, -66.02, 1.135, 1150);
   }
   _buildZoomHud() {
     const hud = document.createElement('div'); hud.className = 'globe-zoom-controls';
-    hud.innerHTML = `<button type="button" class="globe-zoom-btn" title="Zoom Out">−</button><span class="globe-zoom-readout">🌐 Rueda: Acercar País</span><button type="button" class="globe-zoom-btn" title="Zoom In">+</button><button type="button" class="globe-sanluis-btn" title="Enfocar Mapa Departamental de San Luis">🗺️ San Luis</button>`;
+    hud.innerHTML = `<button type="button" class="globe-zoom-btn" title="Zoom Out">−</button><span class="globe-zoom-readout">🌐 Doble Click / Rueda: Zoom</span><button type="button" class="globe-zoom-btn" title="Zoom In">+</button><button type="button" class="globe-sanluis-btn" title="Enfocar Mapa Departamental de San Luis">🗺️ San Luis</button>`;
     const [btnOut, btnIn, btnSanLuis] = hud.querySelectorAll('button'); this.zoomReadoutEl = hud.querySelector('.globe-zoom-readout');
-    btnOut.addEventListener('click', () => { const step = Math.max(0.06, (this.zoomTarget - 1.0) * 0.28); this.zoomTarget = Math.min(4.2, this.zoomTarget + step); });
-    btnIn.addEventListener('click', () => { const step = Math.max(0.05, (this.zoomTarget - 1.0) * 0.25); this.zoomTarget = Math.max(1.065, this.zoomTarget - step); });
+    btnOut.addEventListener('click', () => { this.flightState = null; const step = Math.max(0.045, (this.zoomTarget - 1.0) * 0.32); this.zoomTarget = Math.min(4.2, this.zoomTarget + step); });
+    btnIn.addEventListener('click', () => { this.flightState = null; const step = Math.max(0.035, (this.zoomTarget - 1.0) * 0.28); this.zoomTarget = Math.max(1.045, this.zoomTarget - step); });
     if (btnSanLuis) btnSanLuis.addEventListener('click', () => this.focusSanLuis());
     this.container.appendChild(hud);
   }
   _addCountryLabelNode(THREE, lat, lon, nameEs, nameEn, span = 6) {
     const normEs = /falkland|malvinas/i.test(nameEs) ? 'Islas Malvinas' : nameEs, normEn = /falkland|malvinas/i.test(nameEn) ? 'Islas Malvinas' : nameEn;
     if (this.countryNodes.some((c) => c.nameEn.toLowerCase() === normEn.toLowerCase() || (Math.abs(c.lat - lat) < 1.8 && Math.abs(c.lon - lon) < 1.8))) return;
-    const el = document.createElement('div'); el.className = 'country-floating-tag'; el.style.display = 'none';
+    const el = document.createElement('div'); el.className = 'country-floating-tag';
     this.labelLayer.appendChild(el);
     this.countryNodes.push({ lat, lon, nameEs: normEs, nameEn: normEn, span, localVec: this._latLonToVec3(THREE, lat, lon, 1.006), el });
   }
@@ -182,7 +210,7 @@ export class GlobeView {
     this.earthGroup.add(new THREE.LineSegments(mainGeo, this.sanLuisBordersMat));
 
     SAN_LUIS_GEOGRAPHY.DEPARTMENTS.forEach(([lat, lon, labelEs, labelEn]) => {
-      const el = document.createElement('div'); el.className = 'dept-floating-tag'; el.style.display = 'none';
+      const el = document.createElement('div'); el.className = 'dept-floating-tag';
       this.labelLayer.appendChild(el);
       this.sanLuisDeptNodes.push({ lat, lon, labelEs, labelEn, localVec: this._latLonToVec3(THREE, lat, lon, 1.0018), el });
     });
@@ -204,7 +232,6 @@ export class GlobeView {
       const el = document.createElement('div');
       el.className = `locality-floating-tag ${isCapital ? 'locality-capital' : tier === 1 ? 'locality-tier-1' : 'locality-tier-2'}`;
       el.textContent = isCapital ? `★ ${name}` : `• ${name}`;
-      el.style.display = 'none';
       this.labelLayer.appendChild(el);
       this.sanLuisLocNodes.push({ lat, lon, name, tier, isCapital, localVec: vec, mesh, el });
     });
@@ -272,10 +299,17 @@ export class GlobeView {
     this.aoiRingMesh.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(tickPts), this.aoiRingMat));
   }
   _bindPointerControls() {
-    this.container.addEventListener('pointerdown', (e) => { this.isDragging = true; this.prevMouse = { x: e.clientX, y: e.clientY }; }); window.addEventListener('pointerup', () => (this.isDragging = false));
+    this.container.addEventListener('pointerdown', (e) => {
+      if (e.target && e.target.closest && e.target.closest('.globe-zoom-controls')) return;
+      this.isDragging = true;
+      this.flightState = null;
+      if (this.cameraVeilEl) this.cameraVeilEl.classList.remove('veil-active');
+      this.prevMouse = { x: e.clientX, y: e.clientY };
+    });
+    window.addEventListener('pointerup', () => (this.isDragging = false));
     window.addEventListener('pointermove', (e) => {
       if (!this.isDragging) return;
-      const alt = this.camera ? Math.max(0.05, this.camera.position.z - 0.98) : 2.25;
+      const alt = this.camera ? Math.max(0.035, this.camera.position.z - 0.985) : 2.25;
       const sens = 0.0042 * (alt / 2.25);
       this.rotationTarget.y += (e.clientX - this.prevMouse.x) * sens;
       this.rotationTarget.x = Math.max(-1.25, Math.min(1.25, this.rotationTarget.x + (e.clientY - this.prevMouse.y) * sens));
@@ -283,9 +317,71 @@ export class GlobeView {
     });
     this.container.addEventListener('wheel', (e) => {
       e.preventDefault();
-      const alt = Math.max(0.06, this.zoomTarget - 1.0);
-      this.zoomTarget = Math.max(1.065, Math.min(4.2, this.zoomTarget + e.deltaY * 0.00085 * alt));
+      this.flightState = null;
+      if (this.cameraVeilEl) this.cameraVeilEl.classList.remove('veil-active');
+      const alt = Math.max(0.04, this.zoomTarget - 1.0);
+      this.zoomTarget = Math.max(1.045, Math.min(4.2, this.zoomTarget + e.deltaY * 0.00085 * alt));
     }, { passive: false });
+    this.container.addEventListener('dblclick', (e) => {
+      if (e.target && e.target.closest && e.target.closest('.globe-zoom-controls')) return;
+      e.preventDefault();
+      this.autoRotate = false;
+      const rect = this.renderer ? this.renderer.domElement.getBoundingClientRect() : this.container.getBoundingClientRect();
+      const ripple = document.createElement('div');
+      ripple.className = 'earth-dblclick-ripple';
+      ripple.style.left = `${e.clientX - rect.left}px`;
+      ripple.style.top = `${e.clientY - rect.top}px`;
+      this.container.appendChild(ripple);
+      setTimeout(() => { if (ripple.parentNode) ripple.parentNode.removeChild(ripple); }, 850);
+
+      const currentZ = this.camera ? this.camera.position.z : this.zoomTarget;
+      const nextAlt = Math.max(0.045, (currentZ - 1.0) * 0.48);
+      let nextZ = Math.max(1.045, 1.0 + nextAlt);
+      let targetLat = null, targetLon = null, snappedName = null;
+
+      if (this.camera && this.earthSphereMesh && window.THREE) {
+        const THREE = window.THREE;
+        const mouse = new THREE.Vector2(((e.clientX - rect.left) / rect.width) * 2 - 1, -((e.clientY - rect.top) / rect.height) * 2 + 1);
+        const raycaster = new THREE.Raycaster(); raycaster.setFromCamera(mouse, this.camera);
+        const hits = raycaster.intersectObject(this.earthSphereMesh, false);
+        if (hits.length > 0) {
+          const localPt = this.earthGroup.worldToLocal(hits[0].point.clone()).normalize();
+          const phi = Math.acos(Math.max(-1, Math.min(1, localPt.y)));
+          targetLat = 90 - (phi * 180) / Math.PI;
+          let theta = Math.atan2(localPt.z, -localPt.x);
+          if (theta < 0) theta += Math.PI * 2;
+          targetLon = (theta * 180) / Math.PI - 180;
+
+          if (currentZ < 1.65 && this.sanLuisLocNodes && this.sanLuisLocNodes.length > 0) {
+            let bestLoc = null, bestDist = 0.28;
+            this.sanLuisLocNodes.forEach((loc) => {
+              const d = Math.hypot(loc.lat - targetLat, loc.lon - targetLon);
+              if (d < bestDist) { bestDist = d; bestLoc = loc; }
+            });
+            if (bestLoc) {
+              targetLat = bestLoc.lat; targetLon = bestLoc.lon;
+              snappedName = bestLoc.name;
+              nextZ = Math.min(nextZ, bestLoc.tier === 1 ? 1.085 : 1.062);
+            } else if (this.sanLuisDeptNodes && this.sanLuisDeptNodes.length > 0) {
+              let bestDept = null, bestDeptDist = 0.45;
+              this.sanLuisDeptNodes.forEach((dpt) => {
+                const d = Math.hypot(dpt.lat - targetLat, dpt.lon - targetLon);
+                if (d < bestDeptDist) { bestDeptDist = d; bestDept = dpt; }
+              });
+              if (bestDept) {
+                targetLat = bestDept.lat; targetLon = bestDept.lon;
+                snappedName = bestDept.labelEs;
+                nextZ = Math.min(nextZ, 1.14);
+              }
+            }
+          }
+        }
+      }
+      if (snappedName && this.zoomReadoutEl) {
+        this.zoomReadoutEl.textContent = `✈️ ${snappedName}`;
+      }
+      this._startCameraFlight(targetLat, targetLon, nextZ, 1080);
+    });
   }
   setAutoRotate(enabled) { this.autoRotate = !!enabled; if (this.aoiRingMesh) this.aoiRingMesh.visible = !this.autoRotate; }
   _refreshHotspotScales(scaleMult = 1.0) {
@@ -294,7 +390,7 @@ export class GlobeView {
     for (let i = 0; i < 35; i++) {
       if (i < this.currentBins.length) {
         const b = this.currentBins[i], ratio = (0.65 + 0.65 * (b.harmonizedFrp / maxFrp)) * scaleMult;
-        dummy.position.copy(this._latLonToVec3(window.THREE, b.lat, b.lon, 1.001 + 0.0035 * scaleMult));
+        dummy.position.copy(this._latLonToVec3(window.THREE, b.lat, b.lon, 1.0008 + 0.0032 * scaleMult));
         dummy.scale.set(ratio, ratio, ratio); dummy.updateMatrix();
         (i % 2 === 0 ? this.hotspotModisMesh : this.hotspotViirsMesh).setMatrixAt(i, dummy.matrix);
         dummy.scale.set(0, 0, 0); dummy.updateMatrix();
@@ -312,13 +408,10 @@ export class GlobeView {
       const prevBiome = this.lastBiomeId;
       this.lastBiomeId = snapshot.biome.id;
       if (snapshot.biome.id === 'san_luis_serrano') {
-        this.rotationTarget.y = ((66.02 - 90) * Math.PI) / 180;
-        this.rotationTarget.x = (-33.72 * Math.PI) / 180;
-        this.zoomTarget = 1.18;
+        this._startCameraFlight(-33.72, -66.02, 1.135, 1350);
       } else {
-        this.rotationTarget.y = ((-snapshot.biome.lon - 90) * Math.PI) / 180;
-        this.rotationTarget.x = (snapshot.biome.lat * Math.PI) / 180;
-        if (prevBiome === 'san_luis_serrano' && this.zoomTarget < 1.8) this.zoomTarget = 2.65;
+        const nextZ = prevBiome === 'san_luis_serrano' && this.zoomTarget < 1.8 ? 2.65 : this.zoomTarget;
+        this._startCameraFlight(snapshot.biome.lat, snapshot.biome.lon, nextZ, 1250);
       }
     }
     const statusColor = snapshot.cellStats && snapshot.cellStats.classification ? snapshot.cellStats.classification.colorHex : '#00e676';
@@ -333,30 +426,48 @@ export class GlobeView {
       this.frameCount = 0; this.lastFpsCheck = now;
     }
     const elapsed = (now - this.clockStart) * 0.001;
-    this.camera.position.z += (this.zoomTarget - this.camera.position.z) * 0.12; const zDist = this.camera.position.z;
-    if (this.autoRotate && !this.isDragging) this.rotationTarget.y += 0.0015;
-    this.earthGroup.rotation.y += (this.rotationTarget.y - this.earthGroup.rotation.y) * 0.1;
-    this.earthGroup.rotation.x += (this.rotationTarget.x - this.earthGroup.rotation.x) * 0.1;
-    if (this.cloudsMesh) { this.cloudsMesh.rotation.y += 0.00025; this.cloudsMesh.material.opacity = zDist < 1.9 ? 0.02 : zDist < 2.5 ? 0.10 : 0.32; }
+
+    if (this.flightState && !this.isDragging) {
+      const rawT = Math.min(1, (now - this.flightState.startTime) / this.flightState.durationMs);
+      const ease = rawT < 0.5 ? 4 * rawT * rawT * rawT : 1 - Math.pow(-2 * rawT + 2, 3) / 2;
+      const rotEase = 1 - Math.pow(1 - rawT, 3.2);
+      this.earthGroup.rotation.y = this.flightState.startRy + (this.flightState.endRy - this.flightState.startRy) * rotEase;
+      this.earthGroup.rotation.x = this.flightState.startRx + (this.flightState.endRx - this.flightState.startRx) * rotEase;
+      const baseZ = this.flightState.startZ + (this.flightState.endZ - this.flightState.startZ) * ease;
+      const arcBoost = Math.sin(rawT * Math.PI) * this.flightState.arcLift;
+      this.camera.position.z = baseZ + arcBoost;
+      if (rawT >= 1) {
+        this.flightState = null;
+        if (this.cameraVeilEl) this.cameraVeilEl.classList.remove('veil-active');
+      }
+    } else {
+      this.camera.position.z += (this.zoomTarget - this.camera.position.z) * 0.12;
+      if (this.autoRotate && !this.isDragging) this.rotationTarget.y += 0.0015;
+      this.earthGroup.rotation.y += (this.rotationTarget.y - this.earthGroup.rotation.y) * 0.1;
+      this.earthGroup.rotation.x += (this.rotationTarget.x - this.earthGroup.rotation.x) * 0.1;
+    }
+    const zDist = this.camera.position.z;
+    if (this.cloudsMesh) { this.cloudsMesh.rotation.y += 0.00025; this.cloudsMesh.material.opacity = zDist < 1.9 ? 0.0 : zDist < 2.5 ? 0.10 : 0.32; }
     const zoomFactor = Math.max(0, Math.min(1, (zDist - 1.35) / 1.75));
     if (this.bordersMat) this.bordersMat.opacity = 0.52 + 0.22 * zoomFactor;
     if (this.borderTexMat) this.borderTexMat.opacity = zDist < 1.75 ? 0.0 : 0.06 + 0.58 * zoomFactor;
     if (this.sanLuisBordersMat) this.sanLuisBordersMat.opacity = zDist < 2.2 ? 0.94 : 0.68;
     if (this.sanLuisShadowMat) this.sanLuisShadowMat.opacity = zDist < 2.2 ? 0.65 : 0.25;
     if (this.sanLuisMarkersGroup) {
-      this.sanLuisMarkersGroup.visible = zDist < 1.85;
-      const mScale = Math.max(0.28, Math.min(1.0, (zDist - 1.04) / 0.55));
+      this.sanLuisMarkersGroup.visible = zDist < 1.32;
+      const mScale = Math.max(0.22, Math.min(0.85, (zDist - 1.03) / 0.35));
       this.sanLuisLocNodes.forEach((loc) => { if (loc.mesh) loc.mesh.scale.set(mScale, mScale, mScale); });
     }
-    const hsScale = Math.max(0.18, Math.min(1.0, (zDist - 1.04) / 0.95));
-    if (Math.abs(hsScale - this.lastHotspotScale) > 0.025) {
+    const hsScale = Math.max(0.14, Math.min(1.0, (zDist - 1.04) / 1.1));
+    if (Math.abs(hsScale - this.lastHotspotScale) > 0.02) {
       this.lastHotspotScale = hsScale;
       this._refreshHotspotScales(hsScale);
     }
-    if (this.aoiRingMat) this.aoiRingMat.opacity = (zDist < 1.55 ? 0.28 : 0.65) + 0.25 * Math.sin(elapsed * 3.2);
+    if (this.aoiRingMesh) this.aoiRingMesh.visible = !this.autoRotate && zDist > 1.48;
+    if (this.aoiRingMat) this.aoiRingMat.opacity = 0.65 + 0.25 * Math.sin(elapsed * 3.2);
     const w = this.container.clientWidth || window.innerWidth, h = this.container.clientHeight || window.innerHeight, projVec = new window.THREE.Vector3();
     this.satMeshes.forEach(({ sat, orbitPivot, satNode, altRadius, labelEl }, id) => {
-      const vis = this.activeSatIds.has(id) && zDist > 1.35; orbitPivot.visible = vis; labelEl.style.display = vis ? 'block' : 'none';
+      const vis = this.activeSatIds.has(id) && zDist > 1.42; orbitPivot.visible = vis; labelEl.style.display = vis ? 'block' : 'none';
       if (vis) {
         const ang = elapsed * 0.35 + sat.phaseOffsetRad;
         satNode.position.set(Math.cos(ang) * altRadius, Math.sin(ang) * altRadius, 0); satNode.rotation.z = ang - Math.PI / 2;
@@ -370,10 +481,23 @@ export class GlobeView {
     const showLabels = zDist < 3.0, isEs = i18n.currentLang === 'es', minSpan = zDist > 2.55 ? 12 : zDist > 2.15 ? 6.5 : zDist > 1.78 ? 3.2 : 0;
     let bestCountry = null, bestDot = -1; const candidates = [];
     this.earthGroup.updateMatrixWorld();
-    const showSanLuisDetail = zDist < 2.05;
+
+    const placedBoxes = [];
+    const tryPlaceBox = (x, y, halfW, halfH, padX = 5, padY = 4) => {
+      for (let i = 0; i < placedBoxes.length; i++) {
+        const b = placedBoxes[i];
+        if (Math.abs(x - b.x) < (halfW + b.w + padX) && Math.abs(y - b.y) < (halfH + b.h + padY)) return false;
+      }
+      placedBoxes.push({ x, y, w: halfW, h: halfH });
+      return true;
+    };
+
+    // Only switch from province label ("San Luis") to internal departments when zoomed in close (zDist < 1.44)
+    const showSanLuisDepts = zDist < 1.44;
     this.countryNodes.forEach((c) => {
-      c.el.style.display = 'none'; c.el.classList.remove('country-tag-focused'); if (!showLabels) return;
-      if (showSanLuisDetail && /san luis/i.test(c.nameEs)) return;
+      c.el.classList.remove('tag-visible', 'country-tag-focused');
+      if (!showLabels) return;
+      if (showSanLuisDepts && /san luis|argentina|chile/i.test(c.nameEs)) return;
       projVec.copy(c.localVec).applyMatrix4(this.earthGroup.matrixWorld); const camAlignment = projVec.z / 1.006;
       if (camAlignment > (zDist < 2.25 ? 0.58 : 0.72)) {
         projVec.project(this.camera);
@@ -383,53 +507,93 @@ export class GlobeView {
         }
       }
     });
-    candidates.sort((a, b) => (a.c === bestCountry ? -1 : b.c === bestCountry ? 1 : b.score - a.score)); const placed = [], minDx = zDist > 2.1 ? 92 : 74, minDy = zDist > 2.1 ? 28 : 22;
+    candidates.sort((a, b) => (a.c === bestCountry ? -1 : b.c === bestCountry ? 1 : b.score - a.score));
     candidates.forEach(({ c, sx, sy }) => {
-      if (c !== bestCountry && placed.some((p) => Math.abs(sx - p.x) < minDx && Math.abs(sy - p.y) < minDy)) return;
-      placed.push({ x: sx, y: sy }); c.el.textContent = isEs ? c.nameEs : c.nameEn; c.el.style.display = 'block'; c.el.style.left = `${sx}px`; c.el.style.top = `${sy}px`;
+      const labelStr = isEs ? c.nameEs : c.nameEn;
+      const hw = Math.max(30, labelStr.length * 3.8), hh = 11;
+      if (c !== bestCountry && !tryPlaceBox(sx, sy, hw, hh, 10, 6)) return;
+      if (c === bestCountry) placedBoxes.push({ x: sx, y: sy, w: hw, h: hh });
+      c.el.textContent = labelStr; c.el.style.left = `${sx}px`; c.el.style.top = `${sy}px`;
+      c.el.classList.add('tag-visible');
     });
 
-    // San Luis 9 Departments & Important Localities progressive high-definition zoom
+    // Progressive San Luis 9 Departments & 27 Localities with strict zero-overlap box placement & smooth Fade-In
     let sanLuisFocused = false;
+    const showTier1Loc = zDist < 1.26, showTier2Loc = zDist < 1.135;
+
+    // 1. Place Capital first when localities are active so ★ San Luis is always anchored cleanly
+    this.sanLuisLocNodes.forEach((loc) => {
+      loc.el.classList.remove('tag-visible');
+      if (loc.mesh) loc.mesh.visible = showTier1Loc && (loc.tier === 1 || showTier2Loc);
+    });
+
+    if (showTier1Loc) {
+      const cap = this.sanLuisLocNodes.find((l) => l.isCapital);
+      if (cap) {
+        projVec.copy(cap.localVec).applyMatrix4(this.earthGroup.matrixWorld);
+        if (projVec.z > 0.82) {
+          projVec.project(this.camera);
+          if (Math.abs(projVec.x) < 0.92 && Math.abs(projVec.y) < 0.92) {
+            const sx = (projVec.x * 0.5 + 0.5) * w, sy = (-projVec.y * 0.5 + 0.5) * h;
+            if (tryPlaceBox(sx + 48, sy, 48, 9, 4, 3)) {
+              cap.el.style.left = `${sx}px`; cap.el.style.top = `${sy}px`;
+              cap.el.classList.add('tag-visible');
+              sanLuisFocused = true;
+            }
+          }
+        }
+      }
+    }
+
+    // 2. Place the 9 Department names (without overlapping each other or Capital)
     this.sanLuisDeptNodes.forEach((d) => {
-      d.el.style.display = 'none';
-      if (!showSanLuisDetail) return;
+      d.el.classList.remove('tag-visible');
+      if (!showSanLuisDepts) return;
       projVec.copy(d.localVec).applyMatrix4(this.earthGroup.matrixWorld);
-      if (projVec.z > 0.75) {
+      if (projVec.z > 0.80) {
         projVec.project(this.camera);
         if (Math.abs(projVec.x) < 0.92 && Math.abs(projVec.y) < 0.92) {
           const sx = (projVec.x * 0.5 + 0.5) * w, sy = (-projVec.y * 0.5 + 0.5) * h;
-          d.el.textContent = isEs ? d.labelEs : d.labelEn;
-          d.el.style.display = 'block'; d.el.style.left = `${sx}px`; d.el.style.top = `${sy}px`;
-          placed.push({ x: sx, y: sy }); sanLuisFocused = true;
+          const txt = isEs ? d.labelEs : d.labelEn;
+          const hw = Math.max(34, txt.length * 3.1), hh = 9;
+          if (tryPlaceBox(sx, sy, hw, hh, 5, 4)) {
+            d.el.textContent = txt;
+            d.el.style.left = `${sx}px`; d.el.style.top = `${sy}px`;
+            d.el.classList.add('tag-visible');
+            sanLuisFocused = true;
+          }
         }
       }
     });
 
-    const showTier1Loc = zDist < 1.65, showTier2Loc = zDist < 1.32;
-    this.sanLuisLocNodes.forEach((loc) => {
-      loc.el.style.display = 'none';
-      if (!showTier1Loc || (loc.tier > 1 && !showTier2Loc)) return;
-      if (loc.mesh) loc.mesh.visible = loc.tier === 1 || showTier2Loc;
-      projVec.copy(loc.localVec).applyMatrix4(this.earthGroup.matrixWorld);
-      if (projVec.z > 0.78) {
-        projVec.project(this.camera);
-        if (Math.abs(projVec.x) < 0.93 && Math.abs(projVec.y) < 0.93) {
-          const sx = (projVec.x * 0.5 + 0.5) * w, sy = (-projVec.y * 0.5 + 0.5) * h;
-          if (!loc.isCapital && placed.some((p) => Math.abs(sx - p.x) < (zDist < 1.2 ? 42 : 56) && Math.abs(sy - p.y) < 16)) return;
-          placed.push({ x: sx, y: sy });
-          loc.el.style.display = 'block'; loc.el.style.left = `${sx}px`; loc.el.style.top = `${sy}px`;
+    // 3. Progressively reveal Tier 1 & Tier 2 localities as zoom deepens and space opens up
+    if (showTier1Loc) {
+      this.sanLuisLocNodes.forEach((loc) => {
+        if (loc.isCapital || (loc.tier > 1 && !showTier2Loc)) return;
+        projVec.copy(loc.localVec).applyMatrix4(this.earthGroup.matrixWorld);
+        if (projVec.z > 0.82) {
+          projVec.project(this.camera);
+          if (Math.abs(projVec.x) < 0.92 && Math.abs(projVec.y) < 0.92) {
+            const sx = (projVec.x * 0.5 + 0.5) * w, sy = (-projVec.y * 0.5 + 0.5) * h;
+            const hw = Math.max(26, (loc.name.length + 2) * 2.85), hh = 8;
+            if (tryPlaceBox(sx + hw + 5, sy, hw, hh, 4, 3)) {
+              loc.el.style.left = `${sx}px`; loc.el.style.top = `${sy}px`;
+              loc.el.classList.add('tag-visible');
+            }
+          }
         }
-      }
-    });
+      });
+    }
 
-    if (sanLuisFocused) {
-      if (this.zoomReadoutEl) this.zoomReadoutEl.textContent = '📍 Prov. de San Luis (9 Dptos.)';
-    } else if (bestCountry) {
-      bestCountry.el.classList.add('country-tag-focused');
-      if (this.zoomReadoutEl) this.zoomReadoutEl.textContent = `📍 ${isEs ? bestCountry.nameEs : bestCountry.nameEn}`;
-    } else if (this.zoomReadoutEl) {
-      this.zoomReadoutEl.textContent = isEs ? '🌐 Rueda / + : Ver Países' : '🌐 Scroll / + : Show Countries';
+    if (!this.flightState) {
+      if (sanLuisFocused) {
+        if (this.zoomReadoutEl) this.zoomReadoutEl.textContent = zDist < 1.14 ? '📍 San Luis · Dptos. y Localidades' : '📍 San Luis · 9 Departamentos';
+      } else if (bestCountry) {
+        bestCountry.el.classList.add('country-tag-focused');
+        if (this.zoomReadoutEl) this.zoomReadoutEl.textContent = `📍 ${isEs ? bestCountry.nameEs : bestCountry.nameEn}`;
+      } else if (this.zoomReadoutEl) {
+        this.zoomReadoutEl.textContent = isEs ? '🌐 Doble Click / Rueda: Zoom' : '🌐 Double-Click / Scroll: Zoom';
+      }
     }
   }
   dispose() { if (!this.scene) return; this.scene.traverse((o) => { if (o.geometry) o.geometry.dispose(); if (o.material) o.material.dispose(); }); if (this.renderer) this.renderer.dispose(); }

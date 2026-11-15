@@ -322,15 +322,15 @@ export const SAN_LUIS_GEOGRAPHY = Object.freeze({
     [[-66.54, -34.50], [-65.97, -34.50], [-65.15, -34.50]]
   ],
   DEPARTMENTS: [
-    [-32.14, -66.52, 'DPTO. AYACUCHO', 'AYACUCHO DEPT.'],
-    [-32.16, -65.54, 'DPTO. JUNÍN', 'JUNIN DEPT.'],
-    [-32.72, -66.68, 'DPTO. BELGRANO', 'BELGRANO DEPT.'],
-    [-32.57, -65.79, 'DPTO. SAN MARTÍN', 'SAN MARTIN DEPT.'],
-    [-32.71, -65.33, 'DPTO. CHACABUCO', 'CHACABUCO DEPT.'],
-    [-33.16, -65.87, 'DPTO. PRINGLES', 'PRINGLES DEPT.'],
-    [-33.76, -66.38, 'DPTO. PUEYRREDÓN', 'PUEYRREDON DEPT.'],
-    [-33.82, -65.56, 'DPTO. PEDERNERA', 'PEDERNERA DEPT.'],
-    [-35.26, -65.86, 'DPTO. DUPUY', 'DUPUY DEPT.']
+    [-32.12, -66.58, 'Dpto. Ayacucho', 'Ayacucho Dept.'],
+    [-32.08, -65.54, 'Dpto. Junín', 'Junín Dept.'],
+    [-32.74, -66.68, 'Dpto. Belgrano', 'Belgrano Dept.'],
+    [-32.55, -65.82, 'Dpto. San Martín', 'San Martín Dept.'],
+    [-32.72, -65.26, 'Dpto. Chacabuco', 'Chacabuco Dept.'],
+    [-33.18, -65.86, 'Dpto. Pringles', 'Pringles Dept.'],
+    [-33.92, -66.42, 'Dpto. Pueyrredón', 'Pueyrredón Dept.'],
+    [-34.02, -65.54, 'Dpto. Pedernera', 'Pedernera Dept.'],
+    [-35.32, -65.86, 'Dpto. Dupuy', 'Dupuy Dept.']
   ],
   LOCALITIES: [
     // Tier 1: Capital, principales centros urbanos y cabeceras clave

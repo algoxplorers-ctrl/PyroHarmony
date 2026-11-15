@@ -114,6 +114,76 @@
       <div id="laces-radar-container"></div>
     </aside>
     <button type="button" id="btn-toggle-right-panel" class="panel-drawer-toggle right-drawer-toggle" title="Ocultar / Mostrar Radar LACES" aria-label="Ocultar o mostrar panel derecho">▶</button>
+
+    <!-- ===================================================================
+         ZONE 3.5: FLOATING SATELLITE SENSOR LEGEND (ANTI-SEMAPHORE PALETTE)
+         =================================================================== -->
+    <div id="floating-sat-legend" class="floating-sat-legend" aria-label="Satellite Constellation Legend">
+      <div class="fsl-bar-collapsed" id="fsl-bar-collapsed" title="Expandir leyenda completa de satélites">
+        <span class="fsl-icon">🛰️</span>
+        <span class="fsl-compact-title" data-i18n="legend.compact_title">Satélites:</span>
+        <span class="fsl-pill" data-sat="terra" style="--sat-color:#a855f7">🟣 Terra</span>
+        <span class="fsl-pill" data-sat="aqua" style="--sat-color:#00e5ff">🔵 Aqua</span>
+        <span class="fsl-pill" data-sat="suomi_npp" style="--sat-color:#ff2a85">🌸 Suomi-NPP</span>
+        <span class="fsl-pill" data-sat="noaa_20" style="--sat-color:#ffffff">⚪ NOAA-20</span>
+        <button type="button" id="fsl-btn-toggle" class="fsl-btn-toggle" title="Expandir / Minimizar Leyenda" aria-label="Expand or minimize legend">▾</button>
+      </div>
+
+      <div class="fsl-card-body" id="fsl-card-body">
+        <div class="fsl-header">
+          <div class="fsl-title-box">
+            <span class="fsl-title">🛰️ <span data-i18n="legend.title">SENSORES SATELITALES (NASA / NOAA)</span></span>
+            <span class="fsl-tag" data-i18n="legend.tag">SIN EFECTO SEMÁFORO</span>
+          </div>
+          <button type="button" id="fsl-btn-close" class="fsl-btn-close" title="Minimizar">✕</button>
+        </div>
+        <div class="fsl-disclaimer" data-i18n="legend.disclaimer">
+          ⚠️ <strong>Color = Satélite detector</strong> (NO indica nivel de peligro)
+        </div>
+        <div class="fsl-grid">
+          <div class="fsl-row" data-sat="terra">
+            <span class="fsl-swatch" style="background:#a855f7;box-shadow:0 0 10px #a855f7"></span>
+            <div class="fsl-meta">
+              <div class="fsl-meta-head">
+                <strong>Terra (EOS AM-1)</strong>
+                <span class="fsl-badge">MODIS · 1000m</span>
+              </div>
+              <span class="fsl-sub">NASA · Paso 10:30 AM · Barrido 2330 km</span>
+            </div>
+          </div>
+          <div class="fsl-row" data-sat="aqua">
+            <span class="fsl-swatch" style="background:#00e5ff;box-shadow:0 0 10px #00e5ff"></span>
+            <div class="fsl-meta">
+              <div class="fsl-meta-head">
+                <strong>Aqua (EOS PM-1)</strong>
+                <span class="fsl-badge">MODIS · 1000m</span>
+              </div>
+              <span class="fsl-sub">NASA · Paso 13:30 PM · Barrido 2330 km</span>
+            </div>
+          </div>
+          <div class="fsl-row" data-sat="suomi_npp">
+            <span class="fsl-swatch" style="background:#ff2a85;box-shadow:0 0 10px #ff2a85"></span>
+            <div class="fsl-meta">
+              <div class="fsl-meta-head">
+                <strong>Suomi-NPP</strong>
+                <span class="fsl-badge">VIIRS · 375m</span>
+              </div>
+              <span class="fsl-sub">NASA / NOAA · Paso 13:30 PM · Barrido 3040 km</span>
+            </div>
+          </div>
+          <div class="fsl-row" data-sat="noaa_20">
+            <span class="fsl-swatch" style="background:#ffffff;box-shadow:0 0 10px #ffffff"></span>
+            <div class="fsl-meta">
+              <div class="fsl-meta-head">
+                <strong>NOAA-20 (JPSS-1)</strong>
+                <span class="fsl-badge">VIIRS · 375m</span>
+              </div>
+              <span class="fsl-sub">NOAA / NASA · Paso 14:20 PM (+50 min) · Barrido 3040 km</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
 
   <!-- =====================================================================

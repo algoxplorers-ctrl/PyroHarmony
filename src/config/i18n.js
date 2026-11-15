@@ -52,7 +52,12 @@ const DICTIONARY = Object.freeze({
     'hud.auto_rotation_opt': '🌐 Planetary Auto-Rotation (Global View)',
     'modal.calendar_title': 'PHENOLOGICAL BURNING ACTIVITY CALENDAR (52 WEEKS × 27 YEARS · 2000–2026)',
     'modal.admin_title': 'ADMINISTRATION, BIOME CALIBRATION & WOLF AMENDMENT AUDIT',
-    'tooltip.calendar_cell': 'Year {year} · Week {week} | Harmonized FRP: {frp} MW | Z-Score: {z} ({status})'
+    'tooltip.calendar_cell': 'Year {year} · Week {week} | Harmonized FRP: {frp} MW | Z-Score: {z} ({status})',
+    'legend.compact_title': 'Satellites:',
+    'legend.title': 'SATELLITE SENSORS (NASA / NOAA)',
+    'legend.tag': 'NO DANGER / NO SEMAPHORE',
+    'legend.disclaimer': '⚠️ Color indicates detecting satellite & sensor (NOT danger severity)',
+    'legend.hint': 'Click satellite to isolate/highlight its hotspots'
   },
   es: {
     'hud.aoi_label': 'AOI:',
@@ -97,7 +102,12 @@ const DICTIONARY = Object.freeze({
     'hud.auto_rotation_opt': '🌐 Rotación Automática (Vista Global)',
     'modal.calendar_title': 'CALENDARIO FENOLÓGICO DE ACTIVIDAD DE QUEMA (52 SEMANAS × 27 AÑOS · 2000–2026)',
     'modal.admin_title': 'ADMINISTRACIÓN, CALIBRACIÓN DE BIOMAS Y AUDITORÍA ENMIENDA WOLF',
-    'tooltip.calendar_cell': 'Año {year} · Semana {week} | FRP Armonizado: {frp} MW | Z-Score: {z} ({status})'
+    'tooltip.calendar_cell': 'Año {year} · Semana {week} | FRP Armonizado: {frp} MW | Z-Score: {z} ({status})',
+    'legend.compact_title': 'Satélites:',
+    'legend.title': 'SENSORES SATELITALES (NASA / NOAA)',
+    'legend.tag': 'SIN EFECTO SEMÁFORO',
+    'legend.disclaimer': '⚠️ El color identifica el satélite detector (NO indica nivel de peligro)',
+    'legend.hint': 'Haz clic en un satélite para aislar/resaltar sus focos'
   }
 });
 

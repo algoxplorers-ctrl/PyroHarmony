@@ -70,7 +70,7 @@ export const SATELLITE_FLEET = Object.freeze([
     altitudeKm: 705,
     swathWidthKm: 2330,
     resolutionM: 1000,
-    colorHex: '#ff5252',
+    colorHex: '#a855f7',
     phaseOffsetRad: 0.0
   },
   {
@@ -98,7 +98,7 @@ export const SATELLITE_FLEET = Object.freeze([
     altitudeKm: 834,
     swathWidthKm: 3040,
     resolutionM: 375,
-    colorHex: '#ffd600',
+    colorHex: '#ff2a85',
     phaseOffsetRad: 3.1416
   },
   {
@@ -112,7 +112,7 @@ export const SATELLITE_FLEET = Object.freeze([
     altitudeKm: 834,
     swathWidthKm: 3040,
     resolutionM: 375,
-    colorHex: '#00e676',
+    colorHex: '#ffffff',
     phaseOffsetRad: 4.0142
   }
 ]);

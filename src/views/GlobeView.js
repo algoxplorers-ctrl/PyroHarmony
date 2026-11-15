@@ -403,6 +403,52 @@ export class GlobeView {
           btnRight.textContent = isCollapsed ? '◀ 🚒' : '▶';
         });
       }
+
+      // FLOATING SATELLITE LEGEND BINDINGS
+      const satLegend = document.getElementById('floating-sat-legend');
+      const barCollapsed = document.getElementById('fsl-bar-collapsed');
+      const btnToggleLegend = document.getElementById('fsl-btn-toggle');
+      const btnCloseLegend = document.getElementById('fsl-btn-close');
+      const hudSatsValue = document.getElementById('hud-sats-value');
+
+      const toggleLegend = () => {
+        if (!satLegend) return;
+        const expanded = satLegend.classList.toggle('is-expanded');
+        if (btnToggleLegend) btnToggleLegend.textContent = expanded ? '▴' : '▾';
+      };
+
+      if (barCollapsed) {
+        barCollapsed.addEventListener('click', (e) => {
+          if (!e.target.closest('[data-sat]')) toggleLegend();
+        });
+      }
+      if (btnToggleLegend) btnToggleLegend.addEventListener('click', (e) => { e.stopPropagation(); toggleLegend(); });
+      if (btnCloseLegend) btnCloseLegend.addEventListener('click', (e) => { e.stopPropagation(); satLegend.classList.remove('is-expanded'); if (btnToggleLegend) btnToggleLegend.textContent = '▾'; });
+      if (hudSatsValue) {
+        hudSatsValue.style.cursor = 'pointer';
+        hudSatsValue.title = 'Click para abrir la leyenda de satélites';
+        hudSatsValue.addEventListener('click', () => toggleLegend());
+      }
+
+      const satItems = document.querySelectorAll('#floating-sat-legend [data-sat]');
+      satItems.forEach((el) => {
+        el.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const satId = el.getAttribute('data-sat');
+          if (!satId) return;
+          if (this.activeSatIds.has(satId) && this.activeSatIds.size === 1) {
+            this.activeSatIds = new Set(SATELLITE_FLEET.map((s) => s.id));
+          } else {
+            this.activeSatIds = new Set([satId]);
+          }
+          satItems.forEach((item) => {
+            const id = item.getAttribute('data-sat');
+            const isActive = this.activeSatIds.has(id);
+            item.style.opacity = isActive ? '1' : '0.35';
+          });
+          if (this.lastSnapshot) this.updateTelemetry(this.lastSnapshot);
+        });
+      });
     }
   }
   _addCountryLabelNode(THREE, lat, lon, nameEs, nameEn, span = 6) {
@@ -562,20 +608,20 @@ export class GlobeView {
     });
   }
   _buildHotspotMeshes(THREE) {
-    // 4-Satellite spherical hotspots: Terra (#ff6d00), Aqua (#00e5ff), Suomi-NPP (#ffd600), NOAA-20 (#00e676)
+    // 4-Satellite spherical hotspots (Anti-Semaphore Palette): Terra (#a855f7), Aqua (#00e5ff), Suomi-NPP (#ff2a85), NOAA-20 (#ffffff)
     this.hotspotSatMeshes = new Map();
     const satStyles = [
-      { id: 'terra', radius: 0.0054, color: 0xff6d00 },
+      { id: 'terra', radius: 0.0054, color: 0xa855f7 },
       { id: 'aqua', radius: 0.0051, color: 0x00e5ff },
-      { id: 'suomi_npp', radius: 0.0043, color: 0xffd600 },
-      { id: 'noaa_20', radius: 0.0043, color: 0x00e676 }
+      { id: 'suomi_npp', radius: 0.0043, color: 0xff2a85 },
+      { id: 'noaa_20', radius: 0.0043, color: 0xffffff }
     ];
     satStyles.forEach(({ id, radius, color }) => {
       const mesh = new THREE.InstancedMesh(new THREE.SphereGeometry(radius, 14, 14), new THREE.MeshBasicMaterial({ color }), 35);
       this.hotspotSatMeshes.set(id, mesh);
       this.earthGroup.add(mesh);
     });
-    this.aoiRingMat = new THREE.LineBasicMaterial({ color: 0x00e676, transparent: true, opacity: 0.92 });
+    this.aoiRingMat = new THREE.LineBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.92 });
     this.aoiRingMesh = new THREE.Group();
     this.earthGroup.add(this.aoiRingMesh);
   }
@@ -627,10 +673,10 @@ export class GlobeView {
     if (item.kind === 'hotspot') {
       const b = item.bin;
       const sat = item.sat || SATELLITE_FLEET[0];
-      const accent = sat.id === 'terra' ? '#ff6d00' : sat.colorHex;
-      const satIcon = sat.id === 'terra' ? '🟠' : sat.id === 'aqua' ? '🔵' : sat.id === 'suomi_npp' ? '🟡' : '🟢';
+      const accent = sat.colorHex;
+      const satIcon = sat.id === 'terra' ? '🟣' : sat.id === 'aqua' ? '🔵' : sat.id === 'suomi_npp' ? '🌸' : '⚪';
       this.hoverRingEl.style.borderColor = accent;
-      this.hoverRingEl.style.boxShadow = `0 0 12px ${accent}, inset 0 0 6px ${accent}`;
+      this.hoverRingEl.style.boxShadow = `0 0 14px ${accent}, inset 0 0 7px ${accent}`;
       this.hoverRingEl.style.left = `${item.sx}px`;
       this.hoverRingEl.style.top = `${item.sy}px`;
       this.hoverRingEl.classList.add('ring-visible');
@@ -667,6 +713,10 @@ export class GlobeView {
         <div class="htt-header">
           <span style="color:${accent}">${satIcon} ${isEs ? 'FOCO' : 'HOTSPOT'} ${sat.id.toUpperCase().replace('_', '-')} · ${sat.sensor}</span>
           <span class="htt-badge" style="background:rgba(15,23,42,0.9);border:1px solid ${accent};color:${accent}">Res. ${sat.resolutionM}m · ${sat.equatorCrossingLocal.split(' ')[0]}</span>
+        </div>
+        <div class="htt-sat-note" style="display:flex;align-items:center;gap:6px;font-size:0.62rem;background:rgba(15,23,42,0.85);border-left:3px solid ${accent};padding:3px 6px;margin:3px 0 6px 0;color:#e2e8f0;border-radius:0 4px 4px 0;">
+          <span>🛰️</span>
+          <span><strong>${isEs ? 'Color referente al satélite' : 'Color refers to satellite'}</strong> (${isEs ? 'NO es nivel de peligro' : 'NOT danger severity'})</span>
         </div>
         <div class="htt-row"><span>🛰️ ${isEs ? 'Órbita / Barrido' : 'Orbit / Swath'}:</span><strong>${sat.agency} · ${sat.altitudeKm} km (${sat.swathWidthKm} km)</strong></div>
         <div class="htt-row"><span>📍 ${isEs ? 'Referencia' : 'Reference'}:</span><strong>${refText}</strong></div>

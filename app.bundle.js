@@ -1,8 +1,15 @@
-﻿/*! PyroHarmony v2.0.0 — Autonomous Bundle (app.bundle.js) | Team AlgoXplorers (Argentina) | MIT License */
+﻿/*!
+ * PyroHarmony v2.0.0 — Autonomous Production Bundle (app.bundle.js)
+ * NASA Space Apps Challenge 2026: "Harmonization of MODIS and VIIRS Hot Spots"
+ * Team AlgoXplorers (Argentina): @fajjaf, @cvizzioli, @gisesanchezj, @jcfernan99, @omegaredone
+ * Architecture: Strict MVC (<300 lines/module) | 100% Wolf Amendment Compliant | License: MIT
+ */
 (function () {
   "use strict";
 
-  // === MODULE: src/config/constants.js ===
+  // =========================================================================
+  // MODULE: src/config/constants.js
+  // =========================================================================
 /**
  * @file src/config/constants.js
  * @description Physical constants, orbital telemetry, biome calibration coefficients,
@@ -371,7 +378,9 @@ const SAN_LUIS_GEOGRAPHY = Object.freeze({
 });
 
 
-  // === MODULE: src/config/i18n.js ===
+  // =========================================================================
+  // MODULE: src/config/i18n.js
+  // =========================================================================
 /**
  * @file src/config/i18n.js
  * @description Bilingual Internationalization Service (EN default / ES dynamic toggle)
@@ -426,7 +435,7 @@ const DICTIONARY = Object.freeze({
     'hud.auto_rotation_opt': '🌐 Planetary Auto-Rotation (Global View)',
     'modal.calendar_title': 'PHENOLOGICAL BURNING ACTIVITY CALENDAR (52 WEEKS × 27 YEARS · 2000–2026)',
     'modal.admin_title': 'ADMINISTRATION, BIOME CALIBRATION & WOLF AMENDMENT AUDIT',
-    'tooltip.calendar_cell': 'Year {year} · Week {week} | Harmonized FRP: {frp} MW | Z-Score: {z} ({status})',
+    'tooltip.calendar_cell': 'Year {year} · Week {week} ({month}) | Harmonized FRP: {frp} MW | Z-Score: {z} ({status})',
     'legend.compact_title': 'Satellites:',
     'legend.title': 'SATELLITE SENSORS (NASA / NOAA)',
     'legend.tag': 'NO DANGER / NO SEMAPHORE',
@@ -476,7 +485,7 @@ const DICTIONARY = Object.freeze({
     'hud.auto_rotation_opt': '🌐 Rotación Automática (Vista Global)',
     'modal.calendar_title': 'CALENDARIO FENOLÓGICO DE ACTIVIDAD DE QUEMA (52 SEMANAS × 27 AÑOS · 2000–2026)',
     'modal.admin_title': 'ADMINISTRACIÓN, CALIBRACIÓN DE BIOMAS Y AUDITORÍA ENMIENDA WOLF',
-    'tooltip.calendar_cell': 'Año {year} · Semana {week} | FRP Armonizado: {frp} MW | Z-Score: {z} ({status})',
+    'tooltip.calendar_cell': 'Año {year} · Semana {week} ({month}) | FRP Armonizado: {frp} MW | Z-Score: {z} ({status})',
     'legend.compact_title': 'Satélites:',
     'legend.title': 'SENSORES SATELITALES (NASA / NOAA)',
     'legend.tag': 'SIN EFECTO SEMÁFORO',
@@ -550,8 +559,54 @@ class I18nService {
 const I18nManager = I18nService;
 const i18n = new I18nService(DEFAULT_LANGUAGE);
 
+const MONTH_HEADER_CONFIG = Object.freeze([
+  { es: 'ENE', en: 'JAN', span: 4 },
+  { es: 'FEB', en: 'FEB', span: 4 },
+  { es: 'MAR', en: 'MAR', span: 5 },
+  { es: 'ABR', en: 'APR', span: 4 },
+  { es: 'MAY', en: 'MAY', span: 5 },
+  { es: 'JUN', en: 'JUN', span: 4 },
+  { es: 'JUL', en: 'JUL', span: 4 },
+  { es: 'AGO', en: 'AUG', span: 5 },
+  { es: 'SEP', en: 'SEP', span: 4 },
+  { es: 'OCT', en: 'OCT', span: 4 },
+  { es: 'NOV', en: 'NOV', span: 5 },
+  { es: 'DIC', en: 'DEC', span: 4 }
+]);
 
-  // === MODULE: src/models/BiofireModel.js ===
+function getWeekPeriodLabel(week, lang = 'en') {
+  const w = Math.max(1, Math.min(52, Number(week) || 1));
+  const dayOfYear = Math.min(365, (w - 1) * 7 + 4);
+  const monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  const monthsES = [
+    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+  ];
+  const monthsEN = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+  let m = 0;
+  let d = dayOfYear;
+  while (m < 11 && d > monthDays[m]) {
+    d -= monthDays[m];
+    m++;
+  }
+  const isEs = lang === 'es';
+  const monthName = isEs ? monthsES[m] : monthsEN[m];
+  if (d <= 10) {
+    return isEs ? `Inicios de ${monthName}` : `Early ${monthName}`;
+  }
+  if (d <= 20) {
+    return isEs ? `Mediados de ${monthName}` : `Mid ${monthName}`;
+  }
+  return isEs ? `Fines de ${monthName}` : `Late ${monthName}`;
+}
+
+
+  // =========================================================================
+  // MODULE: src/models/BiofireModel.js
+  // =========================================================================
 /**
  * @file src/models/BiofireModel.js
  * @description Pure biophysical radiative model implementing Stefan-Boltzmann sub-pixel
@@ -676,7 +731,9 @@ class BiofireModel {
 }
 
 
-  // === MODULE: src/models/HarmonizationModel.js ===
+  // =========================================================================
+  // MODULE: src/models/HarmonizationModel.js
+  // =========================================================================
 /**
  * @file src/models/HarmonizationModel.js
  * @description Spatial binning (0.1° x 0.1° homogeneous grid), orthogonal cross-sensor
@@ -838,7 +895,9 @@ class HarmonizationModel {
 }
 
 
-  // === MODULE: src/models/ClimatologyModel.js ===
+  // =========================================================================
+  // MODULE: src/models/ClimatologyModel.js
+  // =========================================================================
 /**
  * @file src/models/ClimatologyModel.js
  * @description Weekly Climatological Thermal Z-Score engine across the 52 weeks x 26 years
@@ -1005,7 +1064,9 @@ class ClimatologyModel {
 }
 
 
-  // === MODULE: src/models/FirmsDataService.js ===
+  // =========================================================================
+  // MODULE: src/models/FirmsDataService.js
+  // =========================================================================
 /**
  * @file src/models/FirmsDataService.js
  * @description Data ingestion, spatial synthesis, Supabase Cloud REST telemetry sync,
@@ -1220,7 +1281,9 @@ class FirmsDataService {
 }
 
 
-  // === MODULE: src/views/GlobeView.js ===
+  // =========================================================================
+  // MODULE: src/views/GlobeView.js
+  // =========================================================================
 ﻿/**
  * @file src/views/GlobeView.js
  * @description 3D NASA Blue Marble Earth View with Political Country Borders, Zoom-Adaptive
@@ -2473,7 +2536,9 @@ class GlobeView {
 }
 
 
-  // === MODULE: src/views/AnomalyGaugeView.js ===
+  // =========================================================================
+  // MODULE: src/views/AnomalyGaugeView.js
+  // =========================================================================
 /**
  * @file src/views/AnomalyGaugeView.js
  * @description Semicircular SVG Anomaly Speedometer View matching the exact PyroHarmony
@@ -2565,7 +2630,9 @@ class AnomalyGaugeView {
 }
 
 
-  // === MODULE: src/views/SensorDiscrepancyView.js ===
+  // =========================================================================
+  // MODULE: src/views/SensorDiscrepancyView.js
+  // =========================================================================
 /**
  * @file src/views/SensorDiscrepancyView.js
  * @description Renders the left-panel Radiative Telemetry summary, Optical vs. Physical
@@ -2684,7 +2751,9 @@ class SensorDiscrepancyView {
 }
 
 
-  // === MODULE: src/views/CalendarView.js ===
+  // =========================================================================
+  // MODULE: src/views/CalendarView.js
+  // =========================================================================
 /**
  * @file src/views/CalendarView.js
  * @description Renders the interactive 52 Weeks x 27 Years (2000-2026) Phenological
@@ -2694,6 +2763,8 @@ class SensorDiscrepancyView {
  */
 
 
+
+const MONTH_END_WEEKS = new Set([4, 8, 13, 17, 22, 26, 30, 35, 39, 43, 48]);
 
 class CalendarView {
   constructor(containerId, tooltipId) {
@@ -2723,6 +2794,27 @@ class CalendarView {
     const table = document.createElement('div');
     table.className = 'calendar-matrix-grid';
 
+    const headerRow = document.createElement('div');
+    headerRow.className = 'calendar-month-header';
+
+    const spacer = document.createElement('span');
+    spacer.className = 'calendar-year-label';
+    spacer.textContent = '';
+    headerRow.appendChild(spacer);
+
+    const monthStrip = document.createElement('div');
+    monthStrip.className = 'calendar-month-strip';
+    const currentLang = i18n.getLang();
+    MONTH_HEADER_CONFIG.forEach((m) => {
+      const mLabel = document.createElement('span');
+      mLabel.className = 'calendar-month-label';
+      mLabel.style.gridColumn = `span ${m.span}`;
+      mLabel.textContent = currentLang === 'es' ? m.es : m.en;
+      monthStrip.appendChild(mLabel);
+    });
+    headerRow.appendChild(monthStrip);
+    table.appendChild(headerRow);
+
     matrix.forEach((yearRow) => {
       if (!yearRow.length) return;
       const rowYear = yearRow[0].year;
@@ -2746,11 +2838,13 @@ class CalendarView {
         const isSelected =
           cell.year === selectedYear && cell.week === selectedWeek;
         const isBenchmark = cell.year === 2020 && cell.week === 35;
+        const isMonthEnd = MONTH_END_WEEKS.has(cell.week);
 
         cellEl.className = [
           'calendar-cell',
           isSelected ? 'selected-cell' : '',
-          isBenchmark ? 'benchmark-cell' : ''
+          isBenchmark ? 'benchmark-cell' : '',
+          isMonthEnd ? 'month-end-cell' : ''
         ]
           .filter(Boolean)
           .join(' ');
@@ -2783,10 +2877,13 @@ class CalendarView {
 
   _showTooltip(event, cell) {
     if (!this.tooltip) return;
+    const currentLang = i18n.getLang();
+    const monthText = getWeekPeriodLabel(cell.week, currentLang);
     const statusText = i18n.t(cell.classification.i18nKey);
     const label = i18n.t('tooltip.calendar_cell', {
       year: cell.year,
       week: cell.week,
+      month: monthText,
       frp: cell.frpMw,
       z: `${cell.zScore >= 0 ? '+' : ''}${cell.zScore.toFixed(2)}`,
       status: statusText
@@ -2805,7 +2902,9 @@ class CalendarView {
 }
 
 
-  // === MODULE: src/views/TimelineView.js ===
+  // =========================================================================
+  // MODULE: src/views/TimelineView.js
+  // =========================================================================
 /**
  * @file src/views/TimelineView.js
  * @description Renders the bottom Historical Timeline dock (2000-2026) and Top HUD
@@ -2851,14 +2950,15 @@ class TimelineView {
     if (this.calMasterSlider && Number(this.calMasterSlider.value) !== idx) {
       this.calMasterSlider.value = String(idx);
     }
+    const monthPeriod = getWeekPeriodLabel(week, i18n.getLang());
     if (this.calYearLabel) this.calYearLabel.textContent = String(year);
-    if (this.calWeekLabel) this.calWeekLabel.textContent = `${week} / 52`;
+    if (this.calWeekLabel) this.calWeekLabel.textContent = `${week} / 52 · ${monthPeriod}`;
 
     if (this.yearValueEl) {
       this.yearValueEl.textContent = String(year);
     }
     if (this.weekValueEl) {
-      this.weekValueEl.textContent = `${week} / 52`;
+      this.weekValueEl.textContent = `${week} / 52 · ${monthPeriod}`;
     }
 
     if (this.hudSatsEl) {
@@ -2877,7 +2977,9 @@ class TimelineView {
 }
 
 
-  // === MODULE: src/controllers/AOIController.js ===
+  // =========================================================================
+  // MODULE: src/controllers/AOIController.js
+  // =========================================================================
 /**
  * @file src/controllers/AOIController.js
  * @description Controller managing Biome Area of Interest (AOI) selection, bilingual
@@ -2948,7 +3050,9 @@ class AOIController {
 }
 
 
-  // === MODULE: src/controllers/TimelineController.js ===
+  // =========================================================================
+  // MODULE: src/controllers/TimelineController.js
+  // =========================================================================
 /**
  * @file src/controllers/TimelineController.js
  * @description Controller orchestrating the bottom Historical Timeline dock (2000-2026),
@@ -3092,7 +3196,9 @@ class TimelineController {
 }
 
 
-  // === MODULE: src/controllers/AppController.js ===
+  // =========================================================================
+  // MODULE: src/controllers/AppController.js
+  // =========================================================================
 /**
  * @file src/controllers/AppController.js
  * @description Root MVC Coordinator mediating between pure Models, declarative Views,
@@ -3390,7 +3496,9 @@ class AppController {
 }
 
 
-  // === MODULE: src/main.js ===
+  // =========================================================================
+  // MODULE: src/main.js
+  // =========================================================================
 /**
  * @file src/main.js
  * @description Application bootstrap entry point for PyroHarmony v2.0.0.

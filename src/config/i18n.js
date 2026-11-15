@@ -52,7 +52,7 @@ const DICTIONARY = Object.freeze({
     'hud.auto_rotation_opt': '🌐 Planetary Auto-Rotation (Global View)',
     'modal.calendar_title': 'PHENOLOGICAL BURNING ACTIVITY CALENDAR (52 WEEKS × 27 YEARS · 2000–2026)',
     'modal.admin_title': 'ADMINISTRATION, BIOME CALIBRATION & WOLF AMENDMENT AUDIT',
-    'tooltip.calendar_cell': 'Year {year} · Week {week} | Harmonized FRP: {frp} MW | Z-Score: {z} ({status})',
+    'tooltip.calendar_cell': 'Year {year} · Week {week} ({month}) | Harmonized FRP: {frp} MW | Z-Score: {z} ({status})',
     'legend.compact_title': 'Satellites:',
     'legend.title': 'SATELLITE SENSORS (NASA / NOAA)',
     'legend.tag': 'NO DANGER / NO SEMAPHORE',
@@ -102,7 +102,7 @@ const DICTIONARY = Object.freeze({
     'hud.auto_rotation_opt': '🌐 Rotación Automática (Vista Global)',
     'modal.calendar_title': 'CALENDARIO FENOLÓGICO DE ACTIVIDAD DE QUEMA (52 SEMANAS × 27 AÑOS · 2000–2026)',
     'modal.admin_title': 'ADMINISTRACIÓN, CALIBRACIÓN DE BIOMAS Y AUDITORÍA ENMIENDA WOLF',
-    'tooltip.calendar_cell': 'Año {year} · Semana {week} | FRP Armonizado: {frp} MW | Z-Score: {z} ({status})',
+    'tooltip.calendar_cell': 'Año {year} · Semana {week} ({month}) | FRP Armonizado: {frp} MW | Z-Score: {z} ({status})',
     'legend.compact_title': 'Satélites:',
     'legend.title': 'SENSORES SATELITALES (NASA / NOAA)',
     'legend.tag': 'SIN EFECTO SEMÁFORO',
@@ -175,3 +175,47 @@ export class I18nService {
 
 export const I18nManager = I18nService;
 export const i18n = new I18nService(DEFAULT_LANGUAGE);
+
+export const MONTH_HEADER_CONFIG = Object.freeze([
+  { es: 'ENE', en: 'JAN', span: 4 },
+  { es: 'FEB', en: 'FEB', span: 4 },
+  { es: 'MAR', en: 'MAR', span: 5 },
+  { es: 'ABR', en: 'APR', span: 4 },
+  { es: 'MAY', en: 'MAY', span: 5 },
+  { es: 'JUN', en: 'JUN', span: 4 },
+  { es: 'JUL', en: 'JUL', span: 4 },
+  { es: 'AGO', en: 'AUG', span: 5 },
+  { es: 'SEP', en: 'SEP', span: 4 },
+  { es: 'OCT', en: 'OCT', span: 4 },
+  { es: 'NOV', en: 'NOV', span: 5 },
+  { es: 'DIC', en: 'DEC', span: 4 }
+]);
+
+export function getWeekPeriodLabel(week, lang = 'en') {
+  const w = Math.max(1, Math.min(52, Number(week) || 1));
+  const dayOfYear = Math.min(365, (w - 1) * 7 + 4);
+  const monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  const monthsES = [
+    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+  ];
+  const monthsEN = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+  let m = 0;
+  let d = dayOfYear;
+  while (m < 11 && d > monthDays[m]) {
+    d -= monthDays[m];
+    m++;
+  }
+  const isEs = lang === 'es';
+  const monthName = isEs ? monthsES[m] : monthsEN[m];
+  if (d <= 10) {
+    return isEs ? `Inicios de ${monthName}` : `Early ${monthName}`;
+  }
+  if (d <= 20) {
+    return isEs ? `Mediados de ${monthName}` : `Mid ${monthName}`;
+  }
+  return isEs ? `Fines de ${monthName}` : `Late ${monthName}`;
+}

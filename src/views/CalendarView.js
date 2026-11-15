@@ -6,7 +6,9 @@
  * @license MIT
  */
 
-import { i18n } from '../config/i18n.js';
+import { i18n, getWeekPeriodLabel, MONTH_HEADER_CONFIG } from '../config/i18n.js';
+
+const MONTH_END_WEEKS = new Set([4, 8, 13, 17, 22, 26, 30, 35, 39, 43, 48]);
 
 export class CalendarView {
   constructor(containerId, tooltipId) {
@@ -36,6 +38,27 @@ export class CalendarView {
     const table = document.createElement('div');
     table.className = 'calendar-matrix-grid';
 
+    const headerRow = document.createElement('div');
+    headerRow.className = 'calendar-month-header';
+
+    const spacer = document.createElement('span');
+    spacer.className = 'calendar-year-label';
+    spacer.textContent = '';
+    headerRow.appendChild(spacer);
+
+    const monthStrip = document.createElement('div');
+    monthStrip.className = 'calendar-month-strip';
+    const currentLang = i18n.getLang();
+    MONTH_HEADER_CONFIG.forEach((m) => {
+      const mLabel = document.createElement('span');
+      mLabel.className = 'calendar-month-label';
+      mLabel.style.gridColumn = `span ${m.span}`;
+      mLabel.textContent = currentLang === 'es' ? m.es : m.en;
+      monthStrip.appendChild(mLabel);
+    });
+    headerRow.appendChild(monthStrip);
+    table.appendChild(headerRow);
+
     matrix.forEach((yearRow) => {
       if (!yearRow.length) return;
       const rowYear = yearRow[0].year;
@@ -59,11 +82,13 @@ export class CalendarView {
         const isSelected =
           cell.year === selectedYear && cell.week === selectedWeek;
         const isBenchmark = cell.year === 2020 && cell.week === 35;
+        const isMonthEnd = MONTH_END_WEEKS.has(cell.week);
 
         cellEl.className = [
           'calendar-cell',
           isSelected ? 'selected-cell' : '',
-          isBenchmark ? 'benchmark-cell' : ''
+          isBenchmark ? 'benchmark-cell' : '',
+          isMonthEnd ? 'month-end-cell' : ''
         ]
           .filter(Boolean)
           .join(' ');
@@ -96,10 +121,13 @@ export class CalendarView {
 
   _showTooltip(event, cell) {
     if (!this.tooltip) return;
+    const currentLang = i18n.getLang();
+    const monthText = getWeekPeriodLabel(cell.week, currentLang);
     const statusText = i18n.t(cell.classification.i18nKey);
     const label = i18n.t('tooltip.calendar_cell', {
       year: cell.year,
       week: cell.week,
+      month: monthText,
       frp: cell.frpMw,
       z: `${cell.zScore >= 0 ? '+' : ''}${cell.zScore.toFixed(2)}`,
       status: statusText

@@ -7,7 +7,7 @@
  */
 
 import { TIMELINE_BOUNDS } from '../config/constants.js';
-import { i18n } from '../config/i18n.js';
+import { i18n, getWeekPeriodLabel } from '../config/i18n.js';
 
 export class TimelineView {
   constructor(elements) {
@@ -43,14 +43,15 @@ export class TimelineView {
     if (this.calMasterSlider && Number(this.calMasterSlider.value) !== idx) {
       this.calMasterSlider.value = String(idx);
     }
+    const monthPeriod = getWeekPeriodLabel(week, i18n.getLang());
     if (this.calYearLabel) this.calYearLabel.textContent = String(year);
-    if (this.calWeekLabel) this.calWeekLabel.textContent = `${week} / 52`;
+    if (this.calWeekLabel) this.calWeekLabel.textContent = `${week} / 52 · ${monthPeriod}`;
 
     if (this.yearValueEl) {
       this.yearValueEl.textContent = String(year);
     }
     if (this.weekValueEl) {
-      this.weekValueEl.textContent = `${week} / 52`;
+      this.weekValueEl.textContent = `${week} / 52 · ${monthPeriod}`;
     }
 
     if (this.hudSatsEl) {

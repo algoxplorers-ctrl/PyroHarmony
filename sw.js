@@ -7,14 +7,14 @@
  * @license MIT
  */
 
-const CACHE_NAME = 'pyroharmony-pwa-v2.0.19';
+const CACHE_NAME = 'pyroharmony-pwa-v2.0.23';
 
 const CORE_ASSETS = [
   './',
   './index.html',
-  './app.bundle.js?v=2.0.19',
+  './app.bundle.js?v=2.0.23',
   './manifest.webmanifest',
-  './src/styles/main.css?v=2.0.19',
+  './src/styles/main.css?v=2.0.23',
   './assets/icons/favicon.png',
   './assets/icons/icon-192.png',
   './assets/icons/icon-512.png',
@@ -67,20 +67,19 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Cache-first with background refresh (Stale-While-Revalidate) for app & 3D assets
-  event.respondWith(
-    caches.match(request).then((cachedResponse) => {
-      const networkFetch = fetch(request)
-        .then((networkResponse) => {
-          if (networkResponse && networkResponse.status === 200) {
-            const copy = networkResponse.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
-          }
-          return networkResponse;
-        })
-        .catch(() => cachedResponse);
+  // Let external satellite tile servers (Esri World Imagery, EOX Sentinel-2, CDN) use native browser CORS caching
+  if (!request.url.startsWith(self.location.origin)) return;
 
-      return cachedResponse || networkFetch;
-    })
+  // Network-first for HTML, JS, CSS so updates deploy immediately; fallback to cache offline
+  event.respondWith(
+    fetch(request)
+      .then((networkResponse) => {
+        if (networkResponse && networkResponse.status === 200) {
+          const copy = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+        }
+        return networkResponse;
+      })
+      .catch(() => caches.match(request))
   );
 });

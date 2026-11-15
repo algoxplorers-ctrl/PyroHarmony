@@ -13,9 +13,10 @@ export class GlobeView {
     this.container = document.getElementById(containerId); this.fpsElement = document.getElementById(fpsElementId);
     this.scene = null; this.camera = null; this.renderer = null; this.earthGroup = null; this.cloudsMesh = null;
     this.bordersMat = null; this.borderTexMat = null; this.sanLuisBordersMat = null; this.sanLuisShadowMat = null;
-    this.hotspotModisMesh = null; this.hotspotViirsMesh = null;
+    this.hotspotSatMeshes = new Map();
     this.aoiRingMesh = null; this.aoiRingMat = null; this.satMeshes = new Map(); this.countryNodes = [];
     this.sanLuisDeptNodes = []; this.sanLuisLocNodes = []; this.sanLuisMarkersGroup = null; this.earthSphereMesh = null;
+    this.lodLayers = []; this.tileImageCache = new Map(); this.maxAnisotropy = 4;
     this.activeSatIds = new Set(['terra', 'aqua', 'suomi_npp', 'noaa_20']);
     this.currentBins = []; this.clockStart = performance.now(); this.frameCount = 0; this.lastFpsCheck = performance.now();
     this.isContextLost = false; this.isDragging = false; this.prevMouse = { x: 0, y: 0 };
@@ -55,7 +56,7 @@ export class GlobeView {
     this.scene = new THREE.Scene(); this.camera = new THREE.PerspectiveCamera(40, w / h, 0.01, 1000);
     this.zoomTarget = w < 768 ? 3.85 : 3.25; this.camera.position.set(0, 0, this.zoomTarget);
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    const isMob = w < 960 || (window.innerWidth < 960); this.renderer.setPixelRatio(isMob ? Math.min(window.devicePixelRatio || 1, 1.5) : Math.min(window.devicePixelRatio || 1, 2.0)); this.renderer.setSize(w, h);
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2.5)); this.renderer.setSize(w, h);
     this.container.innerHTML = ''; this.container.appendChild(this.renderer.domElement);
     this.cameraVeilEl = document.createElement('div'); this.cameraVeilEl.className = 'globe-camera-veil';
     this.container.appendChild(this.cameraVeilEl);
@@ -73,10 +74,13 @@ export class GlobeView {
     this.scene.add(new THREE.AmbientLight(0x90b4e8, 0.85));
     const sun = new THREE.DirectionalLight(0xffffff, 1.15); sun.position.set(4, 2, 5); this.scene.add(sun);
     const loader = new THREE.TextureLoader(); loader.setCrossOrigin('anonymous');
-    const earthMat = new THREE.MeshPhongMaterial({ map: this._createHighResProceduralEarth(THREE), specular: new THREE.Color(0x0d1f3a), shininess: 9 });
-    loader.load('https://unpkg.com/three-globe@2.31.0/example/img/earth-blue-marble.jpg', (tex) => { earthMat.map = tex; earthMat.needsUpdate = true; });
-    this.earthSphereMesh = new THREE.Mesh(new THREE.SphereGeometry(1.0, 64, 64), earthMat);
+    this.maxAnisotropy = this.renderer.capabilities && this.renderer.capabilities.getMaxAnisotropy ? this.renderer.capabilities.getMaxAnisotropy() : 8;
+    const worldTex = this._buildGlobal4KWorldAtlas(THREE);
+    const earthMat = new THREE.MeshPhongMaterial({ map: worldTex, specular: new THREE.Color(0x0a192f), shininess: 6 });
+    this.earthSphereMesh = new THREE.Mesh(new THREE.SphereGeometry(1.0, 128, 128), earthMat);
+    this.earthSphereMesh.renderOrder = 0;
     this.earthGroup.add(this.earthSphereMesh);
+    this._buildLodTileEngine(THREE);
     const cloudMat = new THREE.MeshLambertMaterial({ color: 0xffffff, transparent: true, opacity: 0.04, depthWrite: false });
     loader.load('https://unpkg.com/three-globe@2.31.0/example/img/earth-clouds.png', (cTex) => { cloudMat.map = cTex; cloudMat.opacity = 0.05; cloudMat.needsUpdate = true; });
     this.cloudsMesh = new THREE.Mesh(new THREE.SphereGeometry(1.014, 48, 48), cloudMat); this.earthGroup.add(this.cloudsMesh);
@@ -86,6 +90,259 @@ export class GlobeView {
       if (!this.renderer || !this.container) return;
       const nw = this.container.clientWidth || window.innerWidth, nh = this.container.clientHeight || window.innerHeight;
       this.camera.aspect = nw / nh; this.camera.updateProjectionMatrix(); this.renderer.setSize(nw, nh);
+    });
+  }
+  _buildGlobal4KWorldAtlas(THREE) {
+    const c = document.createElement('canvas'); c.width = 4096; c.height = 2048;
+    const ctx = c.getContext('2d');
+    ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+    const fallbackTex = this._createHighResProceduralEarth(THREE);
+    ctx.drawImage(fallbackTex.image, 0, 0, 4096, 2048);
+    const worldTex = new THREE.CanvasTexture(c);
+    worldTex.anisotropy = this.maxAnisotropy;
+    worldTex.minFilter = THREE.LinearMipmapLinearFilter;
+    worldTex.magFilter = THREE.LinearFilter;
+
+    const bmImg = new Image();
+    bmImg.crossOrigin = 'anonymous';
+    bmImg.onload = () => {
+      ctx.drawImage(bmImg, 0, 0, 4096, 2048);
+      worldTex.needsUpdate = true;
+      // Overlay Z=3 (8x8 global satellite tiles) projected from Web Mercator to Equirectangular 4K
+      const z = 3, n = 8;
+      const tileToLat = (ty) => (Math.atan(Math.sinh(Math.PI * (1 - (2 * ty) / n))) * 180) / Math.PI;
+      for (let ty = 0; ty < n; ty++) {
+        for (let tx = 0; tx < n; tx++) {
+          const tImg = new Image();
+          tImg.crossOrigin = 'anonymous';
+          tImg.onload = () => {
+            const strips = 16, sh = 256 / strips, dx = tx * 512, dw = 512;
+            for (let s = 0; s < strips; s++) {
+              const lat0 = tileToLat(ty + s / strips);
+              const lat1 = tileToLat(ty + (s + 1) / strips);
+              const dy0 = ((90 - lat0) / 180) * 2048;
+              const dy1 = ((90 - lat1) / 180) * 2048;
+              ctx.drawImage(tImg, 0, s * sh, 256, sh, dx, dy0, dw, Math.max(1, dy1 - dy0 + 0.6));
+            }
+            worldTex.needsUpdate = true;
+          };
+          tImg.src = `https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${z}/${ty}/${tx}`;
+        }
+      }
+    };
+    bmImg.src = 'https://unpkg.com/three-globe@2.31.0/example/img/earth-blue-marble.jpg';
+    return worldTex;
+  }
+  _buildLodTileEngine(THREE) {
+    // Google Earth-style 4-Level Progressive Satellite Tile Pyramid (8x8 = 2048x2048 px per layer)
+    const configs = [
+      { id: 'country', z: 6, gridCols: 8, gridRows: 8, radius: 1.0005, renderOrder: 2, maxZDist: 2.85, fullZDist: 2.20, reCenterDeg: 8.0 },
+      { id: 'regional', z: 8, gridCols: 8, gridRows: 8, radius: 1.0008, renderOrder: 3, maxZDist: 2.00, fullZDist: 1.55, reCenterDeg: 2.2 },
+      { id: 'provincial', z: 10, gridCols: 8, gridRows: 8, radius: 1.0011, renderOrder: 4, maxZDist: 1.45, fullZDist: 1.18, reCenterDeg: 0.55 },
+      { id: 'local', z: 12, gridCols: 8, gridRows: 8, radius: 1.0014, renderOrder: 5, maxZDist: 1.15, fullZDist: 1.06, reCenterDeg: 0.16 }
+    ];
+    this.lodLayers = configs.map((cfg) => {
+      const canvas = document.createElement('canvas');
+      canvas.width = cfg.gridCols * 256;
+      canvas.height = cfg.gridRows * 256;
+      const ctx = canvas.getContext('2d');
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.anisotropy = this.maxAnisotropy;
+      texture.generateMipmaps = false;
+      texture.minFilter = THREE.LinearFilter;
+      texture.magFilter = THREE.LinearFilter;
+      texture.wrapS = THREE.ClampToEdgeWrapping;
+      texture.wrapT = THREE.ClampToEdgeWrapping;
+      const mat = new THREE.MeshBasicMaterial({
+        map: texture,
+        color: 0xf8fafc,
+        transparent: true,
+        opacity: 0,
+        depthWrite: false,
+        depthTest: true,
+        side: THREE.DoubleSide
+      });
+      const mesh = new THREE.Mesh(new THREE.BufferGeometry(), mat);
+      mesh.renderOrder = cfg.renderOrder;
+      mesh.visible = false;
+      this.earthGroup.add(mesh);
+      return { ...cfg, canvas, ctx, texture, mat, mesh, centerLat: null, centerLon: null, xMin: 0, yMin: 0, xMax: 0, yMax: 0, activeKey: '' };
+    });
+    // Pre-warm Z=6, Z=8, and Z=10 satellite mosaics centered on San Luis (-33.55, -66.02)
+    this._refreshLodLayerMosaic(this.lodLayers[0], -33.55, -66.02);
+    this._refreshLodLayerMosaic(this.lodLayers[1], -33.55, -66.02);
+    this._refreshLodLayerMosaic(this.lodLayers[2], -33.55, -66.02);
+  }
+  _drawSingleTileOnLayer(layer, col, row, img) {
+    const px = col * 256, py = row * 256;
+    layer.ctx.globalCompositeOperation = 'source-over';
+    layer.ctx.clearRect(px, py, 256, 256);
+    layer.ctx.drawImage(img, px, py, 256, 256);
+    if (col === 0 || col === layer.gridCols - 1 || row === 0 || row === layer.gridRows - 1) {
+      this._applyTileEdgeAlpha(layer, col, row);
+    }
+    layer.texture.needsUpdate = true;
+  }
+  _applyTileEdgeAlpha(layer, col, row) {
+    const { ctx, gridCols, gridRows } = layer;
+    const px = col * 256, py = row * 256;
+    ctx.save();
+    // IMPORTANT: destination-out ONLY fades pixels inside fillRect and NEVER erases other tiles on the canvas!
+    ctx.globalCompositeOperation = 'destination-out';
+    if (col === 0) {
+      const g = ctx.createLinearGradient(px, 0, px + 64, 0);
+      g.addColorStop(0, 'rgba(0,0,0,1)'); g.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = g; ctx.fillRect(px, py, 64, 256);
+    } else if (col === gridCols - 1) {
+      const g = ctx.createLinearGradient(px + 192, 0, px + 256, 0);
+      g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,1)');
+      ctx.fillStyle = g; ctx.fillRect(px + 192, py, 64, 256);
+    }
+    if (row === 0) {
+      const g = ctx.createLinearGradient(0, py, 0, py + 64);
+      g.addColorStop(0, 'rgba(0,0,0,1)'); g.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = g; ctx.fillRect(px, py, 256, 64);
+    } else if (row === gridRows - 1) {
+      const g = ctx.createLinearGradient(0, py + 192, 0, py + 256);
+      g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,1)');
+      ctx.fillStyle = g; ctx.fillRect(px, py + 192, 256, 64);
+    }
+    ctx.restore();
+  }
+  _requestSatelliteTile(z, tx, ty) {
+    const tileId = `${z}/${ty}/${tx}`;
+    let entry = this.tileImageCache.get(tileId);
+    if (entry) return entry;
+
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    entry = { img, status: 'loading' };
+    this.tileImageCache.set(tileId, entry);
+    if (this.tileImageCache.size > 520) {
+      const oldestKey = this.tileImageCache.keys().next().value;
+      this.tileImageCache.delete(oldestKey);
+    }
+
+    img.onload = () => {
+      entry.status = 'loaded';
+      this.lodLayers.forEach((layer) => {
+        if (layer.z === z && tx >= layer.xMin && tx <= layer.xMax && ty >= layer.yMin && ty <= layer.yMax) {
+          this._drawSingleTileOnLayer(layer, tx - layer.xMin, ty - layer.yMin, img);
+        }
+      });
+    };
+    img.onerror = () => {
+      if (!img.dataset.fallback) {
+        img.dataset.fallback = '1';
+        img.src = `https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${z}/${ty}/${tx}`;
+      } else if (img.dataset.fallback === '1') {
+        img.dataset.fallback = '2';
+        img.src = `https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2020_3857/default/g/${z}/${ty}/${tx}.jpg`;
+      } else {
+        entry.status = 'error';
+      }
+    };
+    img.src = `https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${z}/${ty}/${tx}`;
+    return entry;
+  }
+  _refreshLodLayerMosaic(layer, centerLat, centerLon) {
+    if (!window.THREE) return;
+    const THREE = window.THREE;
+    const z = layer.z, n = 2 ** z;
+    const clampedLat = Math.max(-78, Math.min(78, centerLat));
+    const latRad = (clampedLat * Math.PI) / 180;
+    const cTileX = Math.floor(((centerLon + 180) / 360) * n);
+    const cTileY = Math.floor(((1 - Math.log(Math.tan(latRad) + 1 / Math.cos(latRad)) / Math.PI) / 2) * n);
+
+    const halfC = Math.floor(layer.gridCols / 2);
+    const halfR = Math.floor(layer.gridRows / 2);
+    const xMin = Math.max(0, Math.min(n - layer.gridCols, cTileX - halfC));
+    const yMin = Math.max(0, Math.min(n - layer.gridRows, cTileY - halfR));
+    const key = `${z}:${xMin}:${yMin}`;
+    layer.centerLat = clampedLat;
+    layer.centerLon = centerLon;
+    if (layer.activeKey === key) return;
+    layer.activeKey = key;
+    layer.xMin = xMin;
+    layer.yMin = yMin;
+    layer.xMax = xMin + layer.gridCols - 1;
+    layer.yMax = yMin + layer.gridRows - 1;
+
+    const tileToLon = (tx) => (tx / n) * 360 - 180;
+    const tileToLat = (ty) => (Math.atan(Math.sinh(Math.PI * (1 - (2 * ty) / n))) * 180) / Math.PI;
+    const segX = 48, segY = 48;
+    const positions = new Float32Array((segX + 1) * (segY + 1) * 3);
+    const normals = new Float32Array((segX + 1) * (segY + 1) * 3);
+    const uvs = new Float32Array((segX + 1) * (segY + 1) * 2);
+    const indices = [];
+
+    let pIdx = 0, uIdx = 0;
+    for (let iy = 0; iy <= segY; iy++) {
+      const fy = iy / segY;
+      const ty = yMin + fy * layer.gridRows;
+      const lat = tileToLat(ty);
+      for (let ix = 0; ix <= segX; ix++) {
+        const fx = ix / segX;
+        const tx = xMin + fx * layer.gridCols;
+        const lon = tileToLon(tx);
+        const v3 = this._latLonToVec3(THREE, lat, lon, layer.radius);
+        positions[pIdx] = v3.x; positions[pIdx + 1] = v3.y; positions[pIdx + 2] = v3.z;
+        const n3 = v3.clone().normalize();
+        normals[pIdx] = n3.x; normals[pIdx + 1] = n3.y; normals[pIdx + 2] = n3.z;
+        pIdx += 3;
+        uvs[uIdx] = fx; uvs[uIdx + 1] = 1 - fy;
+        uIdx += 2;
+      }
+    }
+    for (let iy = 0; iy < segY; iy++) {
+      for (let ix = 0; ix < segX; ix++) {
+        const a = iy * (segX + 1) + ix;
+        const b = (iy + 1) * (segX + 1) + ix;
+        const c = (iy + 1) * (segX + 1) + (ix + 1);
+        const d = iy * (segX + 1) + (ix + 1);
+        indices.push(a, b, d, b, c, d);
+      }
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geo.setAttribute('normal', new THREE.BufferAttribute(normals, 3));
+    geo.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
+    geo.setIndex(indices);
+    if (layer.mesh.geometry) layer.mesh.geometry.dispose();
+    layer.mesh.geometry = geo;
+
+    layer.ctx.clearRect(0, 0, layer.canvas.width, layer.canvas.height);
+    for (let row = 0; row < layer.gridRows; row++) {
+      for (let col = 0; col < layer.gridCols; col++) {
+        const tx = xMin + col, ty = yMin + row;
+        const entry = this._requestSatelliteTile(z, tx, ty);
+        if (entry.status === 'loaded' && entry.img.complete && entry.img.naturalWidth > 0) {
+          this._drawSingleTileOnLayer(layer, col, row, entry.img);
+        }
+      }
+    }
+    layer.texture.needsUpdate = true;
+  }
+  _updateLodTiles(zDist) {
+    if (!this.lodLayers || !this.lodLayers.length || !this.earthGroup) return;
+    const rx = this.earthGroup.rotation.x, ry = this.earthGroup.rotation.y;
+    const camLat = Math.max(-75, Math.min(75, (rx * 180) / Math.PI));
+    let camLon = -((ry * 180) / Math.PI) - 90;
+    camLon = ((((camLon + 180) % 360) + 360) % 360) - 180;
+
+    this.lodLayers.forEach((layer) => {
+      if (zDist >= layer.maxZDist) {
+        layer.mesh.visible = false;
+        layer.mat.opacity = 0;
+        return;
+      }
+      layer.mesh.visible = true;
+      const t = Math.max(0, Math.min(1, (layer.maxZDist - zDist) / (layer.maxZDist - layer.fullZDist)));
+      layer.mat.opacity = t;
+      const distDeg = layer.centerLat === null ? 999 : Math.hypot(camLat - layer.centerLat, camLon - layer.centerLon);
+      if (distDeg > layer.reCenterDeg) {
+        this._refreshLodLayerMosaic(layer, camLat, camLon);
+      }
     });
   }
   _startCameraFlight(lat, lon, targetZ, durationMs = 1050) {
@@ -225,11 +482,11 @@ export class GlobeView {
           const t1 = s / steps, t2 = (s + 1) / steps;
           const la1 = lat1 + (lat2 - lat1) * t1, lo1 = lon1 + (lon2 - lon1) * t1;
           const la2 = lat1 + (lat2 - lat1) * t2, lo2 = lon1 + (lon2 - lon1) * t2;
-          const v1 = this._latLonToVec3(THREE, la1, lo1, isOuter ? 1.00155 : 1.00145);
-          const v2 = this._latLonToVec3(THREE, la2, lo2, isOuter ? 1.00155 : 1.00145);
+          const v1 = this._latLonToVec3(THREE, la1, lo1, isOuter ? 1.0022 : 1.0021);
+          const v2 = this._latLonToVec3(THREE, la2, lo2, isOuter ? 1.0022 : 1.0021);
           vertsMain.push(v1.x, v1.y, v1.z, v2.x, v2.y, v2.z);
-          const sv1 = this._latLonToVec3(THREE, la1, lo1, 1.00125);
-          const sv2 = this._latLonToVec3(THREE, la2, lo2, 1.00125);
+          const sv1 = this._latLonToVec3(THREE, la1, lo1, 1.0019);
+          const sv2 = this._latLonToVec3(THREE, la2, lo2, 1.0019);
           vertsShadow.push(sv1.x, sv1.y, sv1.z, sv2.x, sv2.y, sv2.z);
         }
       }
@@ -237,17 +494,20 @@ export class GlobeView {
     addPath(SAN_LUIS_GEOGRAPHY.OUTER_RING, true);
     SAN_LUIS_GEOGRAPHY.INTERNAL_DIVISIONS.forEach((line) => addPath(line, false));
     const shadowGeo = new THREE.BufferGeometry(); shadowGeo.setAttribute('position', new THREE.Float32BufferAttribute(vertsShadow, 3));
-    this.earthGroup.add(new THREE.LineSegments(shadowGeo, this.sanLuisShadowMat));
+    const shadowLines = new THREE.LineSegments(shadowGeo, this.sanLuisShadowMat); shadowLines.renderOrder = 6;
+    this.earthGroup.add(shadowLines);
     const mainGeo = new THREE.BufferGeometry(); mainGeo.setAttribute('position', new THREE.Float32BufferAttribute(vertsMain, 3));
-    this.earthGroup.add(new THREE.LineSegments(mainGeo, this.sanLuisBordersMat));
+    const mainLines = new THREE.LineSegments(mainGeo, this.sanLuisBordersMat); mainLines.renderOrder = 7;
+    this.earthGroup.add(mainLines);
 
     SAN_LUIS_GEOGRAPHY.DEPARTMENTS.forEach(([lat, lon, labelEs, labelEn]) => {
       const el = document.createElement('div'); el.className = 'dept-floating-tag';
       this.labelLayer.appendChild(el);
-      this.sanLuisDeptNodes.push({ lat, lon, labelEs, labelEn, localVec: this._latLonToVec3(THREE, lat, lon, 1.0018), el });
+      this.sanLuisDeptNodes.push({ lat, lon, labelEs, labelEn, localVec: this._latLonToVec3(THREE, lat, lon, 1.0024), el });
     });
 
     this.sanLuisMarkersGroup = new THREE.Group();
+    this.sanLuisMarkersGroup.renderOrder = 8;
     this.earthGroup.add(this.sanLuisMarkersGroup);
     const dotGeoCap = new THREE.SphereGeometry(0.0013, 10, 10);
     const dotGeoT1 = new THREE.SphereGeometry(0.00095, 8, 8);
@@ -257,7 +517,7 @@ export class GlobeView {
     const matT2 = new THREE.MeshBasicMaterial({ color: 0xbae6fd });
 
     SAN_LUIS_GEOGRAPHY.LOCALITIES.forEach(([lat, lon, name, tier, isCapital]) => {
-      const vec = this._latLonToVec3(THREE, lat, lon, 1.0017);
+      const vec = this._latLonToVec3(THREE, lat, lon, 1.0024);
       const mesh = new THREE.Mesh(isCapital ? dotGeoCap : tier === 1 ? dotGeoT1 : dotGeoT2, isCapital ? matCap : tier === 1 ? matT1 : matT2);
       mesh.position.copy(vec);
       this.sanLuisMarkersGroup.add(mesh);
@@ -275,11 +535,11 @@ export class GlobeView {
     this.scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({ color: 0x93c5fd, size: 0.045, transparent: true, opacity: 0.75 })));
   }
   _buildOrbitsAndSatellites(THREE) {
-    const tilts = [{ rx: 0.14, ry: -0.22, rz: -0.46 }, { rx: -0.14, ry: 0.22, rz: 0.44 }, { rx: 0.10, ry: 0.26, rz: -0.16 }, { rx: -0.12, ry: -0.25, rz: 0.18 }];
+    const tilts = [{ rx: 1.15, ry: 0.35, rz: 0.45 }, { rx: 1.32, ry: -0.42, rz: -0.35 }, { rx: 1.48, ry: 0.18, rz: 0.62 }, { rx: 1.22, ry: -0.25, rz: -0.55 }];
     SATELLITE_FLEET.forEach((sat, idx) => {
       const orbitPivot = new THREE.Group(), t = tilts[idx % tilts.length]; orbitPivot.rotation.set(t.rx, t.ry, t.rz);
       const altRadius = sat.sensor === 'VIIRS' ? 1.24 : 1.17, pts = [];
-      for (let i = 0; i <= 96; i++) { const a = (i / 96) * Math.PI * 2; pts.push(new THREE.Vector3(0, Math.sin(a) * altRadius, Math.cos(a) * altRadius)); }
+      for (let i = 0; i <= 96; i++) { const a = (i / 96) * Math.PI * 2; pts.push(new THREE.Vector3(Math.cos(a) * altRadius, Math.sin(a) * altRadius, 0)); }
       orbitPivot.add(new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: sat.colorHex, transparent: true, opacity: 0.42 })));
       const satNode = new THREE.Group(), coneH = altRadius - 1.0;
       const busMat = new THREE.MeshStandardMaterial({ color: sat.sensor === 'VIIRS' ? 0xd1d5db : 0xd97706, metalness: 0.85, roughness: 0.25 });
@@ -292,12 +552,12 @@ export class GlobeView {
       dish.position.set(0, 0.024, 0.015); dish.rotation.x = Math.PI / 4; satNode.add(dish);
       const lens = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.01, 0.012, 12), new THREE.MeshBasicMaterial({ color: sat.colorHex }));
       lens.position.set(0, -0.024, 0); satNode.add(lens);
-      const cone = new THREE.Mesh(new THREE.ConeGeometry(sat.sensor === 'VIIRS' ? 0.165 : 0.125, coneH, 28, 1, true), new THREE.MeshBasicMaterial({ color: sat.colorHex, transparent: true, opacity: 0.24, side: THREE.DoubleSide }));
+      const cone = new THREE.Mesh(new THREE.ConeGeometry(sat.sensor === 'VIIRS' ? 0.17 : 0.125, coneH, 28, 1, true), new THREE.MeshBasicMaterial({ color: sat.colorHex, transparent: true, opacity: 0.25, side: THREE.DoubleSide }));
       cone.position.y = -coneH / 2; satNode.add(cone);
       const labelEl = document.createElement('div'); labelEl.className = 'sat-floating-tag';
       labelEl.style.borderColor = sat.colorHex;
       labelEl.textContent = `${sat.id.toUpperCase().replace('_', '-')} (${sat.sensor}) ${sat.equatorCrossingLocal.split(' ')[0]}`;
-      this.labelLayer.appendChild(labelEl); orbitPivot.add(satNode); this.scene.add(orbitPivot);
+      this.labelLayer.appendChild(labelEl); orbitPivot.add(satNode); this.earthGroup.add(orbitPivot);
       this.satMeshes.set(sat.id, { sat, idx, orbitPivot, satNode, altRadius, labelEl });
     });
   }
@@ -603,7 +863,7 @@ export class GlobeView {
       if (i < this.currentBins.length) {
         const b = this.currentBins[i], ratio = (0.65 + 0.65 * (b.harmonizedFrp / maxFrp)) * scaleMult;
         const targetSat = this._getSatForBinIndex(i);
-        dummy.position.copy(this._latLonToVec3(window.THREE, b.lat, b.lon, 1.0008 + 0.0032 * scaleMult));
+        dummy.position.copy(this._latLonToVec3(window.THREE, b.lat, b.lon, 1.0025 + 0.0032 * scaleMult));
         dummy.scale.set(ratio, ratio, ratio); dummy.updateMatrix();
         this.hotspotSatMeshes.forEach((mesh, satId) => {
           mesh.setMatrixAt(i, satId === targetSat.id ? dummy.matrix : zeroDummy.matrix);
@@ -660,6 +920,7 @@ export class GlobeView {
       this.earthGroup.rotation.x += (this.rotationTarget.x - this.earthGroup.rotation.x) * 0.1;
     }
     const zDist = this.camera.position.z;
+    this._updateLodTiles(zDist);
     if (this.cloudsMesh) { this.cloudsMesh.rotation.y += 0.00025; this.cloudsMesh.material.opacity = zDist < 1.9 ? 0.0 : 0.05; }
     const zoomFactor = Math.max(0, Math.min(1, (zDist - 1.35) / 1.75));
     if (this.bordersMat) this.bordersMat.opacity = 0.52 + 0.22 * zoomFactor;
@@ -679,13 +940,11 @@ export class GlobeView {
     if (this.aoiRingMesh) this.aoiRingMesh.visible = !this.autoRotate && zDist > 1.48;
     if (this.aoiRingMat) this.aoiRingMat.opacity = 0.65 + 0.25 * Math.sin(elapsed * 3.2);
     const w = this.container.clientWidth || window.innerWidth, h = this.container.clientHeight || window.innerHeight, projVec = new window.THREE.Vector3();
-    const upAxis = new window.THREE.Vector3(0, 1, 0);
-    this.satMeshes.forEach(({ idx, orbitPivot, satNode, altRadius, labelEl }, id) => {
+    this.satMeshes.forEach(({ sat, orbitPivot, satNode, altRadius, labelEl }, id) => {
       const vis = this.activeSatIds.has(id) && zDist > 1.42; orbitPivot.visible = vis; labelEl.style.display = vis ? 'block' : 'none';
       if (vis) {
-        const ang = Math.sin(elapsed * (0.21 + idx * 0.035) + idx * 1.45) * 0.72;
-        satNode.position.set(0, Math.sin(ang) * altRadius, Math.cos(ang) * altRadius);
-        satNode.quaternion.setFromUnitVectors(upAxis, satNode.position.clone().normalize());
+        const ang = elapsed * 0.35 + sat.phaseOffsetRad;
+        satNode.position.set(Math.cos(ang) * altRadius, Math.sin(ang) * altRadius, 0); satNode.rotation.z = ang - Math.PI / 2;
         satNode.getWorldPosition(projVec); projVec.project(this.camera);
         labelEl.style.transform = `translate(${(projVec.x * 0.5 + 0.5) * w - 45}px, ${(-projVec.y * 0.5 + 0.5) * h - 26}px)`;
       }
@@ -804,7 +1063,7 @@ export class GlobeView {
     this.hoverScreenItems = [];
     if (window.THREE) {
       const THREE = window.THREE;
-      const rHotspot = 1.0008 + 0.0032 * this.lastHotspotScale;
+      const rHotspot = 1.0025 + 0.0032 * this.lastHotspotScale;
       const limit = Math.min(35, this.currentBins.length);
       for (let i = 0; i < limit; i++) {
         const b = this.currentBins[i];

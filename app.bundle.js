@@ -1217,11 +1217,17 @@ class GlobeView {
     this.rotationTarget = { x: 0.22, y: -1.35 }; this.zoomTarget = 3.25; this.zoomReadoutEl = null;
     this.lastBiomeId = null; this.autoRotate = false; this.lastHotspotScale = 1.0;
     this.flightState = null; this.cameraVeilEl = null;
+    this.hoverTooltipEl = null; this.hoverRingEl = null; this.hoverScreenItems = []; this.activeHoverItem = null; this.lastSnapshot = null;
   }
   init() { if (this.container && window.THREE) { this._initThreeScene(); this._bindPointerControls(); this._animate(); } }
   _latLonToVec3(THREE, lat, lon, r = 1.004) {
     const phi = ((90 - lat) * Math.PI) / 180, theta = ((lon + 180) * Math.PI) / 180;
     return new THREE.Vector3(-r * Math.sin(phi) * Math.cos(theta), r * Math.cos(phi), r * Math.sin(phi) * Math.sin(theta));
+  }
+  _haversineKm(lat1, lon1, lat2, lon2) {
+    const toRad = Math.PI / 180, dLat = (lat2 - lat1) * toRad, dLon = (lon2 - lon1) * toRad;
+    const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * toRad) * Math.cos(lat2 * toRad) * Math.sin(dLon / 2) ** 2;
+    return 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   }
   _createHighResProceduralEarth(THREE) {
     const c = document.createElement('canvas'); c.width = 2048; c.height = 1024;
@@ -1249,7 +1255,12 @@ class GlobeView {
     this.cameraVeilEl = document.createElement('div'); this.cameraVeilEl.className = 'globe-camera-veil';
     this.container.appendChild(this.cameraVeilEl);
     this.labelLayer = document.createElement('div'); this.labelLayer.className = 'sat-labels-overlay';
-    this.container.appendChild(this.labelLayer); this._buildZoomHud();
+    this.container.appendChild(this.labelLayer);
+    this.hoverRingEl = document.createElement('div'); this.hoverRingEl.className = 'globe-hover-ring';
+    this.container.appendChild(this.hoverRingEl);
+    this.hoverTooltipEl = document.createElement('div'); this.hoverTooltipEl.className = 'globe-hover-tooltip';
+    this.container.appendChild(this.hoverTooltipEl);
+    this._buildZoomHud();
     const domCanvas = this.renderer.domElement;
     domCanvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); this.isContextLost = true; });
     domCanvas.addEventListener('webglcontextrestored', () => { this.isContextLost = false; this.dispose(); this._initThreeScene(); });
@@ -1493,26 +1504,180 @@ class GlobeView {
     }
     this.aoiRingMesh.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(tickPts), this.aoiRingMat));
   }
+  _hideHoverCard() {
+    this.activeHoverItem = null;
+    if (this.hoverRingEl) this.hoverRingEl.classList.remove('ring-visible');
+    if (this.hoverTooltipEl) this.hoverTooltipEl.classList.remove('tooltip-visible');
+    if (this.container) this.container.style.cursor = this.isDragging ? 'grabbing' : 'grab';
+  }
+  _renderHoverCard(item, w, h) {
+    if (!this.hoverTooltipEl || !this.hoverRingEl) return;
+    const isEs = i18n.currentLang === 'es';
+    const latStr = `${Math.abs(item.lat).toFixed(2)}° ${item.lat < 0 ? 'S' : 'N'}`;
+    const lonStr = `${Math.abs(item.lon).toFixed(2)}° ${item.lon < 0 ? 'W' : 'E'}`;
+
+    let nearDept = null, minDeptDist = 9999;
+    this.sanLuisDeptNodes.forEach((dpt) => {
+      const d = this._haversineKm(item.lat, item.lon, dpt.lat, dpt.lon);
+      if (d < minDeptDist) { minDeptDist = d; nearDept = dpt; }
+    });
+
+    if (item.kind === 'hotspot') {
+      const b = item.bin;
+      const isModis = item.isModis;
+      const accent = isModis ? '#ff6d00' : '#00e5ff';
+      this.hoverRingEl.style.borderColor = accent;
+      this.hoverRingEl.style.boxShadow = `0 0 12px ${accent}, inset 0 0 6px ${accent}`;
+      this.hoverRingEl.style.left = `${item.sx}px`;
+      this.hoverRingEl.style.top = `${item.sy}px`;
+      this.hoverRingEl.classList.add('ring-visible');
+
+      let nearLoc = null, minLocKm = 9999;
+      this.sanLuisLocNodes.forEach((loc) => {
+        const dKm = this._haversineKm(b.lat, b.lon, loc.lat, loc.lon);
+        if (dKm < minLocKm) { minLocKm = dKm; nearLoc = loc; }
+      });
+
+      const biome = this.lastSnapshot && this.lastSnapshot.biome ? this.lastSnapshot.biome : null;
+      const zScore = this.lastSnapshot && this.lastSnapshot.cellStats ? this.lastSnapshot.cellStats.zScore : 0;
+      const refText = (nearLoc && minLocKm < 190)
+        ? (isEs ? `A ${minLocKm.toFixed(1)} km de ${nearLoc.name} (${nearDept ? nearDept.labelEs : 'San Luis'})` : `${minLocKm.toFixed(1)} km from ${nearLoc.name}`)
+        : (biome ? `${isEs ? biome.nameEs : biome.nameEn}` : 'AOI');
+
+      const kgSec = (b.harmonizedFrp * 0.368).toFixed(2);
+      const tonHr = ((b.harmonizedFrp * 0.368 * 3600) / 1000).toFixed(2);
+      const pxModis = Math.max(1, b.countModis || 1);
+      const pxViirs = Math.max(1, b.countViirs || 1);
+
+      let lacesBg = 'rgba(6, 78, 59, 0.72)', lacesBorder = '#10b981', lacesColor = '#6ee7b7';
+      let lacesLabel = isEs ? '🟢 LACES NOMINAL · Contención Estándar' : '🟢 LACES NOMINAL · Standard Containment';
+      if ((minLocKm < 16) || b.harmonizedFrp >= 22 || zScore >= 2.0) {
+        lacesBg = 'rgba(127, 29, 29, 0.82)'; lacesBorder = '#f43f5e'; lacesColor = '#fecdd3';
+        lacesLabel = isEs ? '🔴 CRÍTICO · Alerta Interfaz Urbano-Forestal' : '🔴 CRITICAL · WUI Burnover Alert';
+      } else if ((minLocKm < 32) || b.harmonizedFrp >= 11 || zScore >= 1.0) {
+        lacesBg = 'rgba(120, 53, 15, 0.8)'; lacesBorder = '#f59e0b'; lacesColor = '#fde68a';
+        lacesLabel = isEs ? '🟡 VIGÍA LACES · Monitoreo de Propagación' : '🟡 LACES WATCH · Spread Monitoring';
+      }
+
+      this.hoverTooltipEl.style.borderColor = accent;
+      this.hoverTooltipEl.innerHTML = `
+        <div class="htt-header">
+          <span style="color:${accent}">${isModis ? '🟠 FOCO MODIS (Terra/Aqua)' : '🔵 FOCO VIIRS (SNPP/NOAA-20)'}</span>
+          <span class="htt-badge" style="background:rgba(15,23,42,0.9);border:1px solid ${accent};color:${accent}">${isModis ? 'Res. 1000m' : 'Res. 375m'}</span>
+        </div>
+        <div class="htt-row"><span>📍 ${isEs ? 'Referencia' : 'Reference'}:</span><strong>${refText}</strong></div>
+        <div class="htt-row"><span>🌐 ${isEs ? 'Coordenadas' : 'Coords'}:</span><strong>${latStr}, ${lonStr}</strong></div>
+        <div class="htt-row"><span>⚡ ${isEs ? 'Potencia (FRP Arm.)' : 'Harmonized FRP'}:</span><strong style="color:#38bdf8">${b.harmonizedFrp.toFixed(2)} MW</strong></div>
+        <div class="htt-sub">MODIS: ${b.frpModis.toFixed(1)} MW (${pxModis} px) · VIIRS Esc.: ${b.viirsScaledFrp.toFixed(1)} MW (${pxViirs} px)</div>
+        <div class="htt-row"><span>🌲 ${isEs ? 'Biomasa Seca (Wooster)' : 'Dry Biomass Rate'}:</span><strong style="color:#fbbf24">${kgSec} kg/s (${tonHr} t/h)</strong></div>
+        <div class="htt-laces" style="background:${lacesBg};border:1px solid ${lacesBorder};color:${lacesColor}">${lacesLabel}</div>
+      `;
+    } else if (item.kind === 'locality') {
+      const loc = item.loc;
+      const accent = loc.isCapital ? '#facc15' : loc.tier === 1 ? '#22d3ee' : '#bae6fd';
+      this.hoverRingEl.style.borderColor = accent;
+      this.hoverRingEl.style.boxShadow = `0 0 12px ${accent}, inset 0 0 6px ${accent}`;
+      this.hoverRingEl.style.left = `${item.sx}px`;
+      this.hoverRingEl.style.top = `${item.sy}px`;
+      this.hoverRingEl.classList.add('ring-visible');
+
+      let minFireKm = 9999, nearBin = null;
+      this.currentBins.slice(0, 35).forEach((b) => {
+        const dKm = this._haversineKm(loc.lat, loc.lon, b.lat, b.lon);
+        if (dKm < minFireKm) { minFireKm = dKm; nearBin = b; }
+      });
+
+      const roleText = loc.isCapital
+        ? (isEs ? 'Capital Provincial' : 'Provincial Capital')
+        : loc.tier === 1
+          ? (isEs ? 'Cabecera / Centro Urbano' : 'Department Seat / Hub')
+          : (isEs ? 'Localidad Serrana / Rural' : 'Municipality / Town');
+
+      let wuiBg = 'rgba(6, 78, 59, 0.72)', wuiBorder = '#10b981', wuiColor = '#6ee7b7';
+      let wuiText = isEs ? '🟢 Perímetro Urbano-Forestal Seguro' : '🟢 Safe WUI Perimeter';
+      if (minFireKm < 16) {
+        wuiBg = 'rgba(127, 29, 29, 0.82)'; wuiBorder = '#f43f5e'; wuiColor = '#fecdd3';
+        wuiText = isEs ? '🔴 Alerta Temprana WUI · Foco Cercano' : '🔴 Early WUI Alert · Nearby Hotspot';
+      } else if (minFireKm < 35) {
+        wuiBg = 'rgba(120, 53, 15, 0.8)'; wuiBorder = '#f59e0b'; wuiColor = '#fde68a';
+        wuiText = isEs ? '🟡 Vigía Preventiva · Defensa Civil / Brigadas' : '🟡 Preventive Watch · Civil Defense';
+      }
+
+      this.hoverTooltipEl.style.borderColor = accent;
+      this.hoverTooltipEl.innerHTML = `
+        <div class="htt-header">
+          <span style="color:${accent}">${loc.isCapital ? '★' : '📍'} ${loc.name}</span>
+          <span class="htt-badge" style="background:rgba(15,23,42,0.9);border:1px solid ${accent};color:${accent}">${nearDept ? nearDept.labelEs : 'San Luis'}</span>
+        </div>
+        <div class="htt-row"><span>🏛️ ${isEs ? 'Categoría' : 'Category'}:</span><strong>${roleText}</strong></div>
+        <div class="htt-row"><span>🌐 ${isEs ? 'Coordenadas' : 'Coords'}:</span><strong>${latStr}, ${lonStr}</strong></div>
+        <div class="htt-row"><span>🔥 ${isEs ? 'Foco más cercano' : 'Nearest Hotspot'}:</span><strong style="color:#fb923c">${nearBin ? `a ${minFireKm.toFixed(1)} km (${nearBin.harmonizedFrp.toFixed(1)} MW)` : 'N/A'}</strong></div>
+        <div class="htt-laces" style="background:${wuiBg};border:1px solid ${wuiBorder};color:${wuiColor}">${wuiText}</div>
+      `;
+    }
+
+    const cardW = 278, cardH = 152;
+    let tx = item.sx + 16;
+    let ty = item.sy - cardH * 0.5;
+    if (tx + cardW > w - 16) tx = item.sx - cardW - 16;
+    if (ty < 14) ty = 14;
+    if (ty + cardH > h - 18) ty = Math.max(14, h - cardH - 18);
+    this.hoverTooltipEl.style.left = `${Math.round(tx)}px`;
+    this.hoverTooltipEl.style.top = `${Math.round(ty)}px`;
+    this.hoverTooltipEl.classList.add('tooltip-visible');
+  }
   _bindPointerControls() {
     this.container.addEventListener('pointerdown', (e) => {
       if (e.target && e.target.closest && e.target.closest('.globe-zoom-controls')) return;
       this.isDragging = true;
       this.flightState = null;
+      this._hideHoverCard();
       if (this.cameraVeilEl) this.cameraVeilEl.classList.remove('veil-active');
       this.prevMouse = { x: e.clientX, y: e.clientY };
     });
-    window.addEventListener('pointerup', () => (this.isDragging = false));
+    window.addEventListener('pointerup', () => {
+      this.isDragging = false;
+      if (this.container && !this.activeHoverItem) this.container.style.cursor = 'grab';
+    });
+    this.container.addEventListener('pointerleave', () => this._hideHoverCard());
     window.addEventListener('pointermove', (e) => {
-      if (!this.isDragging) return;
-      const alt = this.camera ? Math.max(0.035, this.camera.position.z - 0.985) : 2.25;
-      const sens = 0.0042 * (alt / 2.25);
-      this.rotationTarget.y += (e.clientX - this.prevMouse.x) * sens;
-      this.rotationTarget.x = Math.max(-1.25, Math.min(1.25, this.rotationTarget.x + (e.clientY - this.prevMouse.y) * sens));
-      this.prevMouse = { x: e.clientX, y: e.clientY };
+      if (this.isDragging) {
+        const alt = this.camera ? Math.max(0.035, this.camera.position.z - 0.985) : 2.25;
+        const sens = 0.0042 * (alt / 2.25);
+        this.rotationTarget.y += (e.clientX - this.prevMouse.x) * sens;
+        this.rotationTarget.x = Math.max(-1.25, Math.min(1.25, this.rotationTarget.x + (e.clientY - this.prevMouse.y) * sens));
+        this.prevMouse = { x: e.clientX, y: e.clientY };
+        return;
+      }
+      if (!this.container || !this.hoverScreenItems.length) return;
+      if (e.target && e.target.closest && (e.target.closest('.floating-glass-panel') || e.target.closest('.globe-zoom-controls'))) {
+        this._hideHoverCard();
+        return;
+      }
+      const rect = this.renderer ? this.renderer.domElement.getBoundingClientRect() : this.container.getBoundingClientRect();
+      const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+      if (mx < 0 || my < 0 || mx > rect.width || my > rect.height) {
+        this._hideHoverCard();
+        return;
+      }
+      let bestItem = null, bestPxDist = 17;
+      for (let i = 0; i < this.hoverScreenItems.length; i++) {
+        const it = this.hoverScreenItems[i];
+        const d = Math.hypot(it.sx - mx, it.sy - my);
+        if (d < bestPxDist) { bestPxDist = d; bestItem = it; }
+      }
+      if (bestItem) {
+        this.activeHoverItem = bestItem;
+        this.container.style.cursor = 'pointer';
+        this._renderHoverCard(bestItem, rect.width, rect.height);
+      } else if (this.activeHoverItem) {
+        this._hideHoverCard();
+      }
     });
     this.container.addEventListener('wheel', (e) => {
       e.preventDefault();
       this.flightState = null;
+      this._hideHoverCard();
       if (this.cameraVeilEl) this.cameraVeilEl.classList.remove('veil-active');
       const alt = Math.max(0.04, this.zoomTarget - 1.0);
       this.zoomTarget = Math.max(1.045, Math.min(4.2, this.zoomTarget + e.deltaY * 0.00085 * alt));
@@ -1534,7 +1699,12 @@ class GlobeView {
       let nextZ = Math.max(1.045, 1.0 + nextAlt);
       let targetLat = null, targetLon = null, snappedName = null;
 
-      if (this.camera && this.earthSphereMesh && window.THREE) {
+      if (this.activeHoverItem) {
+        targetLat = this.activeHoverItem.lat;
+        targetLon = this.activeHoverItem.lon;
+        snappedName = this.activeHoverItem.kind === 'locality' ? this.activeHoverItem.loc.name : `Foco ${this.activeHoverItem.isModis ? 'MODIS' : 'VIIRS'} (${this.activeHoverItem.bin.harmonizedFrp.toFixed(1)} MW)`;
+        nextZ = Math.min(nextZ, 1.075);
+      } else if (this.camera && this.earthSphereMesh && window.THREE) {
         const THREE = window.THREE;
         const mouse = new THREE.Vector2(((e.clientX - rect.left) / rect.width) * 2 - 1, -((e.clientY - rect.top) / rect.height) * 2 + 1);
         const raycaster = new THREE.Raycaster(); raycaster.setFromCamera(mouse, this.camera);
@@ -1598,6 +1768,7 @@ class GlobeView {
     this.hotspotModisMesh.instanceMatrix.needsUpdate = true; this.hotspotViirsMesh.instanceMatrix.needsUpdate = true;
   }
   updateTelemetry(snapshot) {
+    this.lastSnapshot = snapshot;
     this.activeSatIds = new Set(snapshot.activeSatellites.map((s) => s.id)); this.currentBins = snapshot.harmonizedGrid.bins || [];
     if (!this.autoRotate && this.lastBiomeId !== snapshot.biome.id) {
       const prevBiome = this.lastBiomeId;
@@ -1778,6 +1949,51 @@ class GlobeView {
           }
         }
       });
+    }
+
+    // 4. Project active thermal hotspot circles & locality circles for interactive hover telemetry
+    this.hoverScreenItems = [];
+    if (window.THREE) {
+      const THREE = window.THREE;
+      const rHotspot = 1.0008 + 0.0032 * this.lastHotspotScale;
+      const limit = Math.min(35, this.currentBins.length);
+      for (let i = 0; i < limit; i++) {
+        const b = this.currentBins[i];
+        projVec.copy(this._latLonToVec3(THREE, b.lat, b.lon, rHotspot)).applyMatrix4(this.earthGroup.matrixWorld);
+        if (projVec.z > 0.55) {
+          projVec.project(this.camera);
+          if (Math.abs(projVec.x) < 0.96 && Math.abs(projVec.y) < 0.96) {
+            this.hoverScreenItems.push({
+              kind: 'hotspot',
+              bin: b,
+              isModis: i % 2 === 0,
+              lat: b.lat,
+              lon: b.lon,
+              sx: (projVec.x * 0.5 + 0.5) * w,
+              sy: (-projVec.y * 0.5 + 0.5) * h
+            });
+          }
+        }
+      }
+      if (zDist < 1.32) {
+        this.sanLuisLocNodes.forEach((loc) => {
+          if (loc.mesh && !loc.mesh.visible) return;
+          projVec.copy(loc.localVec).applyMatrix4(this.earthGroup.matrixWorld);
+          if (projVec.z > 0.78) {
+            projVec.project(this.camera);
+            if (Math.abs(projVec.x) < 0.95 && Math.abs(projVec.y) < 0.95) {
+              this.hoverScreenItems.push({
+                kind: 'locality',
+                loc,
+                lat: loc.lat,
+                lon: loc.lon,
+                sx: (projVec.x * 0.5 + 0.5) * w,
+                sy: (-projVec.y * 0.5 + 0.5) * h
+              });
+            }
+          }
+        });
+      }
     }
 
     if (!this.flightState) {

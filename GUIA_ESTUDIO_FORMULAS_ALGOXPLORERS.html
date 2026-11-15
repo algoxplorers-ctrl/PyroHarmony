@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Machete Científico & Formulario Maestro — AlgoXplorers</title>
+  <title>Machete Científico & Formulario Secreto — AlgoXplorers</title>
   <!-- KaTeX -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
@@ -76,11 +76,6 @@
       border-color: var(--accent-cyan);
     }
     .btn-print:hover { background: #1d4ed8; }
-    .btn-outline {
-      background: var(--card-bg);
-      color: #fff;
-    }
-    .btn-outline:hover { background: #1e293b; color: var(--accent-cyan); }
 
     /* Hero */
     .hero {
@@ -107,22 +102,6 @@
     }
     .hero h1 { font-size: 2.1rem; color: #fff; margin-bottom: 10px; }
     .hero p { color: var(--text-muted); font-size: 1.05rem; }
-
-    .team-badge-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 14px;
-    }
-    .team-badge-pill {
-      background: rgba(11,61,145,0.4);
-      border: 1px solid var(--accent-cyan);
-      border-radius: 6px;
-      padding: 4px 10px;
-      font-size: 0.8rem;
-      color: #fff;
-    }
-    .team-badge-pill strong { color: var(--accent-cyan); }
 
     /* Tarjetas de Módulo */
     .module-card {
@@ -283,16 +262,13 @@
   <div class="top-bar">
     <div style="font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px;">
       <span>🧠 Formulario & Machete de Estudio Interno</span>
-      <span style="font-size: 0.8rem; color: var(--accent-purple);">(Equipo AlgoXplorers)</span>
+      <span style="font-size: 0.8rem; color: var(--accent-purple);">(Solo Equipo AlgoXplorers)</span>
     </div>
     <div style="display: flex; gap: 10px;">
       <button onclick="window.print()" class="btn btn-print">
         🖨️ Imprimir / Guardar PDF
       </button>
-      <a href="GUIA_ESTUDIO_FORMULAS_ALGOXPLORERS.en.html" class="btn btn-outline">
-        🌐 Switch to English
-      </a>
-      <a href="index.html" class="btn btn-outline">
+      <a href="/" class="btn" style="background: var(--card-bg); color: #fff;">
         ⬅ Volver a la Maqueta
       </a>
     </div>
@@ -300,7 +276,7 @@
 
   <!-- HERO -->
   <div class="hero">
-    <div class="badge">NASA Space Apps Challenge 2026 — AlgoXplorers</div>
+    <div class="badge">Uso Interno del Equipo — Confidencial AlgoXplorers</div>
     <h1>Formulario Maestro, Matemáticas y Física de PyroHarmony</h1>
     <p>Este documento es una guía pedagógica diseñada paso a paso para que todo el equipo (José Alex, Carlos, Gisella, Juan Carlos y Maximiliano) domine cada ecuación, entienda el porqué de cada número y pueda responder con seguridad ante cualquier pregunta técnica.</p>
   </div>
@@ -312,10 +288,10 @@
       <li>1. La Física Térmica y el Fuego: ¿Por qué NO usamos temperatura en °C? (Stefan-Boltzmann, el poder de $T^4$ y Sub-píxel)</li>
       <li>2. La Potencia Radiativa del Fuego (FRP en Megawatts): Ecuación de Wooster y Kaufman</li>
       <li>3. La Fractura Óptica MODIS vs. VIIRS: Geometría de Píxel, Efecto Bowtie y Swath Nadir</li>
-      <li>4. El Modelo de Armonización: Spatial Binning, Calibración Cruzada, Conservación $\alpha + \beta = 1.00$ y Caso San Luis</li>
+      <li>4. El Modelo de Armonización: Spatial Binning, Calibración Cruzada y Conservación $\alpha + \beta = 1.00$</li>
       <li>5. El Z-Score Fenológico Semanal: Matriz 52 Semanas × 26 Años</li>
       <li>6. Satélites en Órbita Polar: Terra, Aqua, Suomi-NPP y NOAA-20</li>
-      <li>7. "El Machete del Defensor": 12 Respuestas Clave Rápidas para Memorizar (Incluyendo San Luis y los 3 Proto-usuarios)</li>
+      <li>7. "El Machete del Defensor": 10 Respuestas Clave Rápidas para Memorizar</li>
     </ul>
   </div>
 
@@ -395,7 +371,7 @@
     <p>En MODIS, un píxel mide <strong>1.000 m × 1.000 m = 1.000.000 m²</strong> (100 hectáreas). Un frente de fuego activo típico mide unos <strong>100 m²</strong> (el 0,01% del píxel). El resto es suelo y árboles fríos.</p>
 
     <div class="box-example">
-      <strong>📐 Ejemplo con números reales: ¿Cómo un fuego de 800 °C da 21,3 °C aparentes?</strong><br><br>
+      <strong>📐 Ejemplo con números reales: ¿Cómo un fuego de 800 °C da 23 °C aparentes?</strong><br><br>
       Supongamos:<br>
       • Suelo frío de fondo: $T_{\text{bg}} = 20^\circ\text{C} = 293{,}15\text{ K}$ (ocupa el $99{,}99\%$ del píxel, $1-p = 0{,}9999$).<br>
       • Llama de fuego: $T_{\text{fuego}} = 800^\circ\text{C} = 1073{,}15\text{ K}$ (ocupa solo $p = 0{,}0001$, es decir 100 m² de 1.000.000 m²).<br><br>
@@ -423,7 +399,7 @@
 
     <div class="box-why">
       <strong>💡 La Solución de la NASA (Kaufman & Wooster, 1998–2005):</strong><br>
-      En lugar de buscar la "temperatura", los científicos descubrieron que en la banda del <strong>Infrarrojo Medio (MIR a 3,9–4,0 µm)</strong>, la radiancia emitida por el fuego es <strong>linealmente proporcional a la energía radiativa total</strong> liberada por la combustión.
+      En lugar de buscar la "temperatura", los científicos descubrieron que en la banda del **Infrarrojo Medio (MIR a 3,9–4,0 µm)**, la radiancia emitida por el fuego es <strong>linealmente proporcional a la energía radiativa total</strong> liberada por la combustión.
     </div>
 
     <h3 style="color: #fff; margin-top: 15px;">2.1 Ecuación de Wooster (Aproximación de Radiación MIR)</h3>
@@ -503,8 +479,8 @@
     <div class="box-why">
       <strong>🔥 El Ejemplo para entender la disparidad 4x en Hotspots:</strong><br>
       Imagina un incendio que ocupa un cuadrado de 800 m × 800 m:<br>
-      • <strong>MODIS:</strong> Cae dentro de <strong>1 solo píxel</strong> de 1 km² $\rightarrow$ MODIS reporta: <strong>1 foco de calor</strong>.<br>
-      • <strong>VIIRS:</strong> Con píxeles de 375 m, ese mismo fuego abarca al menos <strong>4 píxeles contiguos</strong> $\rightarrow$ VIIRS reporta: <strong>4 focos de calor</strong>.<br>
+      • **MODIS:** Cae dentro de <strong>1 solo píxel</strong> de 1 km² $\rightarrow$ MODIS reporta: **1 foco de calor**.<br>
+      • **VIIRS:** Con píxeles de 375 m, ese mismo fuego abarca al menos <strong>4 píxeles contiguos</strong> $\rightarrow$ VIIRS reporta: **4 focos de calor**.<br>
       <em>¡El fuego es idéntico, pero el recuento simple se cuadruplicó artificialmente!</em>
     </div>
   </div>
@@ -537,14 +513,6 @@
       </div>
     </div>
 
-    <!-- CASO TERRITORIAL SAN LUIS -->
-    <div class="box-why" style="background: rgba(168,85,247,0.15); border-left-color: var(--accent-purple);">
-      <strong style="color: var(--accent-purple);">🏔️ Caso de Calibración Territorial: San Luis (Sierras y Monte):</strong><br>
-      En zonas de topografía rugosa con vientos locales intensos (viento Zonda), el modelo calibra parámetros regionales específicos:
-      $$\alpha = 0{,}44 \qquad \beta = 0{,}56 \qquad R^2 = 0{,}92$$
-      Esto corrige la subdetección en laderas escarpadas, asegurando que cuando el sistema emita una alarma en San Luis, responda a una emergencia biofísica comprobada y no a un espejismo instrumental.
-    </div>
-
     <h3 style="color: #fff; margin-top: 15px;">Paso 3: Métricas de Control de Calidad</h3>
     <p>Para asegurar que la armonización no sea una invención matemática, el sistema evalúa dos indicadores estadísticos estrictos:</p>
     <ul>
@@ -565,8 +533,8 @@
     <div class="box-why">
       <strong>🌾 ¿Qué es la Fenología del Fuego?</strong><br>
       Los incendios tienen un ritmo biológico dictado por las estaciones del año. En la Amazonía:<br>
-      • <strong>Abril (Semana 15):</strong> Es época de lluvias torrenciales. Tener 300 MW de fuego es una <strong>anomalía grave y destructiva</strong>.<br>
-      • <strong>Agosto (Semana 34):</strong> Es el pico de la temporada seca. Tener 300 MW es <strong>absolutamente normal</strong>.<br>
+      • **Abril (Semana 15):** Es época de lluvias torrenciales. Tener 300 MW de fuego es una **anomalía grave y destructiva**.<br>
+      • **Agosto (Semana 34):** Es el pico de la temporada seca. Tener 300 MW es **absolutamente normal**.<br>
       <em>Si promedias todo el año junto, generas falsas alarmas en época de lluvias y ocultas desastres en época seca.</em>
     </div>
 
@@ -696,9 +664,9 @@
     <h3 style="color: var(--accent-cyan); margin-top: 22px;">6.3 Velocidad Orbital: ¿A qué velocidad se mueven de verdad vs. la maqueta 3D?</h3>
     <div class="box-why">
       <strong>🚀 Realidad Física vs. Escala Visual:</strong><br>
-      • <strong>En velocidad absoluta van rapidísimo:</strong> Viajan a unos <strong>27.000 km/h</strong> ($7{,}5\text{ km/s}$), es decir unas 25 veces más rápido que un avión de pasajeros.<br>
-      • <strong>Pero la Tierra es enorme:</strong> Tienen que recorrer una circunferencia de $40.000\text{ km}$, por lo que tardan unos <strong>99 a 101 minutos</strong> (casi 1 hora y 40 minutos) en dar una sola vuelta completa al planeta (realizan 14 órbitas por día).<br>
-      • <strong>¿Por qué en la maqueta dan una vuelta cada 15 segundos?</strong> Porque está acelerada intencionadamente en modo <em>time-lapse</em>. Si se movieran en tiempo real 1:1, parecerían congelados y ningún evaluador podría notar cómo se cruzan las órbitas ni cómo el haz Nadir barre los continentes.
+      • **En velocidad absoluta van rapidísimo:** Viajan a unos **27.000 km/h** ($7{,}5\text{ km/s}$), es decir unas 25 veces más rápido que un avión de pasajeros.<br>
+      • **Pero la Tierra es enorme:** Tienen que recorrer una circunferencia de $40.000\text{ km}$, por lo que tardan unos **99 a 101 minutos** (casi 1 hora y 40 minutos) en dar una sola vuelta completa al planeta (realizan 14 órbitas por día).<br>
+      • **¿Por qué en la maqueta dan una vuelta cada 15 segundos?** Porque está acelerada intencionadamente en modo <em>time-lapse</em>. Si se movieran en tiempo real 1:1, parecerían congelados y ningún evaluador podría notar cómo se cruzan las órbitas ni cómo el haz Nadir barre los continentes.
     </div>
   </div>
 
@@ -708,7 +676,7 @@
   <div class="module-card">
     <div class="module-header">
       <span class="module-num">MÓDULO 7</span>
-      <h2 class="module-title">"El Machete del Defensor": 12 Respuestas Clave para Memorizar</h2>
+      <h2 class="module-title">"El Machete del Defensor": 10 Respuestas Clave para Memorizar</h2>
     </div>
     <p style="margin-bottom: 16px; color: var(--text-muted);">Si en la defensa o en una conversación técnica te hacen estas preguntas, responde con estas frases exactas:</p>
 
@@ -764,7 +732,7 @@
     <div class="qa-card">
       <div class="qa-q">❓ 7. "¿Qué es un Z-Score de 2.0?"</div>
       <div class="qa-a">
-        <strong>Respuesta:</strong> "Significa que la energía observada está 2 desviaciones estándar por encima de la media histórica de esa semana. En estadística corresponde a $p < 0{,}05$, lo que demuestra que la probabilidad de que ocurra por simple azar climático es menor al 5%: es una <strong>anomalía estadísticamente significativa</strong>."
+        <strong>Respuesta:</strong> "Significa que la energía observada está 2 desviaciones estándar por encima de la media histórica de esa semana. En estadística corresponde a $p < 0{,}05$, lo que demuestra que la probabilidad de que ocurra por simple azar climático es menor al 5%: es una **anomalía estadísticamente significativa**."
       </div>
     </div>
 
@@ -780,7 +748,7 @@
     <div class="qa-card">
       <div class="qa-q">❓ 9. "¿Qué datasets oficiales de la NASA utiliza el proyecto?"</div>
       <div class="qa-a">
-        <strong>Respuesta:</strong> "Datos de NASA FIRMS: <code>MCD14DL</code> (MODIS Colección 6.1) y <code>VNP14IMGTDL</code> / <code>VJ114IMGTDL</code> (VIIRS 375 m NRT y Standard). Para la visualización orbital usamos capas Blue Marble de NASA GIBS."
+        <strong>Respuesta:</strong> "Datos de NASA FIRMS: `MCD14DL` (MODIS Colección 6.1) y `VNP14IMGTDL` / `VJ114IMGTDL` (VIIRS 375 m NRT y Standard). Para la visualización orbital usamos capas Blue Marble de NASA GIBS."
       </div>
     </div>
 
@@ -788,27 +756,7 @@
     <div class="qa-card">
       <div class="qa-q">❓ 10. "¿Por qué la maqueta no se traba con miles de fuegos?"</div>
       <div class="qa-a">
-        <strong>Respuesta:</strong> "Porque implementamos <code>InstancedMesh</code> en Three.js con WebGL. En lugar de crear 50.000 objetos individuales que saturan la CPU, se envía una sola geometría a la memoria GPU y se dibujan todas las partículas en un solo draw call a 60 FPS estables."
-      </div>
-    </div>
-
-    <!-- Q11: CASO SAN LUIS -->
-    <div class="qa-card" style="border-color: rgba(56,189,248,0.5); background: rgba(11,61,145,0.25);">
-      <div class="qa-q" style="color: var(--accent-cyan);">❓ 11. "¿Cómo aplican este modelo al caso real de San Luis (Argentina)?"</div>
-      <div class="qa-a">
-        <strong>Respuesta:</strong> "Calibramos los coeficientes ($\alpha = 0{,}44$, $\beta = 0{,}56$, $R^2 = 0{,}92$) para corregir la subdetección en laderas escarpadas y pastizales de monte bajo viento Zonda. En semanas críticas de sequía extrema, el velocímetro emite la alerta situacional validada:  
-        <em style="color: #fff; font-weight: 600;">«El incremento de calor observado esta semana en San Luis no es un error óptico por cambio de satélites: el Z-Score de +2.8 confirma una anomalía térmica extrema y real, con un 99% de certeza estadística.»</em>"
-      </div>
-    </div>
-
-    <!-- Q12: LOS 3 PROTO-USUARIOS -->
-    <div class="qa-card" style="border-color: rgba(168,85,247,0.5); background: rgba(168,85,247,0.15);">
-      <div class="qa-q" style="color: var(--accent-purple);">❓ 12. "¿A qué usuarios institucionales les sirve cada fórmula de este machete?"</div>
-      <div class="qa-a">
-        <strong>Respuesta:</strong> "A tres niveles de usuarios reales:  
-        1. <strong>Brigadista de Terreno (Nivel 1):</strong> Consulta el Anomaly Gauge y la ventana de 50 min de revisita satelital para saber si el frente es seguro o exige repliegue táctico inmediato.  
-        2. <strong>Comandante Operativo (Nivel 2):</strong> Usa el FRP en MW en celdas de 11 km para despachar aviones hidrantes y helibaldes hacia donde la biomasa se quema con mayor violencia.  
-        3. <strong>Científico Ambiental (Nivel 3):</strong> Audita el Burning Calendar de 26 años para estudiar el adelantamiento estacional del fuego impulsado por el cambio climático."
+        <strong>Respuesta:</strong> "Porque implementamos `InstancedMesh` en Three.js con WebGL. En lugar de crear 50.000 objetos individuales que saturan la CPU, se envía una sola geometría a la memoria GPU y se dibujan todas las partículas en un solo draw call a 60 FPS estables."
       </div>
     </div>
 

@@ -1,4 +1,4 @@
-# 🛰️ PyroHarmony v2.0.0 — Biophysical Harmonization of MODIS & VIIRS Hot Spots
+﻿# 🛰️ PyroHarmony v2.0.0 — Biophysical Harmonization of MODIS & VIIRS Hot Spots
 
 <p align="center">
   <img src="assets/icons/logo-official.png" alt="PyroHarmony Official Logo — NASA Space Apps 2026" width="260" style="border-radius: 18px;" />
@@ -9,6 +9,11 @@
 [![Architecture](https://img.shields.io/badge/Architecture-Strict_MVC_(%3C300_LOC)-00E5FF?style=for-the-badge)](./REPLICATION_PLAYBOOK.md)
 [![Wolf Amendment](https://img.shields.io/badge/Wolf_Amendment-100%25_Compliant_USA%2FNASA-2E7D32?style=for-the-badge)](#4-nasa-legal-compliance--wolf-amendment-audit)
 [![Open Science](https://img.shields.io/badge/FAIR_%26_TOPS-MIT_License-FF6D00?style=for-the-badge)](./LICENSE)
+
+---
+
+### 🌐 Language / Idioma:
+> **[ 🇺🇸 English Version (Current) ](#)** &nbsp;|&nbsp; **[ 🇦🇷 Versión en Español Completa (README.es.md) ](./README.es.md)**
 
 > **Developed by Team AlgoXplorers (Argentina) 🇦🇷**  
 > **Official Challenge:** *"Harmonization of MODIS and VIIRS Hot Spots"* — NASA Space Apps Challenge 2026  
@@ -64,7 +69,28 @@ Because VIIRS pixels are 7 times smaller in area, it detects **3× to 5× more i
 
 ---
 
-## 3. Strict MVC Software Architecture (`< 300` Lines Per File)
+## 3. Institutional Proto-Users & Operational Decision-Makers (Zero Fiction)
+
+In strict adherence to NASA Space Apps Challenge 2026 impact requirements, PyroHarmony is calibrated for three verifiable real-world operational tiers under international standards:
+
+### 🚒 1. Tactical Tier (Field Command): Wildland Incident Commander / Crew Boss (ICS)
+- **Real-World Agencies:** *San Luis Solidario*, *Servicio Nacional de Manejo del Fuego (SNMF - Argentina)*, *US Forest Service (USFS - USA)*, *CAL FIRE*, and *CONAF (Chile)* under international *NWCG / Incident Command System (ICS)* protocols.
+- **Field Problem:** Optical pixel fragmentation creates confusion in mountainous canyons with Zonda winds. Unverified advancements lead to fatal entrapments (*burnovers*).
+- **PyroHarmony Action:** Evaluates the **50-Minute LACES Burnover Radar** ($\Delta\text{FRP}$) between Suomi-NPP (13:30) and NOAA-20 (14:20). An acceleration surge $>150\%$ triggers immediate radio retreat orders to Safety Zones and exports offline **SitRep (.txt)** summaries transmittable via VHF/HF radio.
+
+### 🏛️ 2. Strategic Tier: Director of Civil Protection & Emergency Risk Management
+- **Real-World Agencies:** Provincial Civil Defense Directors, Emergency Operations Centers (COE), and UN Sendai Framework (Priority 4) coordinators.
+- **Governance Problem:** The post-2012 artificial quadrupling of unharmonized hotspot counts prevents transparent justification of aerial firefighting budgets or emergency declarations.
+- **PyroHarmony Action:** Inspects the **52-Week × 27-Year Climatological Z-Score Heatmap**. A certified anomaly  \ge +2.5$ ( < 0.01$) delivers undeniable mathematical justification to declare Provincial/National Fire Emergency Decrees and preposition water-bombing air tankers.
+
+### 🔬 3. Scientific Tier: Earth Observation Specialist & Carbon Emission Modeler
+- **Real-World Agencies:** *CONAE (National Space Activities Commission)*, *NASA Earth Science Division*, *Copernicus CAMS*, *INTA*, *CONICET*, and university institutes (e.g., *Universidad de La Punta - ULP*).
+- **Research Problem:** Integrating 26 years of MODIS and VIIRS records for greenhouse gas (GHG) inventories without violating radiative physical conservation laws ($\alpha + \beta = 1.00$) or conflating sub-pixel temperatures (\circ\text{C}$).
+- **PyroHarmony Action:** Implements **Scale-Conserving Orthogonal Regression** and Wooster's coefficient ( = 0.368\text{ kg/MJ}$) to calculate biomass burn rates ($\text{kg/s}$ and $\text{t/h}$), exporting standardized **GeoJSON (RFC 7946)** and **CSV** layers under **FAIR** and **NASA TOPS** guidelines.
+
+---
+
+## 4. Strict MVC Software Architecture (`< 300` Lines Per File)
 
 ```mermaid
 flowchart LR
@@ -105,7 +131,7 @@ flowchart LR
 
 ---
 
-## 4. NASA Legal Compliance & Wolf Amendment Audit
+## 5. NASA Legal Compliance & Wolf Amendment Audit
 
 PyroHarmony strictly complies with U.S. Federal Law (**Wolf Amendment**, Public Law 112-55, Section 539), prohibiting bilateral use of Chinese aerospace, satellite, cloud, or mapping dependencies:
 
@@ -121,7 +147,7 @@ PyroHarmony strictly complies with U.S. Federal Law (**Wolf Amendment**, Public 
 
 ---
 
-## 5. Official Team Roster — AlgoXplorers (Argentina) 🇦🇷
+## 6. Official Team Roster — AlgoXplorers (Argentina) 🇦🇷
 
 All five members of **AlgoXplorers** contribute as equal co-authors and co-architects:
 
@@ -135,7 +161,7 @@ All five members of **AlgoXplorers** contribute as equal co-authors and co-archi
 
 ---
 
-## 6. Quick Start & Deliverables Index
+## 7. Quick Start & Deliverables Index
 
 - **One-Click Windows Launch:** Double-click [`INICIAR_PYROHARMONY.bat`](./INICIAR_PYROHARMONY.bat) or open [`index.html`](./index.html) directly in any modern browser.
 - **Executive Team Dossier:** [`DOSSIER_ENTREGA_EQUIPO.html`](./DOSSIER_ENTREGA_EQUIPO.html)

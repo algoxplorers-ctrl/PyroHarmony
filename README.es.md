@@ -15,11 +15,21 @@
 ### 🌐 Idioma / Language:
 > **[ 🇺🇸 Read in English (README.md) ](./README.md)** &nbsp;|&nbsp; **[ 🇦🇷 Versión en Español (Actual) ](#)**
 
----
-
 > **Desarrollado por el Equipo AlgoXplorers (Argentina) 🇦🇷**  
 > **Desafío Oficial:** *"Harmonization of MODIS and VIIRS Hot Spots"* — NASA Space Apps Challenge 2026  
 > **Idioma de Interfaz:** Inglés nativo (`EN`) por defecto con selector dinámico a Español (`ES`) en tiempo real sin recargar página (`#btn-toggle-lang`).
+
+### 📚 Índice Oficial de Documentación y Entregables Bilingües:
+
+| Documento / Document | Versión en Español (ES) 🇦🇷 | English Version (EN) 🇺🇸 | Descripción / Description |
+| :--- | :--- | :--- | :--- |
+| **Plataforma WebGL 3D** | [`index.html`](./index.html) *(Conmutador ES)* | [`index.html`](./index.html) *(Native EN)* | Globo 3D WebGL a 60 FPS y Centro de Comando de 4 Zonas |
+| **White Paper Científico** | [`GUIA_CIENTIFICA_PYROHARMONY.html`](./GUIA_CIENTIFICA_PYROHARMONY.html) · [`md`](./GUIA_CIENTIFICA_PYROHARMONY.md) | [`SCIENTIFIC_GUIDE_PYROHARMONY.html`](./SCIENTIFIC_GUIDE_PYROHARMONY.html) · [`md`](./SCIENTIFIC_GUIDE_PYROHARMONY.md) | Fundamentos biofísicos y matemáticos (Exportable a PDF A4) |
+| **Manual de Operaciones** | [`GUIA_INTERPRETACION_MAQUETA.html`](./GUIA_INTERPRETACION_MAQUETA.html) · [`md`](./GUIA_INTERPRETACION_MAQUETA.md) | [`COMMAND_MANUAL_4_ZONES.html`](./COMMAND_MANUAL_4_ZONES.html) · [`md`](./COMMAND_MANUAL_4_ZONES.md) | Guía técnica y protocolo de validación en 3 etapas |
+| **Dossier Ejecutivo** | [`DOSSIER_ENTREGA_EQUIPO.html`](./DOSSIER_ENTREGA_EQUIPO.html) | [`EXECUTIVE_TEAM_DOSSIER.html`](./EXECUTIVE_TEAM_DOSSIER.html) | Resumen ejecutivo, auditoría legal y equipo de trabajo |
+| **Guion Video Pitch (240s)** | [`VIDEO_PITCH_PROMPTER.html`](./VIDEO_PITCH_PROMPTER.html) | [`VIDEO_PITCH_PROMPTER.html`](./VIDEO_PITCH_PROMPTER.html) | Teleprompter interactivo para la defensa oficial |
+| **Formulario NASA** | [`NASA_SUBMISSION_TEMPLATE.md`](./NASA_SUBMISSION_TEMPLATE.md) | [`NASA_SUBMISSION_TEMPLATE.md`](./NASA_SUBMISSION_TEMPLATE.md) | Respuestas formales al desafío de NASA Space Apps |
+| **Presentación del Proyecto** | [`README.es.md`](./README.es.md) | [`README.md`](./README.md) | Portada principal de GitHub |
 
 ---
 
@@ -88,7 +98,7 @@ Para garantizar que **ningún dato sea ficticio ni arbitrario**, las estadístic
 
 ---
 
-## 4. Los 3 Proto-usuarios Institucionales (Cero Ficción)
+## 4. Los 3 Proto-usuarios Institucionales
 
 PyroHarmony está diseñado para responder a requerimientos reales de tres niveles de toma de decisiones, vinculados a agencias concretas bajo estándares internacionales:
 
@@ -184,7 +194,7 @@ Los 5 integrantes de **AlgoXplorers** participan en igualdad de condiciones como
 - **Lanzador Local con Servidor HTTP (Recomendado para PWA):** Doble clic en [`EJECUTAR_CON_SERVIDOR.bat`](./EJECUTAR_CON_SERVIDOR.bat) (levanta `http://localhost:8080/` sin problemas de CORS ni dependencias externas).
 - **Lanzador Local de 1 Clic:** Doble clic en [`INICIAR_PYROHARMONY.bat`](./INICIAR_PYROHARMONY.bat) o [`EJECUTAR_LOCAL.bat`](./EJECUTAR_LOCAL.bat).
 - **Dossier Ejecutivo del Equipo:** [`DOSSIER_ENTREGA_EQUIPO.html`](./DOSSIER_ENTREGA_EQUIPO.html)
-- **White Paper Científico Exhaustivo:** [`GUIA_CIENTIFICA_PYROHARMONY.html`](./GUIA_CIENTIFICA_PYROHARMONY.html) / [`GUIA_CIENTIFICA_PYROHARMONY.md`](./GUIA_CIENTIFICA_PYROHARMONY.md)
+- **White Paper Científico Exhaustivo:** [`GUIA_CIENTIFICA_PYROHARMONY.html`](./GUIA_CIENTIFICA_PYROHARMONY.html) / [`GUIA_CIENTIFICA_PYROHARMONY.md`](./GUIA_CIENTIFICA_PYROHARMONY.md) *(Versión en inglés: [`SCIENTIFIC_GUIDE_PYROHARMONY.html`](./SCIENTIFIC_GUIDE_PYROHARMONY.html) / [`SCIENTIFIC_GUIDE_PYROHARMONY.md`](./SCIENTIFIC_GUIDE_PYROHARMONY.md))*
 - **Manual de Operaciones de las 4 Zonas:** [`GUIA_INTERPRETACION_MAQUETA.html`](./GUIA_INTERPRETACION_MAQUETA.html) / [`GUIA_INTERPRETACION_MAQUETA.md`](./GUIA_INTERPRETACION_MAQUETA.md)
 - **Teleprompter para Video Pitch (240 Segundos):** [`VIDEO_PITCH_PROMPTER.html`](./VIDEO_PITCH_PROMPTER.html)
 - **Playbook de Replicación de Ingeniería:** [`REPLICATION_PLAYBOOK.md`](./REPLICATION_PLAYBOOK.md)

@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Machete Científico & Formulario Maestro — AlgoXplorers</title>
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+          onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+  <style>
+    :root {
+      --space-dark: #070b19;
+      --card-bg: #0f172a;
+      --card-border: #1e293b;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent-cyan: #38bdf8;
+      --accent-purple: #a855f7;
+      --accent-amber: #f59e0b;
+      --accent-emerald: #10b981;
+      --accent-red: #fc3d21;
+      --nasa-blue: #0b3d91;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--space-dark);
+      color: var(--text-main);
+      line-height: 1.65;
+      padding: 30px 20px 80px;
+    }
+
+    .container {
+      max-width: 1050px;
+      margin: 0 auto;
+    }
+
+    /* Barra Superior Flotante */
+    .top-bar {
+      position: sticky;
+      top: 15px;
+      z-index: 1000;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 12px 20px;
+      margin-bottom: 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: 1px solid var(--card-border);
+    }
+    .btn-print {
+      background: linear-gradient(135deg, #0b3d91 0%, #1e40af 100%);
+      color: #fff;
+      border-color: var(--accent-cyan);
+    }
+    .btn-print:hover { background: #1d4ed8; }
+    .btn-outline {
+      background: var(--card-bg);
+      color: #fff;
+    }
+    .btn-outline:hover { background: #1e293b; color: var(--accent-cyan); }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, rgba(168,85,247,0.2) 0%, rgba(15,23,42,0.95) 100%),
+                  radial-gradient(circle at 80% 20%, rgba(56,189,248,0.15) 0%, transparent 50%);
+      border: 1px solid rgba(168,85,247,0.3);
+      border-radius: 16px;
+      padding: 35px 40px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    }
+    .hero .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      background: rgba(168,85,247,0.2);
+      color: var(--accent-purple);
+      border: 1px solid rgba(168,85,247,0.4);
+      margin-bottom: 12px;
+    }
+    .hero h1 { font-size: 2.1rem; color: #fff; margin-bottom: 10px; }
+    .hero p { color: var(--text-muted); font-size: 1.05rem; }
+
+    .team-badge-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .team-badge-pill {
+      background: rgba(11,61,145,0.4);
+      border: 1px solid var(--accent-cyan);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 0.8rem;
+      color: #fff;
+    }
+    .team-badge-pill strong { color: var(--accent-cyan); }
+
+    /* Tarjetas de Módulo */
+    .module-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 26px 30px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    .module-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+      border-bottom: 2px solid rgba(56,189,248,0.2);
+      padding-bottom: 10px;
+    }
+    .module-num {
+      background: linear-gradient(135deg, var(--nasa-blue), #1e40af);
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--accent-cyan);
+    }
+    .module-title { font-size: 1.35rem; color: var(--accent-cyan); }
+
+    /* Cajas Didácticas */
+    .box-why {
+      background: rgba(11,61,145,0.2);
+      border-left: 4px solid var(--accent-cyan);
+      padding: 14px 18px;
+      border-radius: 0 8px 8px 0;
+      margin: 14px 0;
+      font-size: 0.95rem;
+    }
+    .box-trap {
+      background: rgba(252,61,33,0.12);
+      border-left: 4px solid var(--accent-red);
+      padding: 14px 18px;
+      border-radius: 0 8px 8px 0;
+      margin: 14px 0;
+      font-size: 0.95rem;
+    }
+    .box-formula {
+      background: #060913;
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      padding: 18px 22px;
+      margin: 16px 0;
+      text-align: center;
+    }
+    .box-example {
+      background: rgba(16,185,129,0.1);
+      border: 1px dashed var(--accent-emerald);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin: 14px 0;
+      font-size: 0.92rem;
+    }
+
+    .step-list {
+      margin-left: 20px;
+      margin-top: 10px;
+      margin-bottom: 15px;
+    }
+    .step-list li { margin-bottom: 8px; }
+
+    /* Machete Q&A */
+    .qa-card {
+      background: #090e1d;
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 14px;
+    }
+    .qa-q {
+      font-weight: 700;
+      color: var(--accent-amber);
+      font-size: 1rem;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .qa-a {
+      color: #e2e8f0;
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+    .qa-a strong { color: var(--accent-cyan); }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 0.9rem;
+    }
+    th, td {
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--card-border);
+    }
+    th {
+      background: rgba(11,61,145,0.3);
+      color: var(--accent-cyan);
+    }
+
+    .badge-pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+    .pill-green { background: rgba(16,185,129,0.2); color: #10b981; }
+    .pill-cyan { background: rgba(56,189,248,0.2); color: #38bdf8; }
+    .pill-amber { background: rgba(245,158,11,0.2); color: #f59e0b; }
+    .pill-red { background: rgba(252,61,33,0.2); color: #fc3d21; }
+    .pill-purple { background: rgba(168,85,247,0.2); color: #a855f7; }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--card-border);
+      margin-top: 30px;
+    }
+
+    @media print {
+      body { background-color: #fff !important; color: #000 !important; padding: 0 !important; }
+      .top-bar { display: none !important; }
+      .hero, .module-card, .qa-card {
+        background: #fff !important;
+        color: #000 !important;
+        border: 1px solid #ccc !important;
+        box-shadow: none !important;
+        break-inside: avoid !important;
+      }
+      .box-why, .box-trap, .box-formula, .box-example {
+        background: #f8f9fa !important;
+        color: #000 !important;
+        border: 1px solid #bbb !important;
+      }
+      .module-title, .qa-q, h1, strong { color: #000 !important; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- BARRA DE ACCESO RÁPIDO -->
+  <div class="top-bar">
+    <div style="font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px;">
+      <span>🧠 Formulario & Machete de Estudio Interno</span>
+      <span style="font-size: 0.8rem; color: var(--accent-purple);">(Equipo AlgoXplorers)</span>
+    </div>
+    <div style="display: flex; gap: 10px;">
+      <button onclick="window.print()" class="btn btn-print">
+        🖨️ Imprimir / Guardar PDF
+      </button>
+      <a href="SCIENTIFIC_CHEAT_SHEET_FORMULARY.html" class="btn btn-outline">
+        🌐 Switch to English
+      </a>
+      <a href="index.html" class="btn btn-outline">
+        ⬅ Volver a la Maqueta
+      </a>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="badge">NASA Space Apps Challenge 2026 — AlgoXplorers</div>
+    <h1>Formulario Maestro, Matemáticas y Física de PyroHarmony</h1>
+    <p>Este documento es una guía pedagógica diseñada paso a paso para que todo el equipo domine cada ecuación, entienda el porqué de cada número y pueda responder con seguridad ante cualquier pregunta técnica de jurados o científicos.</p>
+    <div class="team-badge-list">
+      <div class="team-badge-pill"><strong>José Alex Fernández</strong> (@fajjaf)</div>
+      <div class="team-badge-pill"><strong>Carlos Vizzioli</strong> (@cvizzioli)</div>
+      <div class="team-badge-pill"><strong>Gisella Sánchez Obando</strong> (@gisesanchezj)</div>
+      <div class="team-badge-pill"><strong>Juan Carlos Fernandez</strong> (@jcfernan99)</div>
+      <div class="team-badge-pill"><strong>Maximiliano Guevara</strong> (@omegaredone)</div>
+    </div>
+  </div>
+
+  <!-- ÍNDICE DE CONTENIDOS -->
+  <div class="module-card">
+    <h3 style="color: #fff; margin-bottom: 12px;">📑 Temas de Estudio en este Documento:</h3>
+    <ul class="step-list" style="color: var(--accent-cyan); font-weight: 600;">
+      <li>1. La Física Térmica y el Fuego: ¿Por qué NO usamos temperatura en °C? (Stefan-Boltzmann, el poder de $T^4$ y Sub-píxel)</li>
+      <li>2. La Potencia Radiativa del Fuego (FRP en Megawatts): Ecuación de Wooster y Kaufman</li>
+      <li>3. La Fractura Óptica MODIS vs. VIIRS: Geometría de Píxel, Efecto Bowtie y Swath Nadir</li>
+      <li>4. El Modelo de Armonización: Spatial Binning, Calibración Cruzada, Conservación $\alpha + \beta = 1.00$ y Caso San Luis</li>
+      <li>5. El Z-Score Fenológico Semanal: Matriz 52 Semanas × 26 Años</li>
+      <li>6. Satélites en Órbita Polar: Terra, Aqua, Suomi-NPP y NOAA-20</li>
+      <li>7. "El Machete del Defensor": 12 Respuestas Clave Rápidas para Memorizar (Incluyendo San Luis y los 3 Proto-usuarios)</li>
+    </ul>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MÓDULO 1: SUB-PÍXEL Y FÍSICA TÉRMICA -->
+  <!-- ========================================== -->
+  <div class="module-card">
+    <div class="module-header">
+      <span class="module-num">MÓDULO 1</span>
+      <h2 class="module-title">La Física Térmica: ¿Por qué la temperatura en °C engaña?</h2>
+    </div>
+
+    <div class="box-trap">
+      <strong>⚠️ La Trampa Clásica del Termómetro de Cocina:</strong><br>
+      Muchos creen erróneamente que un satélite espacial mide la temperatura como si le pusiera un termómetro a la llama ("el incendio está a 800 °C"). <strong>Eso es imposible desde 700 km de altura.</strong>
+    </div>
+
+    <h3 style="color: #fff; margin-top: 15px;">1.1 La Ley de Stefan-Boltzmann</h3>
+    <p>Cualquier cuerpo emite energía térmica proporcional a la <strong>cuarta potencia de su temperatura absoluta en Kelvin ($T^4$)</strong>:</p>
+
+    <div class="box-formula">
+      $$E = \epsilon \cdot \sigma \cdot T^4$$
+      <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 8px;">
+        $\sigma = 5{,}67 \times 10^{-8}\text{ W}/(\text{m}^2\cdot\text{K}^4)$ (Constante de Stefan-Boltzmann)<br>
+        $\epsilon \approx 1$ (Emisividad del fuego/suelo, casi cuerpo negro)
+      </div>
+    </div>
+
+    <h3 style="color: var(--accent-cyan); margin-top: 20px;">1.2 ¿Qué significa exactamente $T^4$ ("T a la cuarta") y por qué es tan monstruoso?</h3>
+    <p><strong>$T^4$</strong> significa multiplicar la temperatura absoluta en Kelvin cuatro veces por sí misma: $$T^4 = T \times T \times T \times T$$</p>
+
+    <div class="box-why">
+      <strong>💥 El Salto Exponencial (¿Por qué no es lineal?):</strong><br>
+      Si la física fuera lineal, duplicar la temperatura daría el doble de calor. Pero con <strong>$T^4$</strong>, la energía se dispara de forma vertiginosa:
+      <ul style="margin-left: 20px; margin-top: 6px;">
+        <li>Si <strong>duplicas</strong> la temperatura ($2 \times T$) $\rightarrow$ la radiación aumenta <strong>16 veces</strong> ($2^4 = 2 \times 2 \times 2 \times 2 = 16$).</li>
+        <li>Si <strong>triplicas</strong> la temperatura ($3 \times T$) $\rightarrow$ la radiación aumenta <strong>81 veces</strong> ($3^4 = 3 \times 3 \times 3 \times 3 = 81$).</li>
+      </ul>
+    </div>
+
+    <p>Veamos qué pasa en la vida real al comparar el suelo frío con una llama de incendio (pasando a Kelvin: $K = ^\circ\text{C} + 273{,}15$):</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Objeto</th>
+          <th>Temperatura (°C)</th>
+          <th>Temperatura en Kelvin ($T$)</th>
+          <th>Su valor a la cuarta ($T^4$)</th>
+          <th>Radiancia Relativa</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Suelo frío / pasto</strong></td>
+          <td>$20^\circ\text{C}$</td>
+          <td>$293{,}15\text{ K}$</td>
+          <td>$293^4 \approx \mathbf{7{,}37\text{ mil millones}}$</td>
+          <td>Línea de base ($1\times$)</td>
+        </tr>
+        <tr>
+          <td><strong>Llama de fuego activo</strong></td>
+          <td>$800^\circ\text{C}$</td>
+          <td>$1.073{,}15\text{ K}$</td>
+          <td>$1073^4 \approx \mathbf{1{,}326\text{ billones}}$</td>
+          <td><strong>¡180 veces más energía por m²!</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="box-trap" style="background: rgba(16,185,129,0.12); border-left-color: var(--accent-emerald);">
+      <strong style="color: var(--accent-emerald);">🛰️ ¿Por qué este $T^4$ salva a la NASA y a PyroHarmony?</strong><br>
+      Porque gracias a que la energía crece a la cuarta potencia ($T^4$), una llamita pequeña de apenas $10\text{ m} \times 10\text{ m}$ en medio de un píxel gigante de $1\text{ km} \times 1\text{ km}$ <strong>emite 180 veces más radiación por metro cuadrado que la selva que la rodea</strong>. Brilla como un faro cegador en el espectro infrarrojo del satélite. Si la física fuera lineal, un satélite a 700 km de altura jamás podría detectar fuegos pequeños, porque el pasto frío taparía la señal térmica por completo.
+    </div>
+
+    <h3 style="color: #fff; margin-top: 20px;">1.3 El Problema del Sub-píxel (Cálculo Numérico Real)</h3>
+    <p>En MODIS, un píxel mide <strong>1.000 m × 1.000 m = 1.000.000 m²</strong> (100 hectáreas). Un frente de fuego activo típico mide unos <strong>100 m²</strong> (el 0,01% del píxel). El resto es suelo y árboles fríos.</p>
+
+    <div class="box-example">
+      <strong>📐 Ejemplo con números reales: ¿Cómo un fuego de 800 °C da 21,3 °C aparentes?</strong><br><br>
+      Supongamos:<br>
+      • Suelo frío de fondo: $T_{\text{bg}} = 20^\circ\text{C} = 293{,}15\text{ K}$ (ocupa el $99{,}99\%$ del píxel, $1-p = 0{,}9999$).<br>
+      • Llama de fuego: $T_{\text{fuego}} = 800^\circ\text{C} = 1073{,}15\text{ K}$ (ocupa solo $p = 0{,}0001$, es decir 100 m² de 1.000.000 m²).<br><br>
+      El sensor satelital promedia la radiación total emitida ($T_{\text{aparente}}^4$):
+      $$T_{\text{aparente}}^4 = (1 - p) \cdot T_{\text{bg}}^4 + p \cdot T_{\text{fuego}}^4$$
+      $$T_{\text{aparente}}^4 = 0{,}9999 \cdot (293{,}15)^4 + 0{,}0001 \cdot (1073{,}15)^4$$
+      $$(293{,}15)^4 \approx 7{,}38 \times 10^9 \quad \longrightarrow \quad 0{,}9999 \times 7{,}38 \times 10^9 \approx 7{,}379 \times 10^9$$
+      $$(1073{,}15)^4 \approx 1{,}326 \times 10^{12} \quad \longrightarrow \quad 0{,}0001 \times 1{,}326 \times 10^{12} \approx 1{,}326 \times 10^8$$
+      $$T_{\text{aparente}}^4 \approx 7{,}379 \times 10^9 + 0{,}133 \times 10^9 = 7{,}512 \times 10^9$$
+      $$T_{\text{aparente}} = \sqrt[4]{7{,}512 \times 10^9} \approx 294{,}46\text{ K} \approx \mathbf{21{,}3^\circ\text{C}}$$
+      <div style="margin-top: 10px; font-weight: 700; color: #fff;">
+        👉 Conclusión brutal: La llama está a 800 °C, pero el sensor satelital registra 21,3 °C (¡solo 1,3 °C más caliente que el suelo frío de al lado!). Por eso la temperatura en °C es inútil para medir incendios.
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MÓDULO 2: FRP EN MEGAWATTS -->
+  <!-- ========================================== -->
+  <div class="module-card">
+    <div class="module-header">
+      <span class="module-num">MÓDULO 2</span>
+      <h2 class="module-title">Fire Radiative Power (FRP): Medir Energía en Megawatts (MW)</h2>
+    </div>
+
+    <div class="box-why">
+      <strong>💡 La Solución de la NASA (Kaufman & Wooster, 1998–2005):</strong><br>
+      En lugar de buscar la "temperatura", los científicos descubrieron que en la banda del <strong>Infrarrojo Medio (MIR a 3,9–4,0 µm)</strong>, la radiancia emitida por el fuego es <strong>linealmente proporcional a la energía radiativa total</strong> liberada por la combustión.
+    </div>
+
+    <h3 style="color: #fff; margin-top: 15px;">2.1 Ecuación de Wooster (Aproximación de Radiación MIR)</h3>
+    <p>Para cada píxel con fuego detectado, el FRP en Megawatts se calcula como:</p>
+
+    <div class="box-formula">
+      $$FRP = \frac{A_{\text{pix}} \cdot \sigma}{a} \cdot \left( L_4 - \bar{L}_{4,\text{bg}} \right)$$
+      <div style="font-size: 0.88rem; color: var(--text-muted); margin-top: 10px; text-align: left;">
+        • $A_{\text{pix}}$: Área real del píxel en la superficie terrestre ($10^6\text{ m}^2$ para MODIS en Nadir).<br>
+        • $\sigma$: Constante de Stefan-Boltzmann ($5{,}67 \times 10^{-8}\text{ W}/(\text{m}^2\cdot\text{K}^4)$).<br>
+        • $a$: Constante de calibración del canal MIR ($\approx 3{,}0 \times 10^{-9}\text{ W}\cdot\text{m}^{-2}\cdot\text{sr}^{-1}\cdot\mu\text{m}^{-1}\cdot\text{K}^{-4}$).<br>
+        • $L_4$: Radiancia espectral medida en el canal 4 µm (donde la llama brilla con intensidad).<br>
+        • $\bar{L}_{4,\text{bg}}$: Radiancia media del suelo circundante no quemado (fondo o background).
+      </div>
+    </div>
+
+    <h3 style="color: #fff; margin-top: 15px;">2.2 ¿Por qué el FRP es una métrica biofísica real?</h3>
+    <p>Existe una relación directa y universal demostrada en laboratorio entre la energía radiada ($FRE$) y los kilos de madera/hojas quemados:</p>
+    <div class="box-formula">
+      $$FRE = \int_{t_1}^{t_2} FRP(t) \, dt \quad [\text{MegaJoules o GigaJoules}]$$
+      $$M_{\text{biomasa}} = C_e \times FRE$$
+      <div style="font-size: 0.85rem; color: var(--accent-emerald); margin-top: 6px;">
+        $C_e \approx 0{,}368 \pm 0{,}015\text{ kg de biomasa quemada por cada MegaJoule de energía}$ (Wooster et al., 2005)
+      </div>
+    </div>
+    <p style="margin-top: 10px;">Si sabes el FRP en MW, sabes exactamente cuántas toneladas de selva se están quemando por segundo. Con el recuento de píxeles, no sabes nada.</p>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MÓDULO 3: FRACTURA OPTICA MODIS vs VIIRS -->
+  <!-- ========================================== -->
+  <div class="module-card">
+    <div class="module-header">
+      <span class="module-num">MÓDULO 3</span>
+      <h2 class="module-title">La Fractura Instrumental: MODIS (1.000m) vs. VIIRS (375m)</h2>
+    </div>
+
+    <p>En el año 2012 la NASA encendió VIIRS a bordo de Suomi-NPP. Al día siguiente, las estadísticas mostraron un salto de <strong>300% a 500% en focos de calor</strong>. ¿Explotó el planeta? No: cambió el lente.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Característica Técnica</th>
+          <th>Sensor MODIS (Terra & Aqua)</th>
+          <th>Sensor VIIRS (Suomi-NPP & NOAA-20)</th>
+          <th>Impacto en los Datos</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Resolución en Nadir</strong></td>
+          <td>1.000 m × 1.000 m ($1{,}0\text{ km}^2$)</td>
+          <td>375 m × 375 m ($0{,}14\text{ km}^2$)</td>
+          <td>El píxel de VIIRS es <strong>7 veces más chico en área</strong>.</td>
+        </tr>
+        <tr>
+          <td><strong>Umbral de detección de fuego</strong></td>
+          <td>$\sim 10\text{ MW}$ a $15\text{ MW}$ mínimo</td>
+          <td>$\sim 1{,}5\text{ MW}$ a $3\text{ MW}$ mínimo</td>
+          <td>VIIRS detecta fogatas y fuegos pequeños que MODIS ignora.</td>
+        </tr>
+        <tr>
+          <td><strong>Ancho de barrido (Swath)</strong></td>
+          <td>2.330 km</td>
+          <td>3.040 km</td>
+          <td>VIIRS no deja franjas ciegas en el ecuador.</td>
+        </tr>
+        <tr>
+          <td><strong>Efecto en los bordes</strong></td>
+          <td>Efecto Bowtie (el píxel se estira hasta 2 × 4,8 km)</td>
+          <td>Agregación a bordo (el píxel solo se estira a 750 m)</td>
+          <td>MODIS pierde muchísima precisión en los bordes.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="box-why">
+      <strong>🔥 El Ejemplo para entender la disparidad 4x en Hotspots:</strong><br>
+      Imagina un incendio que ocupa un cuadrado de 800 m × 800 m:<br>
+      • <strong>MODIS:</strong> Cae dentro de <strong>1 solo píxel</strong> de 1 km² $\rightarrow$ MODIS reporta: <strong>1 foco de calor</strong>.<br>
+      • <strong>VIIRS:</strong> Con píxeles de 375 m, ese mismo fuego abarca al menos <strong>4 píxeles contiguos</strong> $\rightarrow$ VIIRS reporta: <strong>4 focos de calor</strong>.<br>
+      <em>¡El fuego es idéntico, pero el recuento simple se cuadruplicó artificialmente!</em>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MÓDULO 4: MODELO DE ARMONIZACION -->
+  <!-- ========================================== -->
+  <div class="module-card">
+    <div class="module-header">
+      <span class="module-num">MÓDULO 4</span>
+      <h2 class="module-title">El Modelo Matemático de Armonización de PyroHarmony</h2>
+    </div>
+
+    <h3 style="color: #fff;">Paso 1: Spatial Binning Homogéneo</h3>
+    <p>No se comparan puntos aislados en el aire. Se proyectan todas las detecciones de MODIS y VIIRS en una <strong>grilla regular homogénea de $0{,}1^\circ \times 0{,}1^\circ$</strong> ($\approx 11\text{ km} \times 11\text{ km}$ en el ecuador):</p>
+    <div class="box-formula">
+      $$FRP_{\text{cell}}(t) = \sum_{i \in \text{cell}} FRP_i(t)$$
+    </div>
+
+    <h3 style="color: #fff; margin-top: 15px;">Paso 2: Ecuación de Calibración Cruzada con Conservación de Escala</h3>
+    <p>Durante la era de solapamiento satelital (2012–2024), entrenamos una regresión lineal ortogonal por bioma que vincula ambos sensores respetando la <strong>conservación de energía</strong>:</p>
+
+    <div class="box-formula">
+      $$FRP_{\text{harm}} = \alpha \cdot FRP_{\text{MODIS}} + \beta \cdot \left( k_{\text{bioma}} \cdot FRP_{\text{VIIRS}} \right)$$
+      <div style="font-size: 0.95rem; color: var(--accent-emerald); font-weight: 700; margin-top: 10px;">
+        Condición de Conservación de Escala: $\alpha + \beta = 1{,}00$
+      </div>
+      <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 6px;">
+        $k_{\text{bioma}}$: Factor de escala empírico por densidad vegetal (Amazonía $\approx 0{,}88$, Chaco $\approx 0{,}94$, Taiga $\approx 0{,}82$).
+      </div>
+    </div>
+
+    <!-- CASO TERRITORIAL SAN LUIS -->
+    <div class="box-why" style="background: rgba(168,85,247,0.15); border-left-color: var(--accent-purple);">
+      <strong style="color: var(--accent-purple);">🏔️ Caso de Calibración Territorial: San Luis (Sierras y Monte):</strong><br>
+      En zonas de topografía rugosa con vientos locales intensos (viento Zonda), el modelo calibra parámetros regionales específicos:
+      $$\alpha = 0{,}44 \qquad \beta = 0{,}56 \qquad R^2 = 0{,}92$$
+      Esto corrige la subdetección en laderas escarpadas, asegurando que cuando el sistema emita una alarma en San Luis, responda a una emergencia biofísica comprobada y no a un espejismo instrumental.
+    </div>
+
+    <h3 style="color: #fff; margin-top: 15px;">Paso 3: Métricas de Control de Calidad</h3>
+    <p>Para asegurar que la armonización no sea una invención matemática, el sistema evalúa dos indicadores estadísticos estrictos:</p>
+    <ul>
+      <li><strong>Coeficiente de Determinación ($R^2 \ge 0{,}85$):</strong> Mide qué porcentaje de la variación física es explicada por el modelo (debe ser muy cercano a 1).</li>
+      <li><strong>Sesgo Medio Absoluto ($|\text{MBE}| < 5\%$):</strong> Mean Bias Error. Garantiza que el modelo no sobreestime ni subestime la energía radiada total.</li>
+    </ul>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MÓDULO 5: EL Z-SCORE FENOLÓGICO -->
+  <!-- ========================================== -->
+  <div class="module-card">
+    <div class="module-header">
+      <span class="module-num">MÓDULO 5</span>
+      <h2 class="module-title">El Z-Score Fenológico: Matriz de 52 Semanas × 26 Años</h2>
+    </div>
+
+    <div class="box-why">
+      <strong>🌾 ¿Qué es la Fenología del Fuego?</strong><br>
+      Los incendios tienen un ritmo biológico dictado por las estaciones del año. En la Amazonía:<br>
+      • <strong>Abril (Semana 15):</strong> Es época de lluvias torrenciales. Tener 300 MW de fuego es una <strong>anomalía grave y destructiva</strong>.<br>
+      • <strong>Agosto (Semana 34):</strong> Es el pico de la temporada seca. Tener 300 MW es <strong>absolutamente normal</strong>.<br>
+      <em>Si promedias todo el año junto, generas falsas alarmas en época de lluvias y ocultas desastres en época seca.</em>
+    </div>
+
+    <h3 style="color: #fff; margin-top: 15px;">5.1 Fórmula del Z-Score Semanal</h3>
+    <p>Para cada una de las 52 semanas del año ($s \in [1, 52]$), calculamos la media ($\mu_s$) y la desviación estándar ($\sigma_s$) de los 26 años históricos (2000–2026):</p>
+
+    <div class="box-formula">
+      $$\mu_s = \frac{1}{N} \sum_{y=2000}^{2026} FRP_{s,y} \qquad \sigma_s = \sqrt{\frac{1}{N-1} \sum_{y=2000}^{2026} (FRP_{s,y} - \mu_s)^2}$$
+      $$Z_{s,y} = \frac{FRP_{\text{harm}(s,y)} - \mu_s}{\sigma_s}$$
+    </div>
+
+    <h3 style="color: #fff; margin-top: 15px;">5.2 Tabla de Clasificación de Severidad (Lo que Muestra la Aguja)</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Rango de Z-Score</th>
+          <th>Color en Pantalla</th>
+          <th>Significado Biofísico</th>
+          <th>Significancia Estadística</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>$Z \le 0{,}0$</td>
+          <td><span class="badge-pill pill-green">Verde (Bajo)</span></td>
+          <td>Actividad inferior a la media histórica observada.</td>
+          <td>Condición normal o húmeda.</td>
+        </tr>
+        <tr>
+          <td>$0{,}0 < Z < 1{,}0$</td>
+          <td><span class="badge-pill pill-cyan">Cyan (Normal)</span></td>
+          <td>Dentro del desvío típico esperado de la estación.</td>
+          <td>Variabilidad natural esperada ($\sim 68\%$ de los casos).</td>
+        </tr>
+        <tr>
+          <td>$1{,}0 \le Z < 2{,}0$</td>
+          <td><span class="badge-pill pill-amber">Ámbar (Alerta)</span></td>
+          <td>Actividad notablemente superior a lo habitual.</td>
+          <td>Condición de vigilancia preventiva reforzada.</td>
+        </tr>
+        <tr>
+          <td>$Z \ge 2{,}0$</td>
+          <td><span class="badge-pill pill-red">Rojo (Anomalía Crítica)</span></td>
+          <td><strong>Anomalía estadísticamente significativa.</strong></td>
+          <td><strong>$p < 0{,}05$ (probabilidad de ocurrir por azar &lt; 5%).</strong></td>
+        </tr>
+        <tr>
+          <td>$Z \ge 2{,}5$</td>
+          <td><span class="badge-pill pill-purple">Púrpura (Emergencia Extrema)</span></td>
+          <td><strong>Evento atípico extremo severo.</strong></td>
+          <td><strong>$p < 0{,}01$ (ocurre menos de 1 vez cada 100 eventos).</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MÓDULO 6: CONSTELACIÓN Y ÓRBITAS -->
+  <!-- ========================================== -->
+  <div class="module-card">
+    <div class="module-header">
+      <span class="module-num">MÓDULO 6</span>
+      <h2 class="module-title">La Constelación Satelital: Terra, Aqua, Suomi-NPP y NOAA-20</h2>
+    </div>
+
+    <p>Todos estos satélites vuelan en <strong>Órbita Polar Heliosincrónica (Sun-Synchronous LEO)</strong> a $\sim 705 - 824\text{ km}$ de altitud con una inclinación de $98^\circ$:</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Satélite</th>
+          <th>Lanzamiento</th>
+          <th>Sensor a Bordo</th>
+          <th>Hora de Paso Ecuatorial (Solar)</th>
+          <th>Función Estratégica</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Terra</strong></td>
+          <td>Dic 1999</td>
+          <td>MODIS</td>
+          <td>10:30 AM (Descendente)</td>
+          <td>Paso matutino. Inicio de la serie histórica de 26 años.</td>
+        </tr>
+        <tr>
+          <td><strong>Aqua</strong></td>
+          <td>May 2002</td>
+          <td>MODIS</td>
+          <td>13:30 PM (Ascendente)</td>
+          <td>Paso vespertino (coincide con el pico térmico de incendios).</td>
+        </tr>
+        <tr>
+          <td><strong>Suomi-NPP</strong></td>
+          <td>Oct 2011</td>
+          <td>VIIRS</td>
+          <td>13:30 PM (Ascendente)</td>
+          <td>Inaugura la era de alta resolución óptica (375 m).</td>
+        </tr>
+        <tr>
+          <td><strong>NOAA-20 (JPSS-1)</strong></td>
+          <td>Nov 2017</td>
+          <td>VIIRS</td>
+          <td>13:30 PM (Ascendente)</td>
+          <td>Vuela a 50 minutos de Suomi-NPP, duplicando la revisita.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 style="color: var(--accent-cyan); margin-top: 22px;">6.2 ¿Qué significa NADIR y por qué es el punto clave de los satélites?</h3>
+    <p><strong>Nadir</strong> es el término astronómico y geoespacial que significa <strong>mirar exactamente hacia abajo</strong>, en línea recta vertical hacia el centro de la Tierra ($90^\circ$ perpendicular al suelo). Es lo opuesto al <strong>Cénit</strong> (mirar recto hacia arriba al cielo infinito):</p>
+
+    <div class="box-formula" style="font-family: monospace; white-space: pre; line-height: 1.5; font-size: 0.9rem;">
+       ▲ Cénit (Arriba, hacia el espacio infinito)
+       │
+   [Satélite]  (en órbita LEO a 705–824 km)
+       │
+       ▼ NADIR (Abajo, punto vertical exacto sobre el suelo terrestre)
+    ═════════  (Tierra)
+    </div>
+
+    <ul>
+      <li><strong>Punto de máxima nitidez óptica:</strong> Justo en el Nadir, el sensor no sufre deformación angular. Allí MODIS mide su píxel nominal de 1 km² y VIIRS su píxel de 375 m.</li>
+      <li><strong>El Cono y Ancho de Barrido (Swath):</strong> A medida que el sensor óptico barre hacia los lados alejándose del Nadir, cubre el ancho de barrido total: <strong>2.330 km en MODIS</strong> y <strong>3.040 km en VIIRS</strong> (representado por el cono de luz translúcido en la maqueta 3D).</li>
+    </ul>
+
+    <h3 style="color: var(--accent-cyan); margin-top: 22px;">6.3 Velocidad Orbital: ¿A qué velocidad se mueven de verdad vs. la maqueta 3D?</h3>
+    <div class="box-why">
+      <strong>🚀 Realidad Física vs. Escala Visual:</strong><br>
+      • <strong>En velocidad absoluta van rapidísimo:</strong> Viajan a unos <strong>27.000 km/h</strong> ($7{,}5\text{ km/s}$), es decir unas 25 veces más rápido que un avión de pasajeros.<br>
+      • <strong>Pero la Tierra es enorme:</strong> Tienen que recorrer una circunferencia de $40.000\text{ km}$, por lo que tardan unos <strong>99 a 101 minutos</strong> (casi 1 hora y 40 minutos) en dar una sola vuelta completa al planeta (realizan 14 órbitas por día).<br>
+      • <strong>¿Por qué en la maqueta dan una vuelta cada 15 segundos?</strong> Porque está acelerada intencionadamente en modo <em>time-lapse</em>. Si se movieran en tiempo real 1:1, parecerían congelados y ningún evaluador podría notar cómo se cruzan las órbitas ni cómo el haz Nadir barre los continentes.
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MÓDULO 7: EL MACHETE DEL DEFENSOR -->
+  <!-- ========================================== -->
+  <div class="module-card">
+    <div class="module-header">
+      <span class="module-num">MÓDULO 7</span>
+      <h2 class="module-title">"El Machete del Defensor": 12 Respuestas Clave para Memorizar</h2>
+    </div>
+    <p style="margin-bottom: 16px; color: var(--text-muted);">Si en la defensa o en una conversación técnica te hacen estas preguntas, responde con estas frases exactas:</p>
+
+    <!-- Q1 -->
+    <div class="qa-card">
+      <div class="qa-q">❓ 1. "¿Por qué no usan temperatura en °C en lugar de inventar FRP en Megawatts?"</div>
+      <div class="qa-a">
+        <strong>Respuesta:</strong> "Porque un satélite desde el espacio no puede medir la temperatura de la llama. En un píxel de 1 km², una llama de 800 °C ocupa solo el 0,01% del área rodeada de suelo frío, dando una temperatura aparente de apenas 21 °C. El <strong>FRP en Megawatts</strong> resuelve esto porque mide la energía radiativa real emitida en la banda de 4 µm, que es físicamente proporcional a los kilogramos de biomasa consumidos."
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="qa-card">
+      <div class="qa-q">❓ 2. "¿Por qué VIIRS cuenta 4 veces más focos que MODIS?"</div>
+      <div class="qa-a">
+        <strong>Respuesta:</strong> "Por una razón puramente geométrica: el píxel de VIIRS (375 m) es 7 veces más pequeño en área que el de MODIS (1000 m). Un mismo fuego que MODIS registra como un único punto rojo, VIIRS lo desagrega en 4 o 5 píxeles individuales. Si cuentas puntos crees que hay 4 veces más fuego, pero si mides FRP en Megawatts, la energía total es prácticamente la misma."
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="qa-card">
+      <div class="qa-q">❓ 3. "¿Qué significa Nadir?"</div>
+      <div class="qa-a">
+        <strong>Respuesta:</strong> "Es la línea recta vertical que apunta hacia abajo, hacia el centro de la Tierra ($90^\circ$ perpendicular). Es el punto de máxima resolución óptica del satélite antes de que los haces se abran hacia los costados en el ancho de barrido (Swath)."
+      </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="qa-card">
+      <div class="qa-q">❓ 4. "¿Por qué los satélites se mueven tan rápido en la maqueta?"</div>
+      <div class="qa-a">
+        <strong>Respuesta:</strong> "En la realidad viajan a 27.000 km/h pero tardan 100 minutos en dar una vuelta completa a la Tierra. En la maqueta aceleramos la escala temporal a modo <em>time-lapse</em> para que en 15 segundos se pueda apreciar la órbita polar, la inclinación de $98^\circ$ y el barrido del haz Nadir sobre los biomas."
+      </div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="qa-card">
+      <div class="qa-q">❓ 5. "¿Por qué el Z-Score es semanal y no mensual o anual?"</div>
+      <div class="qa-a">
+        <strong>Respuesta:</strong> "Por la <strong>fenología del fuego</strong>. 500 MW en abril (temporada de lluvias amazónica) es una catástrofe anómala, pero 500 MW en agosto (temporada seca) es un evento habitual. El Z-Score compara la semana 34 de 2024 exclusivamente contra las semanas 34 de los 26 años previos, respetando el ciclo estacional natural."
+      </div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="qa-card">
+      <div class="qa-q">❓ 6. "¿Qué significa que $\alpha + \beta = 1{,}00$ en la armonización?"</div>
+      <div class="qa-a">
+        <strong>Respuesta:</strong> "Es el principio de <strong>conservación de escala y energía</strong>. Garantiza que la combinación ponderada de MODIS ($\alpha$) y VIIRS ($\beta$) no infle ni destruya artificialmente la potencia total observada."
+      </div>
+    </div>
+
+    <!-- Q7 -->
+    <div class="qa-card">
+      <div class="qa-q">❓ 7. "¿Qué es un Z-Score de 2.0?"</div>
+      <div class="qa-a">
+        <strong>Respuesta:</strong> "Significa que la energía observada está 2 desviaciones estándar por encima de la media histórica de esa semana. En estadística corresponde a $p < 0{,}05$, lo que demuestra que la probabilidad de que ocurra por simple azar climático es menor al 5%: es una <strong>anomalía estadísticamente significativa</strong>."
+      </div>
+    </div>
+
+    <!-- Q8 -->
+    <div class="qa-card">
+      <div class="qa-q">❓ 8. "¿Cómo generaron los datos previos a 2012 si VIIRS no existía?"</div>
+      <div class="qa-a">
+        <strong>Respuesta:</strong> "No inventamos datos ni creamos un 'VIIRS sintético'. Realizamos una <strong>Estimación Retrospectiva de FRP Armonizado</strong>: calculamos los coeficientes de regresión ortogonal durante la era de solapamiento (2012–2024) y aplicamos esa función de calibración sobre las observaciones reales de MODIS de 2000 a 2011, preservando la escala física en Megawatts."
+      </div>
+    </div>
+
+    <!-- Q9 -->
+    <div class="qa-card">
+      <div class="qa-q">❓ 9. "¿Qué datasets oficiales de la NASA utiliza el proyecto?"</div>
+      <div class="qa-a">
+        <strong>Respuesta:</strong> "Datos de NASA FIRMS: <code>MCD14DL</code> (MODIS Colección 6.1) y <code>VNP14IMGTDL</code> / <code>VJ114IMGTDL</code> (VIIRS 375 m NRT y Standard). Para la visualización orbital usamos capas Blue Marble de NASA GIBS."
+      </div>
+    </div>
+
+    <!-- Q10 -->
+    <div class="qa-card">
+      <div class="qa-q">❓ 10. "¿Por qué la maqueta no se traba con miles de fuegos?"</div>
+      <div class="qa-a">
+        <strong>Respuesta:</strong> "Porque implementamos <code>InstancedMesh</code> en Three.js con WebGL. En lugar de crear 50.000 objetos individuales que saturan la CPU, se envía una sola geometría a la memoria GPU y se dibujan todas las partículas en un solo draw call a 60 FPS estables."
+      </div>
+    </div>
+
+    <!-- Q11: CASO SAN LUIS -->
+    <div class="qa-card" style="border-color: rgba(56,189,248,0.5); background: rgba(11,61,145,0.25);">
+      <div class="qa-q" style="color: var(--accent-cyan);">❓ 11. "¿Cómo aplican este modelo al caso real de San Luis (Argentina)?"</div>
+      <div class="qa-a">
+        <strong>Respuesta:</strong> "Calibramos los coeficientes ($\alpha = 0{,}44$, $\beta = 0{,}56$, $R^2 = 0{,}92$) para corregir la subdetección en laderas escarpadas y pastizales de monte bajo viento Zonda. En semanas críticas de sequía extrema, el velocímetro emite la alerta situacional validada:  
+        <em style="color: #fff; font-weight: 600;">«El incremento de calor observado esta semana en San Luis no es un error óptico por cambio de satélites: el Z-Score de +2.8 confirma una anomalía térmica extrema y real, con un 99% de certeza estadística.»</em>"
+      </div>
+    </div>
+
+    <!-- Q12: LOS 3 PROTO-USUARIOS -->
+    <div class="qa-card" style="border-color: rgba(168,85,247,0.5); background: rgba(168,85,247,0.15);">
+      <div class="qa-q" style="color: var(--accent-purple);">❓ 12. "¿A qué usuarios institucionales les sirve cada fórmula de este machete?"</div>
+      <div class="qa-a">
+        <strong>Respuesta:</strong> "A tres niveles de usuarios reales:  
+        1. <strong>Brigadista de Terreno (Nivel 1):</strong> Consulta el Anomaly Gauge y la ventana de 50 min de revisita satelital para saber si el frente es seguro o exige repliegue táctico inmediato.  
+        2. <strong>Comandante Operativo (Nivel 2):</strong> Usa el FRP en MW en celdas de 11 km para despachar aviones hidrantes y helibaldes hacia donde la biomasa se quema con mayor violencia.  
+        3. <strong>Científico Ambiental (Nivel 3):</strong> Audita el Burning Calendar de 26 años para estudiar el adelantamiento estacional del fuego impulsado por el cambio climático."
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>Equipo AlgoXplorers (Argentina) — PyroHarmony | NASA Space Apps Challenge 2026</p>
+    <p>Documento de estudio y capacitación interna para el equipo.</p>
+  </footer>
+
+</div>
+
+</body>
+</html>

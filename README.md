@@ -19,6 +19,18 @@
 > **Official Challenge:** *"Harmonization of MODIS and VIIRS Hot Spots"* — NASA Space Apps Challenge 2026  
 > **Interface Language:** Native English (`EN`) by default with zero-reload dynamic Spanish (`ES`) toggle (`#btn-toggle-lang`).
 
+### 📚 Official Bilingual Documentation & Deliverables / Documentación Oficial Bilingüe:
+
+| Document / Documento | English Version (EN) 🇺🇸 | Versión en Español (ES) 🇦🇷 | Description / Descripción |
+| :--- | :--- | :--- | :--- |
+| **Interactive 3D Web App** | [`index.html`](./index.html) *(Native EN)* | [`index.html`](./index.html) *(Dynamic ES toggle)* | 60 FPS WebGL 3D Globe & 4-Zone Command Center |
+| **Scientific White Paper** | [`SCIENTIFIC_GUIDE_PYROHARMONY.html`](./SCIENTIFIC_GUIDE_PYROHARMONY.html) · [`md`](./SCIENTIFIC_GUIDE_PYROHARMONY.md) | [`GUIA_CIENTIFICA_PYROHARMONY.html`](./GUIA_CIENTIFICA_PYROHARMONY.html) · [`md`](./GUIA_CIENTIFICA_PYROHARMONY.md) | Full biophysical & math foundation (A4 PDF exportable) |
+| **4-Zone Operations Manual** | [`COMMAND_MANUAL_4_ZONES.html`](./COMMAND_MANUAL_4_ZONES.html) · [`md`](./COMMAND_MANUAL_4_ZONES.md) | [`GUIA_INTERPRETACION_MAQUETA.html`](./GUIA_INTERPRETACION_MAQUETA.html) · [`md`](./GUIA_INTERPRETACION_MAQUETA.md) | Operational walkthrough & 3-stage validation protocol |
+| **Executive Team Dossier** | [`EXECUTIVE_TEAM_DOSSIER.html`](./EXECUTIVE_TEAM_DOSSIER.html) | [`DOSSIER_ENTREGA_EQUIPO.html`](./DOSSIER_ENTREGA_EQUIPO.html) | Executive summary, legal compliance & team audit |
+| **240s Video Pitch Script** | [`VIDEO_PITCH_PROMPTER.html`](./VIDEO_PITCH_PROMPTER.html) | [`VIDEO_PITCH_PROMPTER.html`](./VIDEO_PITCH_PROMPTER.html) | Timed video defense teleprompter |
+| **NASA Submission Form** | [`NASA_SUBMISSION_TEMPLATE.md`](./NASA_SUBMISSION_TEMPLATE.md) | [`NASA_SUBMISSION_TEMPLATE.md`](./NASA_SUBMISSION_TEMPLATE.md) | Official challenge submission answers |
+| **Project Presentation** | [`README.md`](./README.md) | [`README.es.md`](./README.es.md) | Full GitHub landing page |
+
 ---
 
 ## 1. Executive Summary & Scientific Foundation
@@ -83,7 +95,7 @@ To guarantee strict compliance with NASA Space Apps standards, all statistical a
 
 ---
 
-## 4. Institutional Proto-Users & Operational Decision-Makers (Zero Fiction)
+## 4. Institutional Proto-Users & Operational Decision-Makers
 
 In strict adherence to NASA Space Apps Challenge 2026 impact requirements, PyroHarmony is calibrated for three verifiable real-world operational tiers under international standards:
 
@@ -179,7 +191,7 @@ All five members of **AlgoXplorers** contribute as equal co-authors and co-archi
 
 - **One-Click Windows Launch:** Double-click [`INICIAR_PYROHARMONY.bat`](./INICIAR_PYROHARMONY.bat) or open [`index.html`](./index.html) directly in any modern browser.
 - **Executive Team Dossier:** [`DOSSIER_ENTREGA_EQUIPO.html`](./DOSSIER_ENTREGA_EQUIPO.html)
-- **Scientific White Paper:** [`GUIA_CIENTIFICA_PYROHARMONY.html`](./GUIA_CIENTIFICA_PYROHARMONY.html) / [`GUIA_CIENTIFICA_PYROHARMONY.md`](./GUIA_CIENTIFICA_PYROHARMONY.md)
+- **Scientific White Paper:** [`SCIENTIFIC_GUIDE_PYROHARMONY.html`](./SCIENTIFIC_GUIDE_PYROHARMONY.html) / [`SCIENTIFIC_GUIDE_PYROHARMONY.md`](./SCIENTIFIC_GUIDE_PYROHARMONY.md) *(Spanish: [`GUIA_CIENTIFICA_PYROHARMONY.html`](./GUIA_CIENTIFICA_PYROHARMONY.html) / [`GUIA_CIENTIFICA_PYROHARMONY.md`](./GUIA_CIENTIFICA_PYROHARMONY.md))*
 - **4-Zone Command Center Manual:** [`GUIA_INTERPRETACION_MAQUETA.html`](./GUIA_INTERPRETACION_MAQUETA.html) / [`GUIA_INTERPRETACION_MAQUETA.md`](./GUIA_INTERPRETACION_MAQUETA.md)
 - **240-Second Video Pitch Teleprompter:** [`VIDEO_PITCH_PROMPTER.html`](./VIDEO_PITCH_PROMPTER.html)
 - **Engineering Replication Playbook:** [`REPLICATION_PLAYBOOK.md`](./REPLICATION_PLAYBOOK.md)

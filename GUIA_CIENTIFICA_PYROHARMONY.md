@@ -96,7 +96,33 @@ Durante la Semana 35 de 2020 en el bioma **Amazon & Pantanal Wetlands**, el moto
 
 ---
 
-## 6. Referencias Bibliográficas Fundamentales
+## 6. Los 3 Proto-usuarios Institucionales y Marcos Operativos (Cero Ficción)
+
+Para responder a las exigencias operativas de **NASA Space Apps Challenge 2026**, PyroHarmony no define usuarios ficticios ni arquetipos genéricos. La arquitectura del software está calibrada para tres niveles de toma de decisiones del mundo real, alineados con el **Incident Command System (ICS)**, el **Marco de Sendai de la ONU** y los principios **FAIR / NASA TOPS**:
+
+### 1. Nivel Táctico / Operativo: Comandante de Incidentes Forestales (Incident Commander - ICS)
+- **Agencias Reales:** *San Luis Solidario*, *Servicio Nacional de Manejo del Fuego (SNMF - Argentina)*, *US Forest Service (USFS - EE.UU.)*, *CAL FIRE* y *CONAF (Chile)*.
+- **Problema Crítico de Terreno:** En topografía compleja (ej. Sierras Centrales y Comechingones de San Luis), la dispersión óptica genera reportes contradictorios (p. ej. 30 focos de VIIRS 375m frente a 2 de MODIS 1000m). Un comandante no puede enviar personal a quebradas estrechas bajo viento Zonda sin saber si el frente acelera.
+- **Respuesta Tecnológica de PyroHarmony:**
+  - El **Radar Táctico LACES de 50 minutos** cuantifica la tasa de aceleración radiativa ($\Delta\text{FRP}$) entre Suomi-NPP (13:30) y NOAA-20 (14:20). Si $\Delta\text{FRP} > 150\%$, se activa la orden de retirada hacia la Zona de Seguridad, mitigando el riesgo de atrapamiento mortal (*burnover*).
+  - Emite el reporte **SitRep táctico en .txt** diseñado para lectura offline en terminales móviles o transmisión por radio VHF/HF.
+
+### 2. Nivel Estratégico / Gestión Pública: Director de Protección Civil y Manejo de Emergencias
+- **Agencias Reales:** Directores Provinciales de Defensa Civil, Ministerios de Seguridad, Centros de Operaciones de Emergencia (COE) y coordinadores del *Marco de Sendai de la ONU (Prioridad 4)*.
+- **Problema Crítico de Gestión:** El salto artificial de detecciones a partir de 2012 distorsiona las series históricas, dificultando la justificación de presupuestos de prevención, la contratación de medios aéreos o la firma de Decretos de Emergencia Ígnea.
+- **Respuesta Tecnológica de PyroHarmony:**
+  - El **Z-Score Térmico Semanal Climatológico** (\text{ semanas} \times 27\text{ años}$) normaliza la variabilidad fenológica. Si el Z-Score supera $+2.5$ ( < 0.01$), el funcionario cuenta con respaldo matemático para decretar el Estado de Emergencia y solicitar fondos nacionales con rigor científico ante la prensa y el poder legislativo.
+
+### 3. Nivel Científico / Investigación: Especialista en Teledetección y Modelado de Emisiones
+- **Agencias Reales:** *CONAE (Comisión Nacional de Actividades Espaciales)*, *NASA Earth Science Division*, *Copernicus CAMS*, *INTA*, *CONICET* e institutos universitarios (p. ej. *Universidad de La Punta - ULP*).
+- **Problema Crítico de Investigación:** La estimación de biomasa consumida y gases de efecto invernadero (GEI) requiere series de 26 años consistentes sin violar el principio de conservación de energía ($\alpha + \beta = 1.00$) ni promediar temperaturas de brillo subpíxel (\circ\text{C}$).
+- **Respuesta Tecnológica de PyroHarmony:**
+  - Implementa la **Regresión Ortogonal con Conservación de Escala** y el factor de Wooster ( = 0.368\text{ kg/MJ}$) para estimar tasas de combustión en $\text{kg/s}$ y $\text{t/h}$.
+  - Exporta capas estandarizadas en **GeoJSON (RFC 7946)** y **CSV**, interoperables con QGIS, Google Earth Engine y modelos numéricos del IPCC.
+
+---
+
+## 7. Referencias Bibliográficas Fundamentales
 
 1. **Dozier, J. (1981).** *A method for satellite identification of surface temperature fields of subpixel resolution*. Remote Sensing of Environment, 11, 221–229.
 2. **Kaufman, Y. J., Justice, C. O., Flynn, L. P., et al. (1998).** *Potential global fire monitoring from EOS-MODIS*. Journal of Geophysical Research: Atmospheres, 103(D24), 32215–32238.

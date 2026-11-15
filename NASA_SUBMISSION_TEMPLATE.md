@@ -43,7 +43,40 @@ Built under NASA NPR 7150.2 guidelines using a strict Model-View-Controller (MVC
 
 ---
 
-## 4. Open Science (FAIR Principles), UN SDGs & Sendai Framework
+## 4. Institutional Proto-Users & Real-World Stakeholder Personas
+
+To ensure genuine, measurable real-world adoption, PyroHarmony is strictly engineered around three verified operational tiers without fictional constructs, aligning with international standards from the US National Wildfire Coordinating Group (NWCG), the UN Sendai Framework for Disaster Risk Reduction, and NASA Applied Sciences:
+
+### 1. Tactical Tier (Operational Command): Wildland Incident Commander / Crew Boss
+- **Real-World Institutional References:**
+  - *Argentina:* San Luis Solidario Emergency Operations, Servicio Nacional de Manejo del Fuego (SNMF), and Provincial Volunteer Firefighter Federations.
+  - *United States & International:* Incident Commanders under the Incident Command System (ICS / NWCG 310-1) across the US Forest Service (USFS), CAL FIRE, and Chile's Corporación Nacional Forestal (CONAF).
+- **Critical Real-World Problem:** Raw FIRMS feeds present fragmented pixel counts (e.g., 30 VIIRS 375m points vs 2 MODIS 1000m pixels) over mountainous canyons, leaving crews uncertain whether they face a low-intensity grass backing fire or a life-threatening crown fire surge. In canyon terrain, unverified advances lead to catastrophic entrapments and burnovers.
+- **Operational Use of PyroHarmony:**
+  - Evaluates the **50-Minute LACES Burnover Radar** ($\Delta\text{FRP}$) between the orbital passes of Suomi-NPP (13:30 local) and NOAA-20 (14:20 local). A sudden surge of $+150\%\ \Delta\text{FRP}$ triggers immediate radio evacuation orders to pre-identified Safety Zones.
+  - Generates zero-dependency offline **Tactical SitRep (.txt)** summaries readable on mobile field devices and transmittable via VHF/HF radio in dead zones.
+
+### 2. Strategic Tier (Executive Decision-Making): Director of Civil Protection & Fire Management
+- **Real-World Institutional References:**
+  - *Argentina:* Provincial Directors of Civil Defense / Emergency Operations Centers (COE), Environmental and Security Ministries.
+  - *International:* State Emergency Management Agencies (FEMA Region coordinators, UN Sendai Framework Priority 4 focal points).
+- **Critical Real-World Problem:** Multidecadal wildfire statistics suffer from an apparent quadrupling of detections after 2012 caused purely by the transition from 1000m to 375m sensor resolution. Administrators cannot justify emergency decrees, aerial firefighting budgets, or national resource mobilization on unharmonized raw hotspot counts without risking public misinformation.
+- **Operational Use of PyroHarmony:**
+  - Inspects the **52-Week × 27-Year Climatological Z-Score Heatmap**. A certified statistical anomaly ( \ge +2.5$,  < 0.01$) provides unimpeachable scientific justification to declare Provincial/National Fire Emergency Decrees and stage water-bombing aircraft ahead of wind shifts.
+  - Validates historical baseline trends across biomes without sensor-transition discontinuity.
+
+### 3. Scientific Tier (Atmospheric Research & Carbon Accounting): Earth Observation Specialist
+- **Real-World Institutional References:**
+  - *Argentina:* Comisión Nacional de Actividades Espaciales (CONAE), INTA, CONICET, and university research institutes (e.g., Universidad de La Punta - ULP).
+  - *International:* NASA Earth Science Division, Copernicus Atmospheric Monitoring Service (CAMS), and IPCC greenhouse gas inventory teams.
+- **Critical Real-World Problem:** Quantifying wildland pyrogenic emissions and black carbon requires integrating multidecadal satellite series without violating radiative physical conservation laws ($\alpha + \beta \ne 1.00$) or conflating fractional subpixel brightness temperatures (\circ\text{C}$).
+- **Operational Use of PyroHarmony:**
+  - Exploits the **Scale-Conserving Orthogonal Regression ($\alpha + \beta = 1.00$, ^2 \ge 0.85$, $|\text{MBE}| < 5\%$)** and Wooster's combustion factor ( = 0.368\text{ kg/MJ}$) to calculate instantaneous dry biomass consumption rates ($\text{kg/s}$ and $\text{t/h}$).
+  - Exports standard **GeoJSON (RFC 7946)** and **CSV** layers fully compliant with FAIR principles and NASA TOPS for direct ingestion into QGIS, Python geospatial pipelines, and Earth System models.
+
+---
+
+## 5. Open Science (FAIR Principles), UN SDGs & Sendai Framework
 
 - **FAIR & NASA TOPS:** Released under the MIT Open Source License with direct interoperability in standard GeoJSON (`RFC 7946`) and CSV formats.
 - **UN Sustainable Development Goals:** Directly advances **SDG 13 (Climate Action)** and **SDG 15 (Life on Land)**.
@@ -51,7 +84,7 @@ Built under NASA NPR 7150.2 guidelines using a strict Model-View-Controller (MVC
 
 ---
 
-## 5. Official Team Roster — AlgoXplorers (Argentina)
+## 6. Official Team Roster — AlgoXplorers (Argentina)
 
 1. **José Alex Fernández Montellanos (`@fajjaf`)** — Project Lead, Scientific Data Architecture & Mathematical Model
 2. **Carlos Vizzioli (`@cvizzioli`)** — Full-Stack Development, Data Modeling & Algorithms

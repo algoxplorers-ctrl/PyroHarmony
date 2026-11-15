@@ -7,14 +7,14 @@
  * @license MIT
  */
 
-const CACHE_NAME = 'pyroharmony-pwa-v2.0.18';
+const CACHE_NAME = 'pyroharmony-pwa-v2.0.19';
 
 const CORE_ASSETS = [
   './',
   './index.html',
-  './app.bundle.js?v=2.0.18',
+  './app.bundle.js?v=2.0.19',
   './manifest.webmanifest',
-  './src/styles/main.css?v=2.0.18',
+  './src/styles/main.css?v=2.0.19',
   './assets/icons/favicon.png',
   './assets/icons/icon-192.png',
   './assets/icons/icon-512.png',

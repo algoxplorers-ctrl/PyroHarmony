@@ -1208,7 +1208,7 @@ class GlobeView {
     this.container = document.getElementById(containerId); this.fpsElement = document.getElementById(fpsElementId);
     this.scene = null; this.camera = null; this.renderer = null; this.earthGroup = null; this.cloudsMesh = null;
     this.bordersMat = null; this.borderTexMat = null; this.sanLuisBordersMat = null; this.sanLuisShadowMat = null;
-    this.hotspotModisMesh = null; this.hotspotViirsMesh = null;
+    this.hotspotSatMeshes = new Map();
     this.aoiRingMesh = null; this.aoiRingMat = null; this.satMeshes = new Map(); this.countryNodes = [];
     this.sanLuisDeptNodes = []; this.sanLuisLocNodes = []; this.sanLuisMarkersGroup = null; this.earthSphereMesh = null;
     this.activeSatIds = new Set(['terra', 'aqua', 'suomi_npp', 'noaa_20']);
@@ -1470,11 +1470,11 @@ class GlobeView {
     this.scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({ color: 0x93c5fd, size: 0.045, transparent: true, opacity: 0.75 })));
   }
   _buildOrbitsAndSatellites(THREE) {
-    const tilts = [{ rx: 1.15, ry: 0.35, rz: 0.45 }, { rx: 1.32, ry: -0.42, rz: -0.35 }, { rx: 1.48, ry: 0.18, rz: 0.62 }, { rx: 1.22, ry: -0.25, rz: -0.55 }];
+    const tilts = [{ rx: 0.14, ry: -0.22, rz: -0.46 }, { rx: -0.14, ry: 0.22, rz: 0.44 }, { rx: 0.10, ry: 0.26, rz: -0.16 }, { rx: -0.12, ry: -0.25, rz: 0.18 }];
     SATELLITE_FLEET.forEach((sat, idx) => {
       const orbitPivot = new THREE.Group(), t = tilts[idx % tilts.length]; orbitPivot.rotation.set(t.rx, t.ry, t.rz);
       const altRadius = sat.sensor === 'VIIRS' ? 1.24 : 1.17, pts = [];
-      for (let i = 0; i <= 96; i++) { const a = (i / 96) * Math.PI * 2; pts.push(new THREE.Vector3(Math.cos(a) * altRadius, Math.sin(a) * altRadius, 0)); }
+      for (let i = 0; i <= 96; i++) { const a = (i / 96) * Math.PI * 2; pts.push(new THREE.Vector3(0, Math.sin(a) * altRadius, Math.cos(a) * altRadius)); }
       orbitPivot.add(new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: sat.colorHex, transparent: true, opacity: 0.42 })));
       const satNode = new THREE.Group(), coneH = altRadius - 1.0;
       const busMat = new THREE.MeshStandardMaterial({ color: sat.sensor === 'VIIRS' ? 0xd1d5db : 0xd97706, metalness: 0.85, roughness: 0.25 });
@@ -1487,21 +1487,37 @@ class GlobeView {
       dish.position.set(0, 0.024, 0.015); dish.rotation.x = Math.PI / 4; satNode.add(dish);
       const lens = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.01, 0.012, 12), new THREE.MeshBasicMaterial({ color: sat.colorHex }));
       lens.position.set(0, -0.024, 0); satNode.add(lens);
-      const cone = new THREE.Mesh(new THREE.ConeGeometry(sat.sensor === 'VIIRS' ? 0.17 : 0.125, coneH, 28, 1, true), new THREE.MeshBasicMaterial({ color: sat.colorHex, transparent: true, opacity: 0.25, side: THREE.DoubleSide }));
+      const cone = new THREE.Mesh(new THREE.ConeGeometry(sat.sensor === 'VIIRS' ? 0.165 : 0.125, coneH, 28, 1, true), new THREE.MeshBasicMaterial({ color: sat.colorHex, transparent: true, opacity: 0.24, side: THREE.DoubleSide }));
       cone.position.y = -coneH / 2; satNode.add(cone);
       const labelEl = document.createElement('div'); labelEl.className = 'sat-floating-tag';
+      labelEl.style.borderColor = sat.colorHex;
       labelEl.textContent = `${sat.id.toUpperCase().replace('_', '-')} (${sat.sensor}) ${sat.equatorCrossingLocal.split(' ')[0]}`;
-      this.labelLayer.appendChild(labelEl); orbitPivot.add(satNode); this.earthGroup.add(orbitPivot);
-      this.satMeshes.set(sat.id, { sat, orbitPivot, satNode, altRadius, labelEl });
+      this.labelLayer.appendChild(labelEl); orbitPivot.add(satNode); this.scene.add(orbitPivot);
+      this.satMeshes.set(sat.id, { sat, idx, orbitPivot, satNode, altRadius, labelEl });
     });
   }
   _buildHotspotMeshes(THREE) {
-    // Clean spherical hotspots without spikes: MODIS (1000m, orange #ff6d00) and VIIRS (375m, cyan #00e5ff)
-    this.hotspotModisMesh = new THREE.InstancedMesh(new THREE.SphereGeometry(0.0055, 14, 14), new THREE.MeshBasicMaterial({ color: 0xff6d00 }), 35);
-    this.hotspotViirsMesh = new THREE.InstancedMesh(new THREE.SphereGeometry(0.0042, 14, 14), new THREE.MeshBasicMaterial({ color: 0x00e5ff }), 35);
+    // 4-Satellite spherical hotspots: Terra (#ff6d00), Aqua (#00e5ff), Suomi-NPP (#ffd600), NOAA-20 (#00e676)
+    this.hotspotSatMeshes = new Map();
+    const satStyles = [
+      { id: 'terra', radius: 0.0054, color: 0xff6d00 },
+      { id: 'aqua', radius: 0.0051, color: 0x00e5ff },
+      { id: 'suomi_npp', radius: 0.0043, color: 0xffd600 },
+      { id: 'noaa_20', radius: 0.0043, color: 0x00e676 }
+    ];
+    satStyles.forEach(({ id, radius, color }) => {
+      const mesh = new THREE.InstancedMesh(new THREE.SphereGeometry(radius, 14, 14), new THREE.MeshBasicMaterial({ color }), 35);
+      this.hotspotSatMeshes.set(id, mesh);
+      this.earthGroup.add(mesh);
+    });
     this.aoiRingMat = new THREE.LineBasicMaterial({ color: 0x00e676, transparent: true, opacity: 0.92 });
     this.aoiRingMesh = new THREE.Group();
-    this.earthGroup.add(this.hotspotModisMesh, this.hotspotViirsMesh, this.aoiRingMesh);
+    this.earthGroup.add(this.aoiRingMesh);
+  }
+  _getSatForBinIndex(i) {
+    const activeList = SATELLITE_FLEET.filter((s) => this.activeSatIds.has(s.id));
+    if (!activeList.length) return SATELLITE_FLEET[0];
+    return activeList[i % activeList.length];
   }
   _updateAoiRadarRing(biome, colorHex) {
     if (!this.aoiRingMesh || !window.THREE) return;
@@ -1545,8 +1561,9 @@ class GlobeView {
 
     if (item.kind === 'hotspot') {
       const b = item.bin;
-      const isModis = item.isModis;
-      const accent = isModis ? '#ff6d00' : '#00e5ff';
+      const sat = item.sat || SATELLITE_FLEET[0];
+      const accent = sat.id === 'terra' ? '#ff6d00' : sat.colorHex;
+      const satIcon = sat.id === 'terra' ? '🟠' : sat.id === 'aqua' ? '🔵' : sat.id === 'suomi_npp' ? '🟡' : '🟢';
       this.hoverRingEl.style.borderColor = accent;
       this.hoverRingEl.style.boxShadow = `0 0 12px ${accent}, inset 0 0 6px ${accent}`;
       this.hoverRingEl.style.left = `${item.sx}px`;
@@ -1583,9 +1600,10 @@ class GlobeView {
       this.hoverTooltipEl.style.borderColor = accent;
       this.hoverTooltipEl.innerHTML = `
         <div class="htt-header">
-          <span style="color:${accent}">${isModis ? '🟠 FOCO MODIS (Terra/Aqua)' : '🔵 FOCO VIIRS (SNPP/NOAA-20)'}</span>
-          <span class="htt-badge" style="background:rgba(15,23,42,0.9);border:1px solid ${accent};color:${accent}">${isModis ? 'Res. 1000m' : 'Res. 375m'}</span>
+          <span style="color:${accent}">${satIcon} ${isEs ? 'FOCO' : 'HOTSPOT'} ${sat.id.toUpperCase().replace('_', '-')} · ${sat.sensor}</span>
+          <span class="htt-badge" style="background:rgba(15,23,42,0.9);border:1px solid ${accent};color:${accent}">Res. ${sat.resolutionM}m · ${sat.equatorCrossingLocal.split(' ')[0]}</span>
         </div>
+        <div class="htt-row"><span>🛰️ ${isEs ? 'Órbita / Barrido' : 'Orbit / Swath'}:</span><strong>${sat.agency} · ${sat.altitudeKm} km (${sat.swathWidthKm} km)</strong></div>
         <div class="htt-row"><span>📍 ${isEs ? 'Referencia' : 'Reference'}:</span><strong>${refText}</strong></div>
         <div class="htt-row"><span>🌐 ${isEs ? 'Coordenadas' : 'Coords'}:</span><strong>${latStr}, ${lonStr}</strong></div>
         <div class="htt-row"><span>⚡ ${isEs ? 'Potencia (FRP Arm.)' : 'Harmonized FRP'}:</span><strong style="color:#38bdf8">${b.harmonizedFrp.toFixed(2)} MW</strong></div>
@@ -1723,7 +1741,8 @@ class GlobeView {
       if (this.activeHoverItem) {
         targetLat = this.activeHoverItem.lat;
         targetLon = this.activeHoverItem.lon;
-        snappedName = this.activeHoverItem.kind === 'locality' ? this.activeHoverItem.loc.name : `Foco ${this.activeHoverItem.isModis ? 'MODIS' : 'VIIRS'} (${this.activeHoverItem.bin.harmonizedFrp.toFixed(1)} MW)`;
+        const satLabel = this.activeHoverItem.sat ? this.activeHoverItem.sat.id.toUpperCase().replace('_', '-') : 'SAT';
+        snappedName = this.activeHoverItem.kind === 'locality' ? this.activeHoverItem.loc.name : `Foco ${satLabel} (${this.activeHoverItem.bin.harmonizedFrp.toFixed(1)} MW)`;
         nextZ = Math.min(nextZ, 1.075);
       } else if (this.camera && this.earthSphereMesh && window.THREE) {
         const THREE = window.THREE;
@@ -1771,22 +1790,24 @@ class GlobeView {
   }
   setAutoRotate(enabled) { this.autoRotate = !!enabled; if (this.aoiRingMesh) this.aoiRingMesh.visible = !this.autoRotate; }
   _refreshHotspotScales(scaleMult = 1.0) {
-    if (!this.hotspotModisMesh || !window.THREE) return;
-    const dummy = new window.THREE.Object3D(), maxFrp = Math.max(1, ...this.currentBins.map((b) => b.harmonizedFrp));
+    if (!this.hotspotSatMeshes || !this.hotspotSatMeshes.size || !window.THREE) return;
+    const dummy = new window.THREE.Object3D(), zeroDummy = new window.THREE.Object3D();
+    zeroDummy.scale.set(0, 0, 0); zeroDummy.updateMatrix();
+    const maxFrp = Math.max(1, ...this.currentBins.map((b) => b.harmonizedFrp));
     for (let i = 0; i < 35; i++) {
       if (i < this.currentBins.length) {
         const b = this.currentBins[i], ratio = (0.65 + 0.65 * (b.harmonizedFrp / maxFrp)) * scaleMult;
+        const targetSat = this._getSatForBinIndex(i);
         dummy.position.copy(this._latLonToVec3(window.THREE, b.lat, b.lon, 1.0008 + 0.0032 * scaleMult));
         dummy.scale.set(ratio, ratio, ratio); dummy.updateMatrix();
-        (i % 2 === 0 ? this.hotspotModisMesh : this.hotspotViirsMesh).setMatrixAt(i, dummy.matrix);
-        dummy.scale.set(0, 0, 0); dummy.updateMatrix();
-        (i % 2 === 0 ? this.hotspotViirsMesh : this.hotspotModisMesh).setMatrixAt(i, dummy.matrix);
+        this.hotspotSatMeshes.forEach((mesh, satId) => {
+          mesh.setMatrixAt(i, satId === targetSat.id ? dummy.matrix : zeroDummy.matrix);
+        });
       } else {
-        dummy.scale.set(0, 0, 0); dummy.updateMatrix();
-        this.hotspotModisMesh.setMatrixAt(i, dummy.matrix); this.hotspotViirsMesh.setMatrixAt(i, dummy.matrix);
+        this.hotspotSatMeshes.forEach((mesh) => mesh.setMatrixAt(i, zeroDummy.matrix));
       }
     }
-    this.hotspotModisMesh.instanceMatrix.needsUpdate = true; this.hotspotViirsMesh.instanceMatrix.needsUpdate = true;
+    this.hotspotSatMeshes.forEach((mesh) => { mesh.instanceMatrix.needsUpdate = true; });
   }
   updateTelemetry(snapshot) {
     this.lastSnapshot = snapshot;
@@ -1853,11 +1874,13 @@ class GlobeView {
     if (this.aoiRingMesh) this.aoiRingMesh.visible = !this.autoRotate && zDist > 1.48;
     if (this.aoiRingMat) this.aoiRingMat.opacity = 0.65 + 0.25 * Math.sin(elapsed * 3.2);
     const w = this.container.clientWidth || window.innerWidth, h = this.container.clientHeight || window.innerHeight, projVec = new window.THREE.Vector3();
-    this.satMeshes.forEach(({ sat, orbitPivot, satNode, altRadius, labelEl }, id) => {
+    const upAxis = new window.THREE.Vector3(0, 1, 0);
+    this.satMeshes.forEach(({ idx, orbitPivot, satNode, altRadius, labelEl }, id) => {
       const vis = this.activeSatIds.has(id) && zDist > 1.42; orbitPivot.visible = vis; labelEl.style.display = vis ? 'block' : 'none';
       if (vis) {
-        const ang = elapsed * 0.35 + sat.phaseOffsetRad;
-        satNode.position.set(Math.cos(ang) * altRadius, Math.sin(ang) * altRadius, 0); satNode.rotation.z = ang - Math.PI / 2;
+        const ang = Math.sin(elapsed * (0.21 + idx * 0.035) + idx * 1.45) * 0.72;
+        satNode.position.set(0, Math.sin(ang) * altRadius, Math.cos(ang) * altRadius);
+        satNode.quaternion.setFromUnitVectors(upAxis, satNode.position.clone().normalize());
         satNode.getWorldPosition(projVec); projVec.project(this.camera);
         labelEl.style.transform = `translate(${(projVec.x * 0.5 + 0.5) * w - 45}px, ${(-projVec.y * 0.5 + 0.5) * h - 26}px)`;
       }
@@ -1984,10 +2007,12 @@ class GlobeView {
         if (projVec.z > 0.55) {
           projVec.project(this.camera);
           if (Math.abs(projVec.x) < 0.96 && Math.abs(projVec.y) < 0.96) {
+            const targetSat = this._getSatForBinIndex(i);
             this.hoverScreenItems.push({
               kind: 'hotspot',
               bin: b,
-              isModis: i % 2 === 0,
+              sat: targetSat,
+              isModis: targetSat.sensor === 'MODIS',
               lat: b.lat,
               lon: b.lon,
               sx: (projVec.x * 0.5 + 0.5) * w,

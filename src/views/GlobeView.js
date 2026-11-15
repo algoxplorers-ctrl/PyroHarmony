@@ -720,137 +720,216 @@ export class GlobeView {
       `;
     }
 
-    const cardW = 278, cardH = 152;
-    let tx = item.sx + 16;
-    let ty = item.sy - cardH * 0.5;
-    if (tx + cardW > w - 16) tx = item.sx - cardW - 16;
-    if (ty < 14) ty = 14;
-    if (ty + cardH > h - 18) ty = Math.max(14, h - cardH - 18);
+    const cardW = Math.min(282, w - 16), cardH = 162;
+    let tx = w < 540 ? (w - cardW) * 0.5 : item.sx + 16;
+    let ty = w < 540 ? (item.sy > h * 0.52 ? 12 : Math.max(12, h - cardH - 52)) : item.sy - cardH * 0.5;
+    if (tx + cardW > w - 10) tx = item.sx - cardW - 16;
+    if (tx < 8) tx = 8;
+    if (ty < 10) ty = 10;
+    if (ty + cardH > h - 14) ty = Math.max(10, h - cardH - 14);
     this.hoverTooltipEl.style.left = `${Math.round(tx)}px`;
     this.hoverTooltipEl.style.top = `${Math.round(ty)}px`;
     this.hoverTooltipEl.classList.add('tooltip-visible');
   }
+  _findNearestHoverItem(mx, my, maxRadiusPx = 18) {
+    let bestItem = null, bestPxDist = maxRadiusPx;
+    for (let i = 0; i < this.hoverScreenItems.length; i++) {
+      const it = this.hoverScreenItems[i];
+      const d = Math.hypot(it.sx - mx, it.sy - my);
+      if (d < bestPxDist) { bestPxDist = d; bestItem = it; }
+    }
+    return bestItem;
+  }
+  _triggerDoubleTapFlight(clientX, clientY) {
+    this.autoRotate = false;
+    const rect = this.renderer ? this.renderer.domElement.getBoundingClientRect() : this.container.getBoundingClientRect();
+    const ripple = document.createElement('div');
+    ripple.className = 'earth-dblclick-ripple';
+    ripple.style.left = `${clientX - rect.left}px`;
+    ripple.style.top = `${clientY - rect.top}px`;
+    this.container.appendChild(ripple);
+    setTimeout(() => { if (ripple.parentNode) ripple.parentNode.removeChild(ripple); }, 850);
+
+    const currentZ = this.camera ? this.camera.position.z : this.zoomTarget;
+    const nextAlt = Math.max(0.045, (currentZ - 1.0) * 0.48);
+    let nextZ = Math.max(1.045, 1.0 + nextAlt);
+    let targetLat = null, targetLon = null, snappedName = null;
+
+    if (this.activeHoverItem) {
+      targetLat = this.activeHoverItem.lat;
+      targetLon = this.activeHoverItem.lon;
+      const satLabel = this.activeHoverItem.sat ? this.activeHoverItem.sat.id.toUpperCase().replace('_', '-') : 'SAT';
+      snappedName = this.activeHoverItem.kind === 'locality' ? this.activeHoverItem.loc.name : `Foco ${satLabel} (${this.activeHoverItem.bin.harmonizedFrp.toFixed(1)} MW)`;
+      nextZ = Math.min(nextZ, 1.075);
+    } else if (this.camera && this.earthSphereMesh && window.THREE) {
+      const THREE = window.THREE;
+      const mouse = new THREE.Vector2(((clientX - rect.left) / rect.width) * 2 - 1, -((clientY - rect.top) / rect.height) * 2 + 1);
+      const raycaster = new THREE.Raycaster(); raycaster.setFromCamera(mouse, this.camera);
+      const hits = raycaster.intersectObject(this.earthSphereMesh, false);
+      if (hits.length > 0) {
+        const localPt = this.earthGroup.worldToLocal(hits[0].point.clone()).normalize();
+        const phi = Math.acos(Math.max(-1, Math.min(1, localPt.y)));
+        targetLat = 90 - (phi * 180) / Math.PI;
+        let theta = Math.atan2(localPt.z, -localPt.x);
+        if (theta < 0) theta += Math.PI * 2;
+        targetLon = (theta * 180) / Math.PI - 180;
+
+        if (currentZ < 1.65 && this.sanLuisLocNodes && this.sanLuisLocNodes.length > 0) {
+          let bestLoc = null, bestDist = 0.28;
+          this.sanLuisLocNodes.forEach((loc) => {
+            const d = Math.hypot(loc.lat - targetLat, loc.lon - targetLon);
+            if (d < bestDist) { bestDist = d; bestLoc = loc; }
+          });
+          if (bestLoc) {
+            targetLat = bestLoc.lat; targetLon = bestLoc.lon;
+            snappedName = bestLoc.name;
+            nextZ = Math.min(nextZ, bestLoc.tier === 1 ? 1.085 : 1.062);
+          } else if (this.sanLuisDeptNodes && this.sanLuisDeptNodes.length > 0) {
+            let bestDept = null, bestDeptDist = 0.45;
+            this.sanLuisDeptNodes.forEach((dpt) => {
+              const d = Math.hypot(dpt.lat - targetLat, dpt.lon - targetLon);
+              if (d < bestDeptDist) { bestDeptDist = d; bestDept = dpt; }
+            });
+            if (bestDept) {
+              targetLat = bestDept.lat; targetLon = bestDept.lon;
+              snappedName = bestDept.labelEs;
+              nextZ = Math.min(nextZ, 1.14);
+            }
+          }
+        }
+      }
+    }
+    if (snappedName && this.zoomReadoutEl) {
+      this.zoomReadoutEl.textContent = `✈️ ${snappedName}`;
+    }
+    this._startCameraFlight(targetLat, targetLon, nextZ, 1080);
+  }
   _bindPointerControls() {
+    this.pointerDownInfo = null;
+    this.lastTapInfo = null;
+    this.pinchStartDist = null;
+
     this.container.addEventListener('pointerdown', (e) => {
       if (e.target && e.target.closest && e.target.closest('.globe-zoom-controls')) return;
       this.isDragging = true;
       this.flightState = null;
-      this._hideHoverCard();
       if (this.cameraVeilEl) this.cameraVeilEl.classList.remove('veil-active');
       this.prevMouse = { x: e.clientX, y: e.clientY };
+      this.pointerDownInfo = { x: e.clientX, y: e.clientY, pointerType: e.pointerType || 'mouse', moved: false };
     });
-    window.addEventListener('pointerup', () => {
+
+    window.addEventListener('pointerup', (e) => {
+      const down = this.pointerDownInfo;
       this.isDragging = false;
+      this.pointerDownInfo = null;
       if (this.container && !this.activeHoverItem) this.container.style.cursor = 'grab';
+      if (!down || !this.container) return;
+
+      const moveDist = Math.hypot(e.clientX - down.x, e.clientY - down.y);
+      if (moveDist < 12 && !down.moved) {
+        const rect = this.renderer ? this.renderer.domElement.getBoundingClientRect() : this.container.getBoundingClientRect();
+        const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+        if (mx >= 0 && my >= 0 && mx <= rect.width && my <= rect.height) {
+          const isTouch = down.pointerType === 'touch' || window.innerWidth < 960;
+          const hitRadius = isTouch ? 32 : 20;
+          const tappedItem = this._findNearestHoverItem(mx, my, hitRadius);
+          const now = performance.now();
+
+          if (isTouch && this.lastTapInfo && (now - this.lastTapInfo.time < 320) && Math.hypot(e.clientX - this.lastTapInfo.x, e.clientY - this.lastTapInfo.y) < 30) {
+            this.lastTapInfo = null;
+            if (tappedItem) this.activeHoverItem = tappedItem;
+            this._triggerDoubleTapFlight(e.clientX, e.clientY);
+            return;
+          }
+          this.lastTapInfo = { time: now, x: e.clientX, y: e.clientY };
+
+          if (tappedItem) {
+            this.activeHoverItem = tappedItem;
+            this.isCardPinned = true;
+            this._renderHoverCard(tappedItem, rect.width, rect.height);
+          } else if (this.isCardPinned || isTouch) {
+            this.isCardPinned = false;
+            this._hideHoverCard();
+          }
+        }
+      }
     });
-    this.container.addEventListener('pointerleave', () => this._hideHoverCard());
+
+    this.container.addEventListener('pointerleave', (e) => {
+      if (e.pointerType === 'touch' || this.isCardPinned) return;
+      this._hideHoverCard();
+    });
+
     window.addEventListener('pointermove', (e) => {
       if (this.isDragging) {
+        const dx = e.clientX - this.prevMouse.x, dy = e.clientY - this.prevMouse.y;
+        if (this.pointerDownInfo && Math.hypot(e.clientX - this.pointerDownInfo.x, e.clientY - this.pointerDownInfo.y) > 9) {
+          this.pointerDownInfo.moved = true;
+          this.isCardPinned = false;
+          this._hideHoverCard();
+        }
         const alt = this.camera ? Math.max(0.035, this.camera.position.z - 0.985) : 2.25;
         const sens = 0.0042 * (alt / 2.25);
-        this.rotationTarget.y += (e.clientX - this.prevMouse.x) * sens;
-        this.rotationTarget.x = Math.max(-1.25, Math.min(1.25, this.rotationTarget.x + (e.clientY - this.prevMouse.y) * sens));
+        this.rotationTarget.y += dx * sens;
+        this.rotationTarget.x = Math.max(-1.25, Math.min(1.25, this.rotationTarget.x + dy * sens));
         this.prevMouse = { x: e.clientX, y: e.clientY };
         return;
       }
-      if (!this.container || !this.hoverScreenItems.length) return;
+      if (e.pointerType === 'touch' || !this.container || !this.hoverScreenItems.length) return;
       if (e.target && e.target.closest && (e.target.closest('.floating-glass-panel') || e.target.closest('.globe-zoom-controls'))) {
-        this._hideHoverCard();
+        if (!this.isCardPinned) this._hideHoverCard();
         return;
       }
       const rect = this.renderer ? this.renderer.domElement.getBoundingClientRect() : this.container.getBoundingClientRect();
       const mx = e.clientX - rect.left, my = e.clientY - rect.top;
       if (mx < 0 || my < 0 || mx > rect.width || my > rect.height) {
-        this._hideHoverCard();
+        if (!this.isCardPinned) this._hideHoverCard();
         return;
       }
-      let bestItem = null, bestPxDist = 17;
-      for (let i = 0; i < this.hoverScreenItems.length; i++) {
-        const it = this.hoverScreenItems[i];
-        const d = Math.hypot(it.sx - mx, it.sy - my);
-        if (d < bestPxDist) { bestPxDist = d; bestItem = it; }
-      }
+      const bestItem = this._findNearestHoverItem(mx, my, 18);
       if (bestItem) {
         this.activeHoverItem = bestItem;
         this.container.style.cursor = 'pointer';
         this._renderHoverCard(bestItem, rect.width, rect.height);
-      } else if (this.activeHoverItem) {
+      } else if (this.activeHoverItem && !this.isCardPinned) {
         this._hideHoverCard();
       }
     });
+
+    this.container.addEventListener('touchstart', (e) => {
+      if (e.touches && e.touches.length === 2) {
+        this.isDragging = false;
+        this.pinchStartDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+      }
+    }, { passive: true });
+
+    this.container.addEventListener('touchmove', (e) => {
+      if (e.touches && e.touches.length === 2 && this.pinchStartDist) {
+        e.preventDefault();
+        const dist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+        const delta = this.pinchStartDist - dist;
+        this.pinchStartDist = dist;
+        const alt = Math.max(0.04, this.zoomTarget - 1.0);
+        this.zoomTarget = Math.max(1.045, Math.min(4.2, this.zoomTarget + delta * 0.0045 * alt));
+      }
+    }, { passive: false });
+
+    this.container.addEventListener('touchend', () => { this.pinchStartDist = null; }, { passive: true });
+
     this.container.addEventListener('wheel', (e) => {
       e.preventDefault();
       this.flightState = null;
+      this.isCardPinned = false;
       this._hideHoverCard();
       if (this.cameraVeilEl) this.cameraVeilEl.classList.remove('veil-active');
       const alt = Math.max(0.04, this.zoomTarget - 1.0);
       this.zoomTarget = Math.max(1.045, Math.min(4.2, this.zoomTarget + e.deltaY * 0.00085 * alt));
     }, { passive: false });
+
     this.container.addEventListener('dblclick', (e) => {
       if (e.target && e.target.closest && e.target.closest('.globe-zoom-controls')) return;
       e.preventDefault();
-      this.autoRotate = false;
-      const rect = this.renderer ? this.renderer.domElement.getBoundingClientRect() : this.container.getBoundingClientRect();
-      const ripple = document.createElement('div');
-      ripple.className = 'earth-dblclick-ripple';
-      ripple.style.left = `${e.clientX - rect.left}px`;
-      ripple.style.top = `${e.clientY - rect.top}px`;
-      this.container.appendChild(ripple);
-      setTimeout(() => { if (ripple.parentNode) ripple.parentNode.removeChild(ripple); }, 850);
-
-      const currentZ = this.camera ? this.camera.position.z : this.zoomTarget;
-      const nextAlt = Math.max(0.045, (currentZ - 1.0) * 0.48);
-      let nextZ = Math.max(1.045, 1.0 + nextAlt);
-      let targetLat = null, targetLon = null, snappedName = null;
-
-      if (this.activeHoverItem) {
-        targetLat = this.activeHoverItem.lat;
-        targetLon = this.activeHoverItem.lon;
-        const satLabel = this.activeHoverItem.sat ? this.activeHoverItem.sat.id.toUpperCase().replace('_', '-') : 'SAT';
-        snappedName = this.activeHoverItem.kind === 'locality' ? this.activeHoverItem.loc.name : `Foco ${satLabel} (${this.activeHoverItem.bin.harmonizedFrp.toFixed(1)} MW)`;
-        nextZ = Math.min(nextZ, 1.075);
-      } else if (this.camera && this.earthSphereMesh && window.THREE) {
-        const THREE = window.THREE;
-        const mouse = new THREE.Vector2(((e.clientX - rect.left) / rect.width) * 2 - 1, -((e.clientY - rect.top) / rect.height) * 2 + 1);
-        const raycaster = new THREE.Raycaster(); raycaster.setFromCamera(mouse, this.camera);
-        const hits = raycaster.intersectObject(this.earthSphereMesh, false);
-        if (hits.length > 0) {
-          const localPt = this.earthGroup.worldToLocal(hits[0].point.clone()).normalize();
-          const phi = Math.acos(Math.max(-1, Math.min(1, localPt.y)));
-          targetLat = 90 - (phi * 180) / Math.PI;
-          let theta = Math.atan2(localPt.z, -localPt.x);
-          if (theta < 0) theta += Math.PI * 2;
-          targetLon = (theta * 180) / Math.PI - 180;
-
-          if (currentZ < 1.65 && this.sanLuisLocNodes && this.sanLuisLocNodes.length > 0) {
-            let bestLoc = null, bestDist = 0.28;
-            this.sanLuisLocNodes.forEach((loc) => {
-              const d = Math.hypot(loc.lat - targetLat, loc.lon - targetLon);
-              if (d < bestDist) { bestDist = d; bestLoc = loc; }
-            });
-            if (bestLoc) {
-              targetLat = bestLoc.lat; targetLon = bestLoc.lon;
-              snappedName = bestLoc.name;
-              nextZ = Math.min(nextZ, bestLoc.tier === 1 ? 1.085 : 1.062);
-            } else if (this.sanLuisDeptNodes && this.sanLuisDeptNodes.length > 0) {
-              let bestDept = null, bestDeptDist = 0.45;
-              this.sanLuisDeptNodes.forEach((dpt) => {
-                const d = Math.hypot(dpt.lat - targetLat, dpt.lon - targetLon);
-                if (d < bestDeptDist) { bestDeptDist = d; bestDept = dpt; }
-              });
-              if (bestDept) {
-                targetLat = bestDept.lat; targetLon = bestDept.lon;
-                snappedName = bestDept.labelEs;
-                nextZ = Math.min(nextZ, 1.14);
-              }
-            }
-          }
-        }
-      }
-      if (snappedName && this.zoomReadoutEl) {
-        this.zoomReadoutEl.textContent = `✈️ ${snappedName}`;
-      }
-      this._startCameraFlight(targetLat, targetLon, nextZ, 1080);
+      this._triggerDoubleTapFlight(e.clientX, e.clientY);
     });
   }
   setAutoRotate(enabled) { this.autoRotate = !!enabled; if (this.aoiRingMesh) this.aoiRingMesh.visible = !this.autoRotate; }

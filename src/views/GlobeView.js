@@ -126,6 +126,27 @@ export class GlobeView {
     btnIn.addEventListener('click', () => { this.flightState = null; const step = Math.max(0.035, (this.zoomTarget - 1.0) * 0.28); this.zoomTarget = Math.max(1.045, this.zoomTarget - step); });
     if (btnSanLuis) btnSanLuis.addEventListener('click', () => this.focusSanLuis());
     this.container.appendChild(hud);
+    if (!this._drawersBound) {
+      this._drawersBound = true;
+      const btnLeft = document.getElementById('btn-toggle-left-panel');
+      const panelLeft = document.querySelector('.left-telemetry-panel');
+      if (btnLeft && panelLeft) {
+        btnLeft.addEventListener('click', () => {
+          const isCollapsed = panelLeft.classList.toggle('panel-collapsed');
+          btnLeft.classList.toggle('drawer-collapsed', isCollapsed);
+          btnLeft.textContent = isCollapsed ? '📡 ▶' : '◀';
+        });
+      }
+      const btnRight = document.getElementById('btn-toggle-right-panel');
+      const panelRight = document.querySelector('.right-tactical-panel');
+      if (btnRight && panelRight) {
+        btnRight.addEventListener('click', () => {
+          const isCollapsed = panelRight.classList.toggle('panel-collapsed');
+          btnRight.classList.toggle('drawer-collapsed', isCollapsed);
+          btnRight.textContent = isCollapsed ? '◀ 🚒' : '▶';
+        });
+      }
+    }
   }
   _addCountryLabelNode(THREE, lat, lon, nameEs, nameEn, span = 6) {
     const normEs = /falkland|malvinas/i.test(nameEs) ? 'Islas Malvinas' : nameEs, normEn = /falkland|malvinas/i.test(nameEn) ? 'Islas Malvinas' : nameEn;

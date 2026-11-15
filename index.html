@@ -12,7 +12,7 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" type="image/png" href="assets/icons/favicon.png" />
   <link rel="apple-touch-icon" href="assets/icons/icon-192.png" />
-  <link rel="stylesheet" href="src/styles/main.css?v=2.0.17" />
+  <link rel="stylesheet" href="src/styles/main.css?v=2.0.18" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
 </head>
 <body>
@@ -100,6 +100,7 @@
         🔥 <span data-i18n="left.benchmark_btn">Pantanal 2020 Benchmark (W35 · Z = +2.82)</span>
       </button>
     </aside>
+    <button type="button" id="btn-toggle-left-panel" class="panel-drawer-toggle left-drawer-toggle" title="Ocultar / Mostrar Telemetría (FRP)" aria-label="Ocultar o mostrar panel izquierdo">◀</button>
 
     <!-- ===================================================================
          ZONE 3 (RIGHT): TACTICAL BURNOVER RADAR (LACES PROTOCOL)
@@ -112,6 +113,7 @@
 
       <div id="laces-radar-container"></div>
     </aside>
+    <button type="button" id="btn-toggle-right-panel" class="panel-drawer-toggle right-drawer-toggle" title="Ocultar / Mostrar Radar LACES" aria-label="Ocultar o mostrar panel derecho">▶</button>
   </main>
 
   <!-- =====================================================================
@@ -200,6 +202,6 @@
   </div>
 
   <div id="calendar-floating-tooltip" class="floating-tooltip" role="tooltip"></div>
-  <script src="app.bundle.js?v=2.0.17" defer></script>
+  <script src="app.bundle.js?v=2.0.18" defer></script>
 </body>
 </html>

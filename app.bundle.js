@@ -285,6 +285,73 @@ const WORLD_COUNTRIES = Object.freeze([
   [-25.2, 133.7, 'Australia', 'Australia', 32], [-40.9, 174.8, 'Nueva Zelanda', 'New Zealand', 9]
 ]);
 
+const SAN_LUIS_GEOGRAPHY = Object.freeze({
+  OUTER_RING: [
+    [-67.28, -31.86], [-66.95, -31.88], [-66.65, -31.91], [-66.32, -31.93], [-66.12, -31.86], [-65.78, -31.88],
+    [-65.58, -31.90], [-65.45, -31.93], [-65.38, -32.10], [-65.34, -32.28], [-65.12, -32.29], [-65.11, -32.42],
+    [-65.08, -32.58], [-65.11, -32.78], [-65.18, -32.96], [-65.24, -33.12], [-65.16, -33.32], [-65.15, -33.80],
+    [-65.15, -34.50], [-65.15, -35.25], [-65.15, -36.00], [-65.85, -36.00], [-66.60, -36.00], [-66.62, -35.92],
+    [-66.48, -35.72], [-66.38, -35.48], [-66.32, -35.22], [-66.34, -34.95], [-66.40, -34.68], [-66.54, -34.50],
+    [-66.69, -34.43], [-66.66, -34.25], [-66.69, -34.05], [-66.72, -33.84], [-66.58, -33.76], [-66.81, -33.62],
+    [-66.95, -33.42], [-67.04, -33.20], [-67.06, -33.01], [-67.15, -32.82], [-67.08, -32.66], [-67.18, -32.55],
+    [-67.16, -32.43], [-67.24, -32.33], [-67.11, -32.30], [-67.18, -32.22], [-67.26, -32.06], [-67.28, -31.86]
+  ],
+  INTERNAL_DIVISIONS: [
+    [[-65.78, -31.88], [-65.78, -32.24]],
+    [[-67.16, -32.43], [-66.75, -32.41], [-66.42, -32.41], [-66.22, -32.45]],
+    [[-66.22, -32.45], [-66.22, -32.72], [-66.13, -32.82], [-66.24, -32.92], [-66.18, -33.02]],
+    [[-66.22, -32.72], [-66.10, -32.60], [-65.96, -32.40], [-65.78, -32.24]],
+    [[-65.78, -32.24], [-65.53, -32.25], [-65.50, -32.47], [-65.11, -32.42]],
+    [[-65.50, -32.47], [-65.49, -32.68], [-65.64, -32.86]],
+    [[-66.10, -32.60], [-66.04, -32.74], [-65.76, -32.81], [-65.64, -32.86]],
+    [[-65.64, -32.86], [-65.68, -32.96], [-65.18, -32.96]],
+    [[-67.06, -33.01], [-66.18, -33.02]],
+    [[-66.18, -33.02], [-66.08, -33.03], [-66.04, -33.48], [-65.62, -33.49], [-65.69, -33.38], [-65.72, -33.06], [-65.68, -32.96]],
+    [[-66.04, -33.48], [-65.99, -34.00], [-65.97, -34.50]],
+    [[-66.54, -34.50], [-65.97, -34.50], [-65.15, -34.50]]
+  ],
+  DEPARTMENTS: [
+    [-32.14, -66.52, 'DPTO. AYACUCHO', 'AYACUCHO DEPT.'],
+    [-32.16, -65.54, 'DPTO. JUNÍN', 'JUNIN DEPT.'],
+    [-32.72, -66.68, 'DPTO. BELGRANO', 'BELGRANO DEPT.'],
+    [-32.57, -65.79, 'DPTO. SAN MARTÍN', 'SAN MARTIN DEPT.'],
+    [-32.71, -65.33, 'DPTO. CHACABUCO', 'CHACABUCO DEPT.'],
+    [-33.16, -65.87, 'DPTO. PRINGLES', 'PRINGLES DEPT.'],
+    [-33.76, -66.38, 'DPTO. PUEYRREDÓN', 'PUEYRREDON DEPT.'],
+    [-33.82, -65.56, 'DPTO. PEDERNERA', 'PEDERNERA DEPT.'],
+    [-35.26, -65.86, 'DPTO. DUPUY', 'DUPUY DEPT.']
+  ],
+  LOCALITIES: [
+    [-33.3017, -66.3378, 'San Luis (Capital)', 1, true],
+    [-33.6757, -65.4578, 'Villa Mercedes', 1, false],
+    [-32.3450, -65.1550, 'Villa de Merlo', 1, false],
+    [-33.1833, -66.3167, 'La Punta', 1, false],
+    [-32.2333, -65.9667, 'Quines', 1, false],
+    [-32.5667, -65.2500, 'Concarán', 1, false],
+    [-33.0500, -65.7800, 'La Toma', 1, false],
+    [-34.6269, -65.2539, 'Buena Esperanza', 1, false],
+    [-35.1528, -65.9461, 'Unión', 1, false],
+    [-32.6000, -66.1250, 'S. Fco. del Monte de Oro', 2, false],
+    [-32.3667, -66.2200, 'Luján', 2, false],
+    [-32.0667, -66.0500, 'Candelaria', 2, false],
+    [-32.3417, -65.3300, 'Sta. Rosa del Conlara', 2, false],
+    [-32.6600, -66.4500, 'Villa Gral. Roca', 2, false],
+    [-32.5200, -66.7800, 'La Calera', 2, false],
+    [-32.4833, -65.6833, 'Lib. Gral. San Martín', 2, false],
+    [-32.7333, -65.2900, 'Tilisarao', 2, false],
+    [-32.9167, -65.3700, 'Naschel', 2, false],
+    [-33.1167, -66.0600, 'El Trapiche', 2, false],
+    [-32.8300, -66.0400, 'La Carolina', 2, false],
+    [-33.2239, -66.2281, 'Potrero de los Funes', 2, false],
+    [-33.2917, -66.2333, 'Juana Koslay', 2, false],
+    [-33.8600, -65.2200, 'Justo Daract', 2, false],
+    [-33.8833, -66.5200, 'Beazley', 2, false],
+    [-35.2000, -65.2800, 'Nueva Galia', 2, false],
+    [-35.7167, -65.3400, 'Arizona', 2, false],
+    [-35.6833, -65.9333, 'Anchorena', 2, false]
+  ]
+});
+
 
   // === MODULE: src/config/i18n.js ===
 /**
@@ -1140,14 +1207,15 @@ class GlobeView {
   constructor(containerId, fpsElementId) {
     this.container = document.getElementById(containerId); this.fpsElement = document.getElementById(fpsElementId);
     this.scene = null; this.camera = null; this.renderer = null; this.earthGroup = null; this.cloudsMesh = null;
-    this.bordersMat = null; this.borderTexMat = null;
+    this.bordersMat = null; this.borderTexMat = null; this.sanLuisBordersMat = null; this.sanLuisShadowMat = null;
     this.hotspotModisMesh = null; this.hotspotViirsMesh = null;
     this.aoiRingMesh = null; this.aoiRingMat = null; this.satMeshes = new Map(); this.countryNodes = [];
+    this.sanLuisDeptNodes = []; this.sanLuisLocNodes = []; this.sanLuisMarkersGroup = null;
     this.activeSatIds = new Set(['terra', 'aqua', 'suomi_npp', 'noaa_20']);
     this.currentBins = []; this.clockStart = performance.now(); this.frameCount = 0; this.lastFpsCheck = performance.now();
     this.isContextLost = false; this.isDragging = false; this.prevMouse = { x: 0, y: 0 };
     this.rotationTarget = { x: 0.22, y: -1.35 }; this.zoomTarget = 3.25; this.zoomReadoutEl = null;
-    this.lastBiomeId = null; this.autoRotate = false;
+    this.lastBiomeId = null; this.autoRotate = false; this.lastHotspotScale = 1.0;
   }
   init() { if (this.container && window.THREE) { this._initThreeScene(); this._bindPointerControls(); this._animate(); } }
   _latLonToVec3(THREE, lat, lon, r = 1.004) {
@@ -1172,7 +1240,7 @@ class GlobeView {
   }
   _initThreeScene() {
     const THREE = window.THREE, w = this.container.clientWidth || window.innerWidth, h = this.container.clientHeight || window.innerHeight;
-    this.scene = new THREE.Scene(); this.camera = new THREE.PerspectiveCamera(40, w / h, 0.1, 1000);
+    this.scene = new THREE.Scene(); this.camera = new THREE.PerspectiveCamera(40, w / h, 0.01, 1000);
     this.zoomTarget = w < 768 ? 3.85 : 3.25; this.camera.position.set(0, 0, this.zoomTarget);
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     const isMob = w < 960 || (window.innerWidth < 960); this.renderer.setPixelRatio(isMob ? Math.min(window.devicePixelRatio || 1, 1.5) : Math.min(window.devicePixelRatio || 1, 2.0)); this.renderer.setSize(w, h);
@@ -1193,19 +1261,26 @@ class GlobeView {
     loader.load('https://unpkg.com/three-globe@2.31.0/example/img/earth-clouds.png', (cTex) => { cloudMat.map = cTex; cloudMat.alphaMap = cTex; cloudMat.opacity = 0.35; cloudMat.needsUpdate = true; });
     this.cloudsMesh = new THREE.Mesh(new THREE.SphereGeometry(1.014, 48, 48), cloudMat); this.earthGroup.add(this.cloudsMesh);
     this.earthGroup.add(new THREE.Mesh(new THREE.SphereGeometry(1.055, 48, 48), new THREE.MeshBasicMaterial({ color: 0x1d70ff, transparent: true, opacity: 0.16, side: THREE.BackSide, depthWrite: false })));
-    this._buildCountryBordersAndLabels(THREE); this._buildOrbitsAndSatellites(THREE); this._buildHotspotMeshes(THREE);
+    this._buildCountryBordersAndLabels(THREE); this._buildSanLuisCartography(THREE); this._buildOrbitsAndSatellites(THREE); this._buildHotspotMeshes(THREE);
     window.addEventListener('resize', () => {
       if (!this.renderer || !this.container) return;
       const nw = this.container.clientWidth || window.innerWidth, nh = this.container.clientHeight || window.innerHeight;
       this.camera.aspect = nw / nh; this.camera.updateProjectionMatrix(); this.renderer.setSize(nw, nh);
     });
   }
+  focusSanLuis() {
+    this.autoRotate = false;
+    this.rotationTarget.y = ((66.02 - 90) * Math.PI) / 180;
+    this.rotationTarget.x = (-33.72 * Math.PI) / 180;
+    this.zoomTarget = 1.17;
+  }
   _buildZoomHud() {
     const hud = document.createElement('div'); hud.className = 'globe-zoom-controls';
-    hud.innerHTML = `<button type="button" class="globe-zoom-btn" title="Zoom Out">−</button><span class="globe-zoom-readout">🌐 Rueda: Acercar País</span><button type="button" class="globe-zoom-btn" title="Zoom In">+</button>`;
-    const [btnOut, btnIn] = hud.querySelectorAll('button'); this.zoomReadoutEl = hud.querySelector('.globe-zoom-readout');
-    btnOut.addEventListener('click', () => { this.zoomTarget = Math.min(4.2, this.zoomTarget + 0.35); });
-    btnIn.addEventListener('click', () => { this.zoomTarget = Math.max(1.38, this.zoomTarget - 0.35); });
+    hud.innerHTML = `<button type="button" class="globe-zoom-btn" title="Zoom Out">−</button><span class="globe-zoom-readout">🌐 Rueda: Acercar País</span><button type="button" class="globe-zoom-btn" title="Zoom In">+</button><button type="button" class="globe-sanluis-btn" title="Enfocar Mapa Departamental de San Luis">🗺️ San Luis</button>`;
+    const [btnOut, btnIn, btnSanLuis] = hud.querySelectorAll('button'); this.zoomReadoutEl = hud.querySelector('.globe-zoom-readout');
+    btnOut.addEventListener('click', () => { const step = Math.max(0.06, (this.zoomTarget - 1.0) * 0.28); this.zoomTarget = Math.min(4.2, this.zoomTarget + step); });
+    btnIn.addEventListener('click', () => { const step = Math.max(0.05, (this.zoomTarget - 1.0) * 0.25); this.zoomTarget = Math.max(1.065, this.zoomTarget - step); });
+    if (btnSanLuis) btnSanLuis.addEventListener('click', () => this.focusSanLuis());
     this.container.appendChild(hud);
   }
   _addCountryLabelNode(THREE, lat, lon, nameEs, nameEn, span = 6) {
@@ -1252,6 +1327,17 @@ class GlobeView {
           this._addCountryLabelNode(THREE, (minLat + maxLat) * 0.5, (minLon + maxLon) * 0.5, name, name, Math.hypot(maxLat - minLat, maxLon - minLon));
         }
       });
+      const strokeSlPath = (pts, wDark, wCyan) => {
+        bctx.beginPath();
+        pts.forEach(([lon, lat], i) => {
+          const x = ((lon + 180) / 360) * bc.width, y = ((90 - lat) / 180) * bc.height;
+          if (i === 0) bctx.moveTo(x, y); else bctx.lineTo(x, y);
+        });
+        bctx.strokeStyle = 'rgba(2, 6, 23, 0.72)'; bctx.lineWidth = wDark; bctx.stroke();
+        bctx.strokeStyle = 'rgba(103, 232, 249, 0.88)'; bctx.lineWidth = wCyan; bctx.stroke();
+      };
+      strokeSlPath(SAN_LUIS_GEOGRAPHY.OUTER_RING, 1.3, 0.65);
+      SAN_LUIS_GEOGRAPHY.INTERNAL_DIVISIONS.forEach((line) => strokeSlPath(line, 0.9, 0.45));
       this.borderTexMat = new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(bc), transparent: true, opacity: 0.65, depthWrite: false });
       this.earthGroup.add(new THREE.Mesh(new THREE.SphereGeometry(1.001, 64, 64), this.borderTexMat));
       if (verts.length > 0) {
@@ -1260,6 +1346,63 @@ class GlobeView {
       }
     };
     fetch(WORLD_GEOJSON_URLS[0]).then((r) => r.json()).then(parseGeoJson).catch(() => fetch(WORLD_GEOJSON_URLS[1]).then((r) => r.json()).then(parseGeoJson).catch(() => {}));
+  }
+  _buildSanLuisCartography(THREE) {
+    this.sanLuisDeptNodes = []; this.sanLuisLocNodes = [];
+    this.sanLuisBordersMat = new THREE.LineBasicMaterial({ color: 0x7dd3fc, transparent: true, opacity: 0.85, depthTest: true });
+    this.sanLuisShadowMat = new THREE.LineBasicMaterial({ color: 0x020617, transparent: true, opacity: 0.55, depthTest: true });
+    const vertsMain = [], vertsShadow = [];
+    const addPath = (pts, isOuter) => {
+      for (let i = 0; i < pts.length - 1; i++) {
+        const [lon1, lat1] = pts[i], [lon2, lat2] = pts[i + 1];
+        const steps = Math.max(1, Math.ceil(Math.hypot(lon2 - lon1, lat2 - lat1) / 0.04));
+        for (let s = 0; s < steps; s++) {
+          const t1 = s / steps, t2 = (s + 1) / steps;
+          const la1 = lat1 + (lat2 - lat1) * t1, lo1 = lon1 + (lon2 - lon1) * t1;
+          const la2 = lat1 + (lat2 - lat1) * t2, lo2 = lon1 + (lon2 - lon1) * t2;
+          const v1 = this._latLonToVec3(THREE, la1, lo1, isOuter ? 1.00155 : 1.00145);
+          const v2 = this._latLonToVec3(THREE, la2, lo2, isOuter ? 1.00155 : 1.00145);
+          vertsMain.push(v1.x, v1.y, v1.z, v2.x, v2.y, v2.z);
+          const sv1 = this._latLonToVec3(THREE, la1, lo1, 1.00125);
+          const sv2 = this._latLonToVec3(THREE, la2, lo2, 1.00125);
+          vertsShadow.push(sv1.x, sv1.y, sv1.z, sv2.x, sv2.y, sv2.z);
+        }
+      }
+    };
+    addPath(SAN_LUIS_GEOGRAPHY.OUTER_RING, true);
+    SAN_LUIS_GEOGRAPHY.INTERNAL_DIVISIONS.forEach((line) => addPath(line, false));
+    const shadowGeo = new THREE.BufferGeometry(); shadowGeo.setAttribute('position', new THREE.Float32BufferAttribute(vertsShadow, 3));
+    this.earthGroup.add(new THREE.LineSegments(shadowGeo, this.sanLuisShadowMat));
+    const mainGeo = new THREE.BufferGeometry(); mainGeo.setAttribute('position', new THREE.Float32BufferAttribute(vertsMain, 3));
+    this.earthGroup.add(new THREE.LineSegments(mainGeo, this.sanLuisBordersMat));
+
+    SAN_LUIS_GEOGRAPHY.DEPARTMENTS.forEach(([lat, lon, labelEs, labelEn]) => {
+      const el = document.createElement('div'); el.className = 'dept-floating-tag'; el.style.display = 'none';
+      this.labelLayer.appendChild(el);
+      this.sanLuisDeptNodes.push({ lat, lon, labelEs, labelEn, localVec: this._latLonToVec3(THREE, lat, lon, 1.0018), el });
+    });
+
+    this.sanLuisMarkersGroup = new THREE.Group();
+    this.earthGroup.add(this.sanLuisMarkersGroup);
+    const dotGeoCap = new THREE.SphereGeometry(0.0013, 10, 10);
+    const dotGeoT1 = new THREE.SphereGeometry(0.00095, 8, 8);
+    const dotGeoT2 = new THREE.SphereGeometry(0.0007, 8, 8);
+    const matCap = new THREE.MeshBasicMaterial({ color: 0xfacc15 });
+    const matT1 = new THREE.MeshBasicMaterial({ color: 0x22d3ee });
+    const matT2 = new THREE.MeshBasicMaterial({ color: 0xbae6fd });
+
+    SAN_LUIS_GEOGRAPHY.LOCALITIES.forEach(([lat, lon, name, tier, isCapital]) => {
+      const vec = this._latLonToVec3(THREE, lat, lon, 1.0017);
+      const mesh = new THREE.Mesh(isCapital ? dotGeoCap : tier === 1 ? dotGeoT1 : dotGeoT2, isCapital ? matCap : tier === 1 ? matT1 : matT2);
+      mesh.position.copy(vec);
+      this.sanLuisMarkersGroup.add(mesh);
+      const el = document.createElement('div');
+      el.className = `locality-floating-tag ${isCapital ? 'locality-capital' : tier === 1 ? 'locality-tier-1' : 'locality-tier-2'}`;
+      el.textContent = isCapital ? `★ ${name}` : `• ${name}`;
+      el.style.display = 'none';
+      this.labelLayer.appendChild(el);
+      this.sanLuisLocNodes.push({ lat, lon, name, tier, isCapital, localVec: vec, mesh, el });
+    });
   }
   _buildStarfield(THREE) {
     const starGeo = new THREE.BufferGeometry(), pos = new Float32Array(1400 * 3);
@@ -1327,38 +1470,55 @@ class GlobeView {
     this.container.addEventListener('pointerdown', (e) => { this.isDragging = true; this.prevMouse = { x: e.clientX, y: e.clientY }; }); window.addEventListener('pointerup', () => (this.isDragging = false));
     window.addEventListener('pointermove', (e) => {
       if (!this.isDragging) return;
-      const sens = 0.0045 * (this.camera ? this.camera.position.z / 3.25 : 1);
+      const alt = this.camera ? Math.max(0.05, this.camera.position.z - 0.98) : 2.25;
+      const sens = 0.0042 * (alt / 2.25);
       this.rotationTarget.y += (e.clientX - this.prevMouse.x) * sens;
       this.rotationTarget.x = Math.max(-1.25, Math.min(1.25, this.rotationTarget.x + (e.clientY - this.prevMouse.y) * sens));
       this.prevMouse = { x: e.clientX, y: e.clientY };
     });
-    this.container.addEventListener('wheel', (e) => { e.preventDefault(); this.zoomTarget = Math.max(1.38, Math.min(4.2, this.zoomTarget + e.deltaY * 0.0016)); }, { passive: false });
+    this.container.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const alt = Math.max(0.06, this.zoomTarget - 1.0);
+      this.zoomTarget = Math.max(1.065, Math.min(4.2, this.zoomTarget + e.deltaY * 0.00085 * alt));
+    }, { passive: false });
   }
   setAutoRotate(enabled) { this.autoRotate = !!enabled; if (this.aoiRingMesh) this.aoiRingMesh.visible = !this.autoRotate; }
+  _refreshHotspotScales(scaleMult = 1.0) {
+    if (!this.hotspotModisMesh || !window.THREE) return;
+    const dummy = new window.THREE.Object3D(), maxFrp = Math.max(1, ...this.currentBins.map((b) => b.harmonizedFrp));
+    for (let i = 0; i < 35; i++) {
+      if (i < this.currentBins.length) {
+        const b = this.currentBins[i], ratio = (0.65 + 0.65 * (b.harmonizedFrp / maxFrp)) * scaleMult;
+        dummy.position.copy(this._latLonToVec3(window.THREE, b.lat, b.lon, 1.001 + 0.0035 * scaleMult));
+        dummy.scale.set(ratio, ratio, ratio); dummy.updateMatrix();
+        (i % 2 === 0 ? this.hotspotModisMesh : this.hotspotViirsMesh).setMatrixAt(i, dummy.matrix);
+        dummy.scale.set(0, 0, 0); dummy.updateMatrix();
+        (i % 2 === 0 ? this.hotspotViirsMesh : this.hotspotModisMesh).setMatrixAt(i, dummy.matrix);
+      } else {
+        dummy.scale.set(0, 0, 0); dummy.updateMatrix();
+        this.hotspotModisMesh.setMatrixAt(i, dummy.matrix); this.hotspotViirsMesh.setMatrixAt(i, dummy.matrix);
+      }
+    }
+    this.hotspotModisMesh.instanceMatrix.needsUpdate = true; this.hotspotViirsMesh.instanceMatrix.needsUpdate = true;
+  }
   updateTelemetry(snapshot) {
     this.activeSatIds = new Set(snapshot.activeSatellites.map((s) => s.id)); this.currentBins = snapshot.harmonizedGrid.bins || [];
     if (!this.autoRotate && this.lastBiomeId !== snapshot.biome.id) {
-      this.lastBiomeId = snapshot.biome.id; this.rotationTarget.y = ((-snapshot.biome.lon - 90) * Math.PI) / 180; this.rotationTarget.x = (snapshot.biome.lat * Math.PI) / 180;
+      const prevBiome = this.lastBiomeId;
+      this.lastBiomeId = snapshot.biome.id;
+      if (snapshot.biome.id === 'san_luis_serrano') {
+        this.rotationTarget.y = ((66.02 - 90) * Math.PI) / 180;
+        this.rotationTarget.x = (-33.72 * Math.PI) / 180;
+        this.zoomTarget = 1.18;
+      } else {
+        this.rotationTarget.y = ((-snapshot.biome.lon - 90) * Math.PI) / 180;
+        this.rotationTarget.x = (snapshot.biome.lat * Math.PI) / 180;
+        if (prevBiome === 'san_luis_serrano' && this.zoomTarget < 1.8) this.zoomTarget = 2.65;
+      }
     }
     const statusColor = snapshot.cellStats && snapshot.cellStats.classification ? snapshot.cellStats.classification.colorHex : '#00e676';
     this._updateAoiRadarRing(snapshot.biome, statusColor);
-    if (this.hotspotModisMesh && window.THREE) {
-      const dummy = new window.THREE.Object3D(), maxFrp = Math.max(1, ...this.currentBins.map((b) => b.harmonizedFrp));
-      for (let i = 0; i < 35; i++) {
-        if (i < this.currentBins.length) {
-          const b = this.currentBins[i], ratio = 0.65 + 0.65 * (b.harmonizedFrp / maxFrp);
-          dummy.position.copy(this._latLonToVec3(window.THREE, b.lat, b.lon, 1.005));
-          dummy.scale.set(ratio, ratio, ratio); dummy.updateMatrix();
-          (i % 2 === 0 ? this.hotspotModisMesh : this.hotspotViirsMesh).setMatrixAt(i, dummy.matrix);
-          dummy.scale.set(0, 0, 0); dummy.updateMatrix();
-          (i % 2 === 0 ? this.hotspotViirsMesh : this.hotspotModisMesh).setMatrixAt(i, dummy.matrix);
-        } else {
-          dummy.scale.set(0, 0, 0); dummy.updateMatrix();
-          this.hotspotModisMesh.setMatrixAt(i, dummy.matrix); this.hotspotViirsMesh.setMatrixAt(i, dummy.matrix);
-        }
-      }
-      this.hotspotModisMesh.instanceMatrix.needsUpdate = true; this.hotspotViirsMesh.instanceMatrix.needsUpdate = true;
-    }
+    this._refreshHotspotScales(this.lastHotspotScale);
   }
   _animate() {
     requestAnimationFrame(() => this._animate()); if (this.isContextLost || !this.renderer) return;
@@ -1372,14 +1532,26 @@ class GlobeView {
     if (this.autoRotate && !this.isDragging) this.rotationTarget.y += 0.0015;
     this.earthGroup.rotation.y += (this.rotationTarget.y - this.earthGroup.rotation.y) * 0.1;
     this.earthGroup.rotation.x += (this.rotationTarget.x - this.earthGroup.rotation.x) * 0.1;
-    if (this.cloudsMesh) { this.cloudsMesh.rotation.y += 0.00025; this.cloudsMesh.material.opacity = zDist < 2.5 ? 0.10 : 0.32; }
-    const zoomFactor = Math.max(0, Math.min(1, (zDist - 1.5) / 1.6));
+    if (this.cloudsMesh) { this.cloudsMesh.rotation.y += 0.00025; this.cloudsMesh.material.opacity = zDist < 1.9 ? 0.02 : zDist < 2.5 ? 0.10 : 0.32; }
+    const zoomFactor = Math.max(0, Math.min(1, (zDist - 1.35) / 1.75));
     if (this.bordersMat) this.bordersMat.opacity = 0.52 + 0.22 * zoomFactor;
-    if (this.borderTexMat) this.borderTexMat.opacity = 0.06 + 0.58 * zoomFactor;
-    if (this.aoiRingMat) this.aoiRingMat.opacity = 0.65 + 0.3 * Math.sin(elapsed * 3.2);
+    if (this.borderTexMat) this.borderTexMat.opacity = zDist < 1.75 ? 0.0 : 0.06 + 0.58 * zoomFactor;
+    if (this.sanLuisBordersMat) this.sanLuisBordersMat.opacity = zDist < 2.2 ? 0.94 : 0.68;
+    if (this.sanLuisShadowMat) this.sanLuisShadowMat.opacity = zDist < 2.2 ? 0.65 : 0.25;
+    if (this.sanLuisMarkersGroup) {
+      this.sanLuisMarkersGroup.visible = zDist < 1.85;
+      const mScale = Math.max(0.28, Math.min(1.0, (zDist - 1.04) / 0.55));
+      this.sanLuisLocNodes.forEach((loc) => { if (loc.mesh) loc.mesh.scale.set(mScale, mScale, mScale); });
+    }
+    const hsScale = Math.max(0.18, Math.min(1.0, (zDist - 1.04) / 0.95));
+    if (Math.abs(hsScale - this.lastHotspotScale) > 0.025) {
+      this.lastHotspotScale = hsScale;
+      this._refreshHotspotScales(hsScale);
+    }
+    if (this.aoiRingMat) this.aoiRingMat.opacity = (zDist < 1.55 ? 0.28 : 0.65) + 0.25 * Math.sin(elapsed * 3.2);
     const w = this.container.clientWidth || window.innerWidth, h = this.container.clientHeight || window.innerHeight, projVec = new window.THREE.Vector3();
     this.satMeshes.forEach(({ sat, orbitPivot, satNode, altRadius, labelEl }, id) => {
-      const vis = this.activeSatIds.has(id); orbitPivot.visible = vis; labelEl.style.display = vis ? 'block' : 'none';
+      const vis = this.activeSatIds.has(id) && zDist > 1.35; orbitPivot.visible = vis; labelEl.style.display = vis ? 'block' : 'none';
       if (vis) {
         const ang = elapsed * 0.35 + sat.phaseOffsetRad;
         satNode.position.set(Math.cos(ang) * altRadius, Math.sin(ang) * altRadius, 0); satNode.rotation.z = ang - Math.PI / 2;
@@ -1393,8 +1565,10 @@ class GlobeView {
     const showLabels = zDist < 3.0, isEs = i18n.currentLang === 'es', minSpan = zDist > 2.55 ? 12 : zDist > 2.15 ? 6.5 : zDist > 1.78 ? 3.2 : 0;
     let bestCountry = null, bestDot = -1; const candidates = [];
     this.earthGroup.updateMatrixWorld();
+    const showSanLuisDetail = zDist < 2.05;
     this.countryNodes.forEach((c) => {
       c.el.style.display = 'none'; c.el.classList.remove('country-tag-focused'); if (!showLabels) return;
+      if (showSanLuisDetail && /san luis/i.test(c.nameEs)) return;
       projVec.copy(c.localVec).applyMatrix4(this.earthGroup.matrixWorld); const camAlignment = projVec.z / 1.006;
       if (camAlignment > (zDist < 2.25 ? 0.58 : 0.72)) {
         projVec.project(this.camera);
@@ -1409,7 +1583,49 @@ class GlobeView {
       if (c !== bestCountry && placed.some((p) => Math.abs(sx - p.x) < minDx && Math.abs(sy - p.y) < minDy)) return;
       placed.push({ x: sx, y: sy }); c.el.textContent = isEs ? c.nameEs : c.nameEn; c.el.style.display = 'block'; c.el.style.left = `${sx}px`; c.el.style.top = `${sy}px`;
     });
-    if (bestCountry) { bestCountry.el.classList.add('country-tag-focused'); if (this.zoomReadoutEl) this.zoomReadoutEl.textContent = `📍 ${isEs ? bestCountry.nameEs : bestCountry.nameEn}`; } else if (this.zoomReadoutEl) { this.zoomReadoutEl.textContent = isEs ? '🌐 Rueda / + : Ver Países' : '🌐 Scroll / + : Show Countries'; }
+
+    // San Luis 9 Departments & Important Localities progressive high-definition zoom
+    let sanLuisFocused = false;
+    this.sanLuisDeptNodes.forEach((d) => {
+      d.el.style.display = 'none';
+      if (!showSanLuisDetail) return;
+      projVec.copy(d.localVec).applyMatrix4(this.earthGroup.matrixWorld);
+      if (projVec.z > 0.75) {
+        projVec.project(this.camera);
+        if (Math.abs(projVec.x) < 0.92 && Math.abs(projVec.y) < 0.92) {
+          const sx = (projVec.x * 0.5 + 0.5) * w, sy = (-projVec.y * 0.5 + 0.5) * h;
+          d.el.textContent = isEs ? d.labelEs : d.labelEn;
+          d.el.style.display = 'block'; d.el.style.left = `${sx}px`; d.el.style.top = `${sy}px`;
+          placed.push({ x: sx, y: sy }); sanLuisFocused = true;
+        }
+      }
+    });
+
+    const showTier1Loc = zDist < 1.65, showTier2Loc = zDist < 1.32;
+    this.sanLuisLocNodes.forEach((loc) => {
+      loc.el.style.display = 'none';
+      if (!showTier1Loc || (loc.tier > 1 && !showTier2Loc)) return;
+      if (loc.mesh) loc.mesh.visible = loc.tier === 1 || showTier2Loc;
+      projVec.copy(loc.localVec).applyMatrix4(this.earthGroup.matrixWorld);
+      if (projVec.z > 0.78) {
+        projVec.project(this.camera);
+        if (Math.abs(projVec.x) < 0.93 && Math.abs(projVec.y) < 0.93) {
+          const sx = (projVec.x * 0.5 + 0.5) * w, sy = (-projVec.y * 0.5 + 0.5) * h;
+          if (!loc.isCapital && placed.some((p) => Math.abs(sx - p.x) < (zDist < 1.2 ? 42 : 56) && Math.abs(sy - p.y) < 16)) return;
+          placed.push({ x: sx, y: sy });
+          loc.el.style.display = 'block'; loc.el.style.left = `${sx}px`; loc.el.style.top = `${sy}px`;
+        }
+      }
+    });
+
+    if (sanLuisFocused) {
+      if (this.zoomReadoutEl) this.zoomReadoutEl.textContent = '📍 Prov. de San Luis (9 Dptos.)';
+    } else if (bestCountry) {
+      bestCountry.el.classList.add('country-tag-focused');
+      if (this.zoomReadoutEl) this.zoomReadoutEl.textContent = `📍 ${isEs ? bestCountry.nameEs : bestCountry.nameEn}`;
+    } else if (this.zoomReadoutEl) {
+      this.zoomReadoutEl.textContent = isEs ? '🌐 Rueda / + : Ver Países' : '🌐 Scroll / + : Show Countries';
+    }
   }
   dispose() { if (!this.scene) return; this.scene.traverse((o) => { if (o.geometry) o.geometry.dispose(); if (o.material) o.material.dispose(); }); if (this.renderer) this.renderer.dispose(); }
 }

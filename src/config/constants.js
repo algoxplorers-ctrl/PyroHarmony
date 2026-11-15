@@ -279,3 +279,88 @@ export const WORLD_COUNTRIES = Object.freeze([
   [-2.5, 118.0, 'Indonesia', 'Indonesia', 22], [36.2, 138.2, 'Japón', 'Japan', 10],
   [-25.2, 133.7, 'Australia', 'Australia', 32], [-40.9, 174.8, 'Nueva Zelanda', 'New Zealand', 9]
 ]);
+
+/**
+ * High-Definition Cartography for San Luis Province (Argentina):
+ * Outer perimeter, 9 Departmental division polylines, Department centroids, and key Localities.
+ */
+export const SAN_LUIS_GEOGRAPHY = Object.freeze({
+  OUTER_RING: [
+    [-67.28, -31.86], [-66.95, -31.88], [-66.65, -31.91], [-66.32, -31.93], [-66.12, -31.86], [-65.78, -31.88],
+    [-65.58, -31.90], [-65.45, -31.93], [-65.38, -32.10], [-65.34, -32.28], [-65.12, -32.29], [-65.11, -32.42],
+    [-65.08, -32.58], [-65.11, -32.78], [-65.18, -32.96], [-65.24, -33.12], [-65.16, -33.32], [-65.15, -33.80],
+    [-65.15, -34.50], [-65.15, -35.25], [-65.15, -36.00], [-65.85, -36.00], [-66.60, -36.00], [-66.62, -35.92],
+    [-66.48, -35.72], [-66.38, -35.48], [-66.32, -35.22], [-66.34, -34.95], [-66.40, -34.68], [-66.54, -34.50],
+    [-66.69, -34.43], [-66.66, -34.25], [-66.69, -34.05], [-66.72, -33.84], [-66.58, -33.76], [-66.81, -33.62],
+    [-66.95, -33.42], [-67.04, -33.20], [-67.06, -33.01], [-67.15, -32.82], [-67.08, -32.66], [-67.18, -32.55],
+    [-67.16, -32.43], [-67.24, -32.33], [-67.11, -32.30], [-67.18, -32.22], [-67.26, -32.06], [-67.28, -31.86]
+  ],
+  INTERNAL_DIVISIONS: [
+    // Ayacucho - Junín
+    [[-65.78, -31.88], [-65.78, -32.24]],
+    // Ayacucho - Belgrano (North border of Belgrano)
+    [[-67.16, -32.43], [-66.75, -32.41], [-66.42, -32.41], [-66.22, -32.45]],
+    // Belgrano East border (with Ayacucho & Pringles)
+    [[-66.22, -32.45], [-66.22, -32.72], [-66.13, -32.82], [-66.24, -32.92], [-66.18, -33.02]],
+    // Ayacucho - San Martín (Arch)
+    [[-66.22, -32.72], [-66.10, -32.60], [-65.96, -32.40], [-65.78, -32.24]],
+    // Junín - San Martín & Chacabuco
+    [[-65.78, -32.24], [-65.53, -32.25], [-65.50, -32.47], [-65.11, -32.42]],
+    // San Martín - Chacabuco
+    [[-65.50, -32.47], [-65.49, -32.68], [-65.64, -32.86]],
+    // San Martín - Pringles
+    [[-66.10, -32.60], [-66.04, -32.74], [-65.76, -32.81], [-65.64, -32.86]],
+    // Chacabuco - Pringles & Pedernera
+    [[-65.64, -32.86], [-65.68, -32.96], [-65.18, -32.96]],
+    // Belgrano - Pueyrredón (South border of Belgrano)
+    [[-67.06, -33.01], [-66.18, -33.02]],
+    // Pringles West & South & East borders (with Pueyrredón & Pedernera)
+    [[-66.18, -33.02], [-66.08, -33.03], [-66.04, -33.48], [-65.62, -33.49], [-65.69, -33.38], [-65.72, -33.06], [-65.68, -32.96]],
+    // Pueyrredón - Pedernera
+    [[-66.04, -33.48], [-65.99, -34.00], [-65.97, -34.50]],
+    // Pueyrredón & Pedernera - Dupuy (Parallel 34.50°S)
+    [[-66.54, -34.50], [-65.97, -34.50], [-65.15, -34.50]]
+  ],
+  DEPARTMENTS: [
+    [-32.14, -66.52, 'DPTO. AYACUCHO', 'AYACUCHO DEPT.'],
+    [-32.16, -65.54, 'DPTO. JUNÍN', 'JUNIN DEPT.'],
+    [-32.72, -66.68, 'DPTO. BELGRANO', 'BELGRANO DEPT.'],
+    [-32.57, -65.79, 'DPTO. SAN MARTÍN', 'SAN MARTIN DEPT.'],
+    [-32.71, -65.33, 'DPTO. CHACABUCO', 'CHACABUCO DEPT.'],
+    [-33.16, -65.87, 'DPTO. PRINGLES', 'PRINGLES DEPT.'],
+    [-33.76, -66.38, 'DPTO. PUEYRREDÓN', 'PUEYRREDON DEPT.'],
+    [-33.82, -65.56, 'DPTO. PEDERNERA', 'PEDERNERA DEPT.'],
+    [-35.26, -65.86, 'DPTO. DUPUY', 'DUPUY DEPT.']
+  ],
+  LOCALITIES: [
+    // Tier 1: Capital, principales centros urbanos y cabeceras clave
+    [-33.3017, -66.3378, 'San Luis (Capital)', 1, true],
+    [-33.6757, -65.4578, 'Villa Mercedes', 1, false],
+    [-32.3450, -65.1550, 'Villa de Merlo', 1, false],
+    [-33.1833, -66.3167, 'La Punta', 1, false],
+    [-32.2333, -65.9667, 'Quines', 1, false],
+    [-32.5667, -65.2500, 'Concarán', 1, false],
+    [-33.0500, -65.7800, 'La Toma', 1, false],
+    [-34.6269, -65.2539, 'Buena Esperanza', 1, false],
+    [-35.1528, -65.9461, 'Unión', 1, false],
+    // Tier 2: Cabeceras departamentales y localidades importantes
+    [-32.6000, -66.1250, 'S. Fco. del Monte de Oro', 2, false],
+    [-32.3667, -66.2200, 'Luján', 2, false],
+    [-32.0667, -66.0500, 'Candelaria', 2, false],
+    [-32.3417, -65.3300, 'Sta. Rosa del Conlara', 2, false],
+    [-32.6600, -66.4500, 'Villa Gral. Roca', 2, false],
+    [-32.5200, -66.7800, 'La Calera', 2, false],
+    [-32.4833, -65.6833, 'Lib. Gral. San Martín', 2, false],
+    [-32.7333, -65.2900, 'Tilisarao', 2, false],
+    [-32.9167, -65.3700, 'Naschel', 2, false],
+    [-33.1167, -66.0600, 'El Trapiche', 2, false],
+    [-32.8300, -66.0400, 'La Carolina', 2, false],
+    [-33.2239, -66.2281, 'Potrero de los Funes', 2, false],
+    [-33.2917, -66.2333, 'Juana Koslay', 2, false],
+    [-33.8600, -65.2200, 'Justo Daract', 2, false],
+    [-33.8833, -66.5200, 'Beazley', 2, false],
+    [-35.2000, -65.2800, 'Nueva Galia', 2, false],
+    [-35.7167, -65.3400, 'Arizona', 2, false],
+    [-35.6833, -65.9333, 'Anchorena', 2, false]
+  ]
+});

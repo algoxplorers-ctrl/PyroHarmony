@@ -1,64 +1,633 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Manual Técnico de las 4 Zonas de Comando · PyroHarmony v2.0.0</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PyroHarmony — Guía de Interpretación del Sistema | AlgoXplorers</title>
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+          onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
   <style>
-    body { background:#050b18; color:#e2e8f0; font-family:'Segoe UI',system-ui,sans-serif; line-height:1.65; max-width:980px; margin:0 auto; padding:28px 20px; }
-    h1, h2, h3 { color:#00e5ff; }
-    .zone-card { background:#0c1930; border:1px solid rgba(0,229,255,0.28); border-radius:10px; padding:18px 22px; margin:16px 0; }
-    .step-badge { display:inline-block; background:#00e676; color:#040914; font-weight:800; padding:2px 9px; border-radius:4px; margin-right:8px; }
-    .nav-bar { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px; }
-    .btn { background:rgba(0,229,255,0.14); color:#fff; border:1px solid #00e5ff; padding:7px 14px; border-radius:6px; text-decoration:none; font-weight:600; }
+    :root {
+      --nasa-blue: #0b3d91;
+      --nasa-red: #fc3d21;
+      --space-dark: #070b19;
+      --card-bg: #0f172a;
+      --card-border: #1e293b;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent-cyan: #38bdf8;
+      --accent-purple: #a855f7;
+      --accent-amber: #f59e0b;
+      --accent-emerald: #10b981;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--space-dark);
+      color: var(--text-main);
+      line-height: 1.65;
+      padding: 30px 20px 80px;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    .container {
+      max-width: 1050px;
+      margin: 0 auto;
+    }
+
+    /* Barra Superior */
+    .top-bar {
+      position: sticky;
+      top: 15px;
+      z-index: 1000;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 12px 20px;
+      margin-bottom: 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 18px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: 1px solid var(--card-border);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--nasa-blue) 0%, #1e40af 100%);
+      color: #fff;
+      border-color: var(--accent-cyan);
+      box-shadow: 0 4px 15px rgba(56,189,248,0.25);
+    }
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-outline {
+      background: var(--card-bg);
+      color: var(--text-main);
+    }
+    .btn-outline:hover { background: #1e293b; color: var(--accent-cyan); }
+
+    .hero {
+      background: linear-gradient(135deg, rgba(11,61,145,0.4) 0%, rgba(15,23,42,0.9) 100%),
+                  radial-gradient(circle at 80% 20%, rgba(56,189,248,0.15) 0%, transparent 50%);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 35px 40px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      background: rgba(56,189,248,0.15);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(56,189,248,0.3);
+      margin-bottom: 12px;
+    }
+
+    h1 { font-size: 2.2rem; color: #fff; margin-bottom: 8px; }
+    .subtitle { color: var(--text-muted); font-size: 1.05rem; margin-bottom: 18px; }
+
+    .meta-box {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      border-top: 1px solid var(--card-border);
+      padding-top: 16px;
+      font-size: 0.9rem;
+    }
+    .meta-box strong { color: var(--accent-cyan); }
+
+    /* Tarjetas de Contenido */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 26px 30px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    h2 {
+      font-size: 1.4rem;
+      color: var(--accent-cyan);
+      margin-bottom: 16px;
+      border-bottom: 2px solid rgba(56,189,248,0.25);
+      padding-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h3 {
+      font-size: 1.15rem;
+      color: #fff;
+      margin: 18px 0 10px;
+    }
+
+    p { margin-bottom: 14px; }
+    ul, ol { margin-left: 22px; margin-bottom: 16px; }
+    li { margin-bottom: 6px; }
+
+    /* Layout Visual de la Maqueta (CSS Grid Moderno) */
+    .mockup-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      background: #060913;
+      border: 1px solid #1e293b;
+      border-radius: 12px;
+      padding: 16px;
+      margin: 20px 0;
+    }
+    .grid-row-hud {
+      background: linear-gradient(90deg, rgba(11,61,145,0.3) 0%, rgba(15,23,42,0.8) 100%);
+      border: 1px solid rgba(56,189,248,0.3);
+      border-radius: 8px;
+      padding: 12px 18px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .grid-middle {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr;
+      gap: 12px;
+    }
+    @media (max-width: 768px) {
+      .grid-middle { grid-template-columns: 1fr; }
+    }
+    .grid-panel-globe {
+      background: radial-gradient(circle at center, rgba(11,61,145,0.2) 0%, rgba(7,11,25,0.9) 100%);
+      border: 1px solid rgba(168,85,247,0.3);
+      border-radius: 8px;
+      padding: 20px;
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .grid-panel-sidebar {
+      background: rgba(15,23,42,0.8);
+      border: 1px solid rgba(245,158,11,0.3);
+      border-radius: 8px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .grid-row-timeline {
+      background: linear-gradient(90deg, rgba(16,185,129,0.15) 0%, rgba(15,23,42,0.8) 100%);
+      border: 1px solid rgba(16,185,129,0.3);
+      border-radius: 8px;
+      padding: 14px 18px;
+    }
+    .mockup-item-tag {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .mockup-subtext {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .zone-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-right: 6px;
+    }
+    .z-hud { background: rgba(56,189,248,0.2); color: var(--accent-cyan); border: 1px solid var(--accent-cyan); }
+    .z-3d { background: rgba(168,85,247,0.2); color: var(--accent-purple); border: 1px solid var(--accent-purple); }
+    .z-gauge { background: rgba(245,158,11,0.2); color: var(--accent-amber); border: 1px solid var(--accent-amber); }
+    .z-cal { background: rgba(16,185,129,0.2); color: var(--accent-emerald); border: 1px solid var(--accent-emerald); }
+
+    .highlight-box {
+      background: rgba(11,61,145,0.2);
+      border-left: 4px solid var(--accent-cyan);
+      padding: 16px 20px;
+      border-radius: 0 10px 10px 0;
+      margin: 18px 0;
+    }
+
+    .step-box {
+      background: rgba(7, 11, 25, 0.6);
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      padding: 18px 22px;
+      margin-bottom: 16px;
+    }
+    .step-title {
+      font-weight: 700;
+      color: #fff;
+      font-size: 1.05rem;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .step-number {
+      background: var(--nasa-blue);
+      color: #fff;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 18px 0;
+      font-size: 0.92rem;
+    }
+    th, td {
+      padding: 11px 15px;
+      text-align: left;
+      border-bottom: 1px solid var(--card-border);
+    }
+    th {
+      background: rgba(11,61,145,0.35);
+      color: var(--accent-cyan);
+      font-weight: 600;
+    }
+
+    .badge-pill {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+    .pill-green { background: rgba(16,185,129,0.2); color: #10b981; border: 1px solid #10b981; }
+    .pill-cyan { background: rgba(56,189,248,0.2); color: #38bdf8; border: 1px solid #38bdf8; }
+    .pill-amber { background: rgba(245,158,11,0.2); color: #f59e0b; border: 1px solid #f59e0b; }
+    .pill-red { background: rgba(252,61,33,0.2); color: #fc3d21; border: 1px solid #fc3d21; }
+    .pill-purple { background: rgba(168,85,247,0.2); color: #a855f7; border: 1px solid #a855f7; }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--card-border);
+      margin-top: 30px;
+    }
+
+    @page { size: A4 portrait; margin: 12mm 15mm; }
+    @media print {
+      body { background-color: var(--space-dark) !important; padding: 0 !important; }
+      .top-bar { display: none !important; }
+      .card, .hero {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+        box-shadow: none !important;
+        margin-bottom: 18px !important;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="nav-bar no-print">
-    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-      <a class="btn" href="index.html">⬅ Volver a PyroHarmony (App)</a>
-      <a class="btn" href="COMMAND_MANUAL_4_ZONES.html" style="background: rgba(56,189,248,0.2);">🌐 Switch to English</a>
-      <a class="btn" href="GUIA_CIENTIFICA_PYROHARMONY.html">📘 White Paper Científico</a>
+
+<div class="container">
+
+  <!-- Barra Superior -->
+  <div class="top-bar">
+    <div style="font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px;">
+      <span>🧭 Guía de Interpretación del Sistema</span>
+      <span style="font-size: 0.8rem; color: var(--accent-cyan);">(Manual Técnico y Operativo)</span>
     </div>
-    <button onclick="window.print()" class="btn" style="background: linear-gradient(135deg, #0b3d91 0%, #1e40af 100%); cursor: pointer;">🖨️ Guardar en PDF / Imprimir</button>
+    <div style="display: flex; gap: 10px;">
+      <button onclick="window.print()" class="btn btn-primary">
+        🖨️ Guardar en PDF / Imprimir
+      </button>
+      <a href="COMMAND_MANUAL_4_ZONES.html" class="btn btn-outline">
+        🌐 Switch to English
+      </a>
+      <a href="index.html" class="btn btn-outline">
+        ⬅ Ir a la Aplicación
+      </a>
+    </div>
   </div>
 
-  <h1>🧭 Manual Técnico de Interpretación de la Maqueta (Las 4 Zonas de Comando)</h1>
-  <p><strong>Sistema:</strong> PyroHarmony v2.0.0 · <strong>Equipo:</strong> AlgoXplorers (Argentina) · <strong>NASA Space Apps Challenge 2026</strong></p>
-
-  <div class="zone-card">
-    <h2>ZONA 1 · HUD Superior de Telemetría y Conmutador Bilingüe (EN / ES)</h2>
-    <p>
-      El panel superior consolida las métricas globales de misión en tiempo real: el bioma activo (AOI), la Potencia Radiativa del Fuego Armonizada Total en Megawatts (MW), los satélites activos en órbita según el año histórico, el contador de rendimiento WebGL a 60 FPS y el botón <code>#btn-toggle-lang</code> que inicia en inglés (<code>EN</code>) y traduce instantáneamente toda la interfaz al español (<code>ES</code>) sin recargar la página.
-    </p>
+  <div class="hero">
+    <div class="badge">NASA Space Apps Challenge 2026</div>
+    <h1>PyroHarmony: Guía de Navegación e Interpretación del Sistema</h1>
+    <p class="subtitle">Manual técnico universal que describe la arquitectura visual, el modelo biofísico y los principios de funcionamiento del sistema para equipos técnicos, analistas ambientales y evaluadores de misión.</p>
+    <div class="meta-box">
+      <div>🚀 <strong>Equipo:</strong> AlgoXplorers (Argentina)</div>
+      <div>🛰️ <strong>Desafío:</strong> Harmonization of MODIS and VIIRS Hot Spots</div>
+      <div>⚡ <strong>Motor Gráfico:</strong> Three.js (WebGL 60 FPS)</div>
+      <div>📊 <strong>Métrica Unificada:</strong> FRP Armonizado (MW) + Z-Score</div>
+    </div>
   </div>
 
-  <div class="zone-card">
-    <h2>ZONA 2 · Globo 3D Heliosincrónico y Conos de Barrido Nadir</h2>
-    <p>
-      Representa en tres dimensiones el planeta Tierra con textura NASA Blue Marble y atmósfera Rayleigh, junto con las órbitas polares heliosincrónicas a <code>98.2°</code> de inclinación para <strong>Terra (10:30 AM)</strong>, <strong>Aqua (13:30 PM)</strong>, <strong>Suomi-NPP (13:30 PM)</strong> y <strong>NOAA-20 (+50 min)</strong>. Incluye los conos de barrido Nadir a escala real (<code>2.330 km</code> para MODIS vs. <code>3.040 km</code> para VIIRS) y renderiza las celdas de calor de <code>0.1° × 0.1°</code> mediante <code>InstancedMesh</code> con recuperación automática de contexto GPU (<code>webglcontextlost</code>).
-    </p>
+  <!-- SECCIÓN 1: ALCANCE -->
+  <div class="card">
+    <h2>1. Declaración de Alcance y Propósito del Sistema</h2>
+    <div class="highlight-box">
+      <strong>🎯 Propósito de la Plataforma:</strong><br>
+      PyroHarmony es una <strong>plataforma de armonización de datos biofísicos, modelado termodinámico y visualización geoespacial tridimensional</strong> diseñada para resolver la discontinuidad histórica de dos décadas entre los sensores MODIS y VIIRS.<br>
+      Su objetivo central es demostrar la viabilidad de integrar telemetría heterogénea mediante la potencia radiativa del fuego (FRP en MW) y la detección de anomalías con un Z-Score climatológico estacional.
+    </div>
+    <ul>
+      <li><strong>Alcance Operativo del Sistema:</strong> Una plataforma interactiva completa en tiempo real (WebGL a 60 FPS, arquitectura MVC desacoplada, sin números mágicos y simulación 2000–2026).</li>
+      <li><strong>Escalabilidad en Producción:</strong> Los parámetros cargados constituyen la <strong>calibración inicial de referencia del prototipo</strong>, diseñada de forma modular para permitir el reentrenamiento masivo automatizado sobre terabytes de datos satelitales brutos.</li>
+    </ul>
   </div>
 
-  <div class="zone-card">
-    <h2>ZONA 3 · Panel de Control, Velocímetro Z-Score y Radar Táctico LACES</h2>
-    <p>
-      Integra el <strong>Velocímetro SVG Semicircular de Anomalía</strong> (con marcas en <code>-2σ, 0μ, +1σ, +2σ, +3σ</code>), la <strong>Tarjeta de Discrepancia de Sensores</strong> (que demuestra cómo el sesgo óptico de conteo de <code>3x a 5x</code> se resuelve al medir Megawatts bajo la ley de conservación <code>α + β = 1.00</code>), el <strong>Radar Táctico de Bomberos (Protocolo LACES)</strong> basado en la ventana orbital de 50 minutos entre Suomi-NPP y NOAA-20, y los botones de descarga de <strong>SitRep (.txt)</strong>, <strong>GeoJSON (.geojson)</strong> y <strong>CSV (.csv)</strong>.
-    </p>
+  <!-- SECCIÓN 2: MAPA VISUAL -->
+  <div class="card">
+    <h2>2. Mapa Visual de la Pantalla: Las 4 Zonas de Comando</h2>
+    <p>Al acceder a la interfaz interactiva de PyroHarmony, el sistema se organiza en cuatro zonas funcionales sincrónicas:</p>
+    
+    <!-- Diagrama Visual Elegante en Cards HTML -->
+    <div class="mockup-grid">
+      <!-- Fila 1: HUD -->
+      <div class="grid-row-hud">
+        <div>
+          <span class="zone-badge z-hud">ZONA 1</span>
+          <strong style="color: #fff;">HUD Superior de Telemetría</strong>
+        </div>
+        <div style="font-size: 0.88rem; color: var(--accent-cyan);">
+          Bioma Activo • FRP Armonizado Total (MW) • Satélites en Órbita
+        </div>
+      </div>
+
+      <!-- Fila 2: Globo 3D y Panel Lateral -->
+      <div class="grid-middle">
+        <!-- Panel 3D -->
+        <div class="grid-panel-globe">
+          <div>
+            <span class="zone-badge z-3d">ZONA 2</span>
+            <strong style="color: #fff;">Visualizador 3D WebGL (Three.js 60 FPS)</strong>
+          </div>
+          <div class="mockup-subtext" style="margin-top: 10px;">
+            • Globo terráqueo Blue Marble con atmósfera y nubes dinámicas<br>
+            • Satélites Terra, Aqua, Suomi-NPP y NOAA-20 orbitando según año<br>
+            • Conos de barrido Nadir a escala real (2.330 km vs 3.040 km)<br>
+            • Focos térmicos instanciados por GPU (InstancedMesh)
+          </div>
+          <div style="margin-top: 15px; font-size: 0.8rem; color: var(--accent-purple); font-weight: 600;">
+            🛰️ Órbitas Polares Heliosincrónicas
+          </div>
+        </div>
+
+        <!-- Panel Lateral -->
+        <div class="grid-panel-sidebar">
+          <div>
+            <span class="zone-badge z-gauge">ZONA 3</span>
+            <strong style="color: #fff;">Panel de Control y Diagnóstico</strong>
+          </div>
+          <div class="mockup-subtext">
+            <strong>• Anomaly Gauge:</strong> Velocímetro semicircular de Z-Score climatológico.<br>
+            <strong>• Sensor Discrepancy Card:</strong> Comparativa MODIS vs VIIRS (resolución del sesgo de píxeles).<br>
+            <strong>• Selector de Biomas:</strong> Amazonía, Pantanal, San Luis (Sierras y Monte), Chaco, Taiga.<br>
+            <strong>• Generador SitRep:</strong> Reporte técnico descargable para brigadistas.
+          </div>
+        </div>
+      </div>
+
+      <!-- Fila 3: Línea de Tiempo y Calendario -->
+      <div class="grid-row-timeline">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <div>
+            <span class="zone-badge z-cal">ZONA 4</span>
+            <strong style="color: #fff;">Línea de Tiempo y Calendario Fenológico de 26 Años</strong>
+          </div>
+          <div style="font-size: 0.8rem; color: var(--accent-emerald); font-weight: 700;">
+            2000 —————————●————————— 2026
+          </div>
+        </div>
+        <div class="mockup-subtext">
+          <strong>• Scrubber Temporal Anual:</strong> Navegación histórica continua con activación dinámica de constelaciones.<br>
+          <strong>• Burning Activity Calendar:</strong> Matriz interactiva de 52 semanas del año × 26 años con mapa de calor de Z-Score.
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="zone-card">
-    <h2>ZONA 4 · Scrubber Temporal (2000–2026) y Burning Activity Calendar</h2>
-    <p>
-      El deslizador multidecadal (con etiquetas <code>Year:</code> y <code>Week:</code>) activa dinámicamente cada satélite según su año real de lanzamiento (2000 Terra, 2002 Aqua, 2012 Suomi-NPP, 2017 NOAA-20). Debajo, la matriz interactiva de <strong>52 semanas × 27 años (1.404 celdas)</strong> muestra el mapa de calor del Z-Score climatológico semanal con tooltips dinámicos traducibles.
-    </p>
+  <!-- SECCIÓN 3: COMPONENTES -->
+  <div class="card">
+    <h2>3. Interpretación Componente por Componente</h2>
+
+    <h3><span class="zone-badge z-3d">ZONA 2</span> El Globo 3D y la Constelación Satelital</h3>
+    <ul>
+      <li><strong>Activación según año histórico:</strong> Al mover la línea de tiempo a <strong>2001</strong>, solo orbita <em>Terra</em>. En <strong>2003</strong> se suma <em>Aqua</em>. En <strong>2012</strong> entra <em>Suomi-NPP</em>, y en <strong>2018</strong> se completa la constelación con <em>NOAA-20</em>.</li>
+      <li><strong>Haces ópticos Nadir:</strong> El cono de barrido de MODIS representa 2.330 km de swath, mientras que VIIRS cubre 3.040 km a escala real.</li>
+      <li><strong>Renderizado de Focos Térmicos:</strong> Las partículas de calor se generan mediante <code>InstancedMesh</code>, manteniendo 60 FPS estables sin saturar la memoria GPU.</li>
+    </ul>
+
+    <h3><span class="zone-badge z-gauge">ZONA 3</span> Sensor Discrepancy Card & Anomaly Gauge</h3>
+    <ul>
+      <li><strong>Resolución del Sesgo Instrumental:</strong> Evidencia cuantitativamente la divergencia entre sensores: mientras el recuento de focos térmicos brutos se incrementa artificialmente entre 3x y 5x con VIIRS (375 m vs. 1.000 m), el <strong>FRP Armonizado en Megawatts</strong> se mantiene en el mismo orden de magnitud biofísico bajo la ley de conservación $\alpha + \beta = 1{,}00$.</li>
+      <li><strong>Velocímetro Anomaly Gauge:</strong> Mide el desvío climatológico estandarizado $Z = \frac{\text{FRP}_{\text{harm}} - \mu}{\sigma}$ respecto al histórico de esa misma semana:
+        <br>
+        <span class="badge-pill pill-green">Z ≤ 0.0 (Bajo / Normal)</span>
+        <span class="badge-pill pill-cyan">0.0 a 1.0 (Variabilidad Esperada)</span>
+        <span class="badge-pill pill-amber">1.0 a 2.0 (Actividad Elevada)</span>
+        <span class="badge-pill pill-red">Z ≥ 2.0 (Significativo p&lt;0.05)</span>
+        <span class="badge-pill pill-purple">Z ≥ 2.5 (Extremo p&lt;0.01)</span>
+      </li>
+    </ul>
+
+    <!-- INTEGRACIÓN DE SAN LUIS EN LA ZONA 3 -->
+    <div class="highlight-box">
+      <strong>🏔️ Validación Territorial San Luis en Zona 3:</strong><br>
+      Al seleccionar la región de <strong>San Luis (Sierras y Monte)</strong>, el sistema ajusta los coeficientes ($\alpha = 0.44$, $\beta = 0.56$, $R^2 = 0.92$) para corregir la subdetección en laderas escarpadas bajo viento Zonda. En semanas críticas de sequía extrema, el velocímetro emite la alerta situacional validada:
+      <blockquote style="margin-top: 8px; font-style: italic; color: var(--accent-cyan); font-weight: 600;">
+        «El incremento de calor observado esta semana en San Luis no es un error óptico por cambio de satélites: el Z-Score de +2.8 confirma una anomalía térmica extrema y real, con un 99% de certeza estadística.»
+      </blockquote>
+    </div>
+
+    <h3><span class="zone-badge z-cal">ZONA 4</span> Burning Activity Calendar (52 Semanas × 26 Años)</h3>
+    <ul>
+      <li><strong>Fenología del Fuego:</strong> Permite identificar con precisión en qué semanas del año inicia, alcanza su pico y finaliza la temporada de incendios de cada bioma.</li>
+      <li><strong>Independencia Estacional:</strong> Contrasta cada semana exclusivamente contra las mismas semanas históricas del pasado, preservando la coherencia fenológica sin mezclar temporadas húmedas y secas.</li>
+    </ul>
   </div>
 
-  <div class="zone-card">
-    <h2>Protocolo de Validación en 3 Etapas</h2>
-    <p><span class="step-badge">ETAPA 1</span> <strong>Evolución Orbital (2000 ➔ 2026):</strong> Deslizar el año desde 2000 hasta 2026 para observar la incorporación secuencial de Terra, Aqua, Suomi-NPP y NOAA-20 y el cambio automático entre el Proxy Retrospectivo (2000–2011) y el Régimen Armonizado Bulsensor (2012–2026).</p>
-    <p><span class="step-badge">ETAPA 2</span> <strong>Validación Ground Truth (Pantanal 2020, Semana 35):</strong> Hacer clic en el botón <em>Pantanal 2020 Benchmark (W35)</em> del HUD y verificar que el velocímetro dispare exactamente <code>Z = +2.82 (p &lt; 0.005)</code> con alerta crítica LACES.</p>
-    <p><span class="step-badge">ETAPA 3</span> <strong>Ciencia Abierta (FAIR) y Bilingüismo:</strong> Alternar el idioma entre <code>EN</code> y <code>ES</code> y exportar el reporte táctico SitRep y la malla GeoJSON.</p>
+  <!-- SECCIÓN 4: RECORRIDO EN VIVO Y PROTO-USUARIOS -->
+  <div class="card">
+    <h2>4. Metodología de Validación Operativa y Los 3 Proto-usuarios</h2>
+    <p>El flujo operativo del sistema responde directamente a los requerimientos de tres niveles de usuarios institucionales del mundo real:</p>
+
+    <!-- LOS 3 PROTO-USUARIOS -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; margin-bottom: 22px;">
+      <div style="background: rgba(11,61,145,0.25); border: 1px solid var(--card-border); border-radius: 10px; padding: 14px 16px;">
+        <strong style="color: var(--accent-cyan);">🔥 Nivel 1: Brigadista de Terreno</strong><br>
+        <span style="font-size: 0.85rem; color: var(--text-muted);">San Luis Solidario / Bomberos Voluntarios</span>
+        <p style="font-size: 0.88rem; margin-top: 8px; margin-bottom: 0;">Consulta el Anomaly Gauge y el radar táctico LACES (ventana de 50 min) para verificar si un frente térmico es seguro o exige repliegue inmediato.</p>
+      </div>
+      <div style="background: rgba(11,61,145,0.25); border: 1px solid var(--card-border); border-radius: 10px; padding: 14px 16px;">
+        <strong style="color: var(--accent-emerald);">🛰️ Nivel 2: Comandante Operativo</strong><br>
+        <span style="font-size: 0.85rem; color: var(--text-muted);">Servicio Nacional de Manejo del Fuego (SNMF)</span>
+        <p style="font-size: 0.88rem; margin-top: 8px; margin-bottom: 0;">Usa el mapa 3D y el generador de reportes SitRep para despachar aviones hidrantes y helibaldes hacia celdas de $11\text{ km}$ con anomalías $Z \ge 2.0$.</p>
+      </div>
+      <div style="background: rgba(11,61,145,0.25); border: 1px solid var(--card-border); border-radius: 10px; padding: 14px 16px;">
+        <strong style="color: var(--accent-purple);">🌱 Nivel 3: Científico Ambiental</strong><br>
+        <span style="font-size: 0.85rem; color: var(--text-muted);">NASA LCLUC / Ministerios de Ambiente</span>
+        <p style="font-size: 0.88rem; margin-top: 8px; margin-bottom: 0;">Audita el Burning Calendar de 26 años para estudiar cómo el cambio climático ha adelantado las semanas críticas de sequía de 2000 a 2026.</p>
+      </div>
+    </div>
+
+    <h3>Flujo de Demostración Operativa en 3 Etapas:</h3>
+
+    <div class="step-box">
+      <div class="step-title">
+        <span class="step-number">1</span>
+        <span>Demostración de la Discrepancia Óptica Instrumental (Era MODIS vs. Era VIIRS)</span>
+      </div>
+      <p style="font-size: 0.92rem; color: var(--text-muted); margin-bottom: 0;">
+        Al seleccionar una región de estudio como <strong>Amazonía y Pantanal</strong> o <strong>San Luis</strong> y desplazar la línea temporal desde el año <strong>2010</strong> (era exclusiva de MODIS) hacia el año <strong>2014</strong> (era combinada con VIIRS), se evidencia cómo el recuento simple de focos térmicos se incrementa de 3 a 5 veces debido a la mayor resolución espacial (375 m vs. 1.000 m). Simultáneamente, se constata que la métrica de <strong>FRP Armonizado en Megawatts se preserva en una escala física continua y comparable</strong>, suprimiendo la discontinuidad instrumental.
+      </p>
+    </div>
+
+    <div class="step-box">
+      <div class="step-title">
+        <span class="step-number">2</span>
+        <span>Evaluación de la Variabilidad Estacional Mediante Z-Score Climatológico</span>
+      </div>
+      <p style="font-size: 0.92rem; color: var(--text-muted); margin-bottom: 0;">
+        Al consultar una celda correspondiente a semanas de régimen húmedo (por ejemplo, Semana 15), el sistema indica variabilidad normal dentro del rango climatológico esperado. En contraste, al seleccionar una semana de régimen severo de sequía (por ejemplo, Semana 35 del año 2020 en Pantanal o Semana 38 en San Luis), el indicador de anomalía refleja una desviación superior a $Z \ge 2.0$ ($p < 0.05$), identificando estadísticamente un episodio fuera de la norma histórica de 26 años.
+      </p>
+    </div>
+
+    <div class="step-box">
+      <div class="step-title">
+        <span class="step-number">3</span>
+        <span>Generación de Telemetría Estructurada para Cuadrillas (SitRep)</span>
+      </div>
+      <p style="font-size: 0.92rem; color: var(--text-muted); margin-bottom: 0;">
+        A través del módulo <strong>SitRep (Situation Report)</strong>, el sistema sintetiza los parámetros radiativos, las coordenadas geográficas del bioma y la clasificación de severidad en un reporte técnico descargable, concebido para brindar soporte a la toma de decisiones en centros de despacho y cuadrillas de combate en terreno.
+      </p>
+    </div>
   </div>
+
+  <!-- SECCIÓN 5: CRITERIOS NASA -->
+  <div class="card">
+    <h2>5. Criterios Oficiales de Evaluación de la NASA y Solución Implementada</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Criterio Oficial NASA</th>
+          <th>Pregunta Guía de Evaluación</th>
+          <th>Implementación en la Plataforma PyroHarmony</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Impacto (Impact)</strong></td>
+          <td>¿Resuelve una problemática ambiental y operativa real?</td>
+          <td>Integra dos décadas de registros satelitales fragmentados, dotando a autoridades y brigadas de un indicador estandarizado para diferenciar quemas estacionales habituales de anomalías críticas.</td>
+        </tr>
+        <tr>
+          <td><strong>Creatividad (Creativity)</strong></td>
+          <td>¿Constituye una solución innovadora y bien estructurada?</td>
+          <td>Sustituye el conteo discreto de píxeles por la física del FRP en MW, integrando una matriz climatológica de 52 semanas y un entorno tridimensional de telemetría orbital.</td>
+        </tr>
+        <tr>
+          <td><strong>Validez Técnica (Technical Validity)</strong></td>
+          <td>¿Posee rigor científico y formulación matemática sólida?</td>
+          <td>Aplica la formulación de Kaufman/Wooster en 4 µm, el principio de conservación de escala ($\alpha + \beta = 1{,}00$), corrección por ciclo diurno y cálculo riguroso del $Z$-Score semanal.</td>
+        </tr>
+        <tr>
+          <td><strong>Uso de Datos NASA (Use of Data)</strong></td>
+          <td>¿Aprovecha eficazmente los productos oficiales de la agencia?</td>
+          <td>Procesa conjuntos de datos certificados de NASA FIRMS (<code>MCD14DL</code>, <code>VNP14IMGTDL</code>, <code>VJ114IMGTDL</code>) e imaginería Blue Marble provista por NASA GIBS.</td>
+        </tr>
+        <tr>
+          <td><strong>Presentación (Presentation)</strong></td>
+          <td>¿El sistema es reproducible, navegable y estructurado?</td>
+          <td>Despliegue interactivo en producción sobre Netlify, script de inicio local automatizado (<code>.bat</code>), teleprompter de exposición y documentación técnica integral.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SECCIÓN 6: EQUIPO ALGOXPLORERS -->
+  <div class="card">
+    <h2>6. Integrantes del Equipo — AlgoXplorers (Argentina)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Integrante</th>
+          <th>Usuario NASA Space Apps</th>
+          <th>Rol Técnico en el Proyecto</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>José Alex Fernández Montellanos</strong></td>
+          <td><code>@fajjaf</code></td>
+          <td>Líder de Proyecto, Arquitectura de Datos Científicos y Modelo Matemático</td>
+        </tr>
+        <tr>
+          <td><strong>Carlos Vizzioli</strong></td>
+          <td><code>@cvizzioli</code></td>
+          <td>Desarrollo Full-Stack, Modelado de Datos y Algoritmos</td>
+        </tr>
+        <tr>
+          <td><strong>Sánchez Obando Gisella Elizabeth</strong></td>
+          <td><code>@gisesanchezj</code></td>
+          <td>Comunicación Técnica, Divulgación Científica y Experiencia de Usuario (UX)</td>
+        </tr>
+        <tr>
+          <td><strong>Juan Carlos Fernandez</strong></td>
+          <td><code>@jcfernan99</code></td>
+          <td>Análisis de Sistemas, Electrónica y Telemetría de Sensores en Tierra</td>
+        </tr>
+        <tr>
+          <td><strong>Maximiliano Guevara</strong></td>
+          <td><code>@omegaredone</code></td>
+          <td>Infraestructura de Redes, Despliegue Cloud y Auditoría de Seguridad</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <footer>
+    <p>AlgoXplorers (Argentina) — PyroHarmony | NASA Space Apps Challenge 2026</p>
+    <p>Documento oficial de navegación y evaluación del prototipo.</p>
+  </footer>
+
+</div>
+
 </body>
 </html>

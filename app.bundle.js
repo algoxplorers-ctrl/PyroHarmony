@@ -285,6 +285,10 @@ const WORLD_COUNTRIES = Object.freeze([
   [-25.2, 133.7, 'Australia', 'Australia', 32], [-40.9, 174.8, 'Nueva Zelanda', 'New Zealand', 9]
 ]);
 
+/**
+ * High-Definition Cartography for San Luis Province (Argentina):
+ * Outer perimeter, 9 Departmental division polylines, Department centroids, and key Localities.
+ */
 const SAN_LUIS_GEOGRAPHY = Object.freeze({
   OUTER_RING: [
     [-67.28, -31.86], [-66.95, -31.88], [-66.65, -31.91], [-66.32, -31.93], [-66.12, -31.86], [-65.78, -31.88],
@@ -297,17 +301,29 @@ const SAN_LUIS_GEOGRAPHY = Object.freeze({
     [-67.16, -32.43], [-67.24, -32.33], [-67.11, -32.30], [-67.18, -32.22], [-67.26, -32.06], [-67.28, -31.86]
   ],
   INTERNAL_DIVISIONS: [
+    // Ayacucho - Junín
     [[-65.78, -31.88], [-65.78, -32.24]],
+    // Ayacucho - Belgrano (North border of Belgrano)
     [[-67.16, -32.43], [-66.75, -32.41], [-66.42, -32.41], [-66.22, -32.45]],
+    // Belgrano East border (with Ayacucho & Pringles)
     [[-66.22, -32.45], [-66.22, -32.72], [-66.13, -32.82], [-66.24, -32.92], [-66.18, -33.02]],
+    // Ayacucho - San Martín (Arch)
     [[-66.22, -32.72], [-66.10, -32.60], [-65.96, -32.40], [-65.78, -32.24]],
+    // Junín - San Martín & Chacabuco
     [[-65.78, -32.24], [-65.53, -32.25], [-65.50, -32.47], [-65.11, -32.42]],
+    // San Martín - Chacabuco
     [[-65.50, -32.47], [-65.49, -32.68], [-65.64, -32.86]],
+    // San Martín - Pringles
     [[-66.10, -32.60], [-66.04, -32.74], [-65.76, -32.81], [-65.64, -32.86]],
+    // Chacabuco - Pringles & Pedernera
     [[-65.64, -32.86], [-65.68, -32.96], [-65.18, -32.96]],
+    // Belgrano - Pueyrredón (South border of Belgrano)
     [[-67.06, -33.01], [-66.18, -33.02]],
+    // Pringles West & South & East borders (with Pueyrredón & Pedernera)
     [[-66.18, -33.02], [-66.08, -33.03], [-66.04, -33.48], [-65.62, -33.49], [-65.69, -33.38], [-65.72, -33.06], [-65.68, -32.96]],
+    // Pueyrredón - Pedernera
     [[-66.04, -33.48], [-65.99, -34.00], [-65.97, -34.50]],
+    // Pueyrredón & Pedernera - Dupuy (Parallel 34.50°S)
     [[-66.54, -34.50], [-65.97, -34.50], [-65.15, -34.50]]
   ],
   DEPARTMENTS: [
@@ -322,6 +338,7 @@ const SAN_LUIS_GEOGRAPHY = Object.freeze({
     [-35.32, -65.86, 'Dpto. Dupuy', 'Dupuy Dept.']
   ],
   LOCALITIES: [
+    // Tier 1: Capital, principales centros urbanos y cabeceras clave
     [-33.3017, -66.3378, 'San Luis (Capital)', 1, true],
     [-33.6757, -65.4578, 'Villa Mercedes', 1, false],
     [-32.3450, -65.1550, 'Villa de Merlo', 1, false],
@@ -331,6 +348,7 @@ const SAN_LUIS_GEOGRAPHY = Object.freeze({
     [-33.0500, -65.7800, 'La Toma', 1, false],
     [-34.6269, -65.2539, 'Buena Esperanza', 1, false],
     [-35.1528, -65.9461, 'Unión', 1, false],
+    // Tier 2: Cabeceras departamentales y localidades importantes
     [-32.6000, -66.1250, 'S. Fco. del Monte de Oro', 2, false],
     [-32.3667, -66.2200, 'Luján', 2, false],
     [-32.0667, -66.0500, 'Candelaria', 2, false],
@@ -1208,7 +1226,7 @@ class GlobeView {
     this.container = document.getElementById(containerId); this.fpsElement = document.getElementById(fpsElementId);
     this.scene = null; this.camera = null; this.renderer = null; this.earthGroup = null; this.cloudsMesh = null;
     this.bordersMat = null; this.borderTexMat = null; this.sanLuisBordersMat = null; this.sanLuisShadowMat = null;
-    this.hotspotSatMeshes = new Map();
+    this.hotspotModisMesh = null; this.hotspotViirsMesh = null;
     this.aoiRingMesh = null; this.aoiRingMat = null; this.satMeshes = new Map(); this.countryNodes = [];
     this.sanLuisDeptNodes = []; this.sanLuisLocNodes = []; this.sanLuisMarkersGroup = null; this.earthSphereMesh = null;
     this.activeSatIds = new Set(['terra', 'aqua', 'suomi_npp', 'noaa_20']);

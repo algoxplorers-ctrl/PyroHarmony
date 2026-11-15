@@ -4,12 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AlgoXplorers - PyroHarmony | NASA Space Apps Challenge 2026</title>
-  
-  <!-- KaTeX para renderizado matemático elegante -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
-
   <style>
     :root {
       --nasa-blue: #0b3d91;
@@ -107,8 +101,8 @@
     }
 
     .hero-logo-box {
-      width: 220px;
-      min-width: 220px;
+      width: 240px;
+      min-width: 240px;
       text-align: center;
     }
 
@@ -309,7 +303,6 @@
       z-index: 1000;
       display: flex;
       justify-content: flex-end;
-      gap: 12px;
       margin-bottom: 20px;
     }
 
@@ -319,32 +312,19 @@
       border: none;
       padding: 12px 24px;
       border-radius: 50px;
-      font-size: 0.95rem;
+      font-size: 1rem;
       font-weight: 700;
       cursor: pointer;
       box-shadow: 0 8px 20px rgba(56,189,248,0.4);
       display: flex;
       align-items: center;
       gap: 10px;
-      text-decoration: none;
       transition: all 0.2s ease;
     }
 
     .btn-pdf:hover {
       transform: scale(1.05);
       box-shadow: 0 12px 25px rgba(56,189,248,0.6);
-    }
-
-    .badge-official {
-      display: inline-block;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      background: rgba(16,185,129,0.15);
-      color: var(--accent-emerald);
-      border: 1px solid rgba(16,185,129,0.4);
-      margin-right: 6px;
     }
 
     /* REGLAS PARA IMPRESIÓN / GENERACIÓN DE PDF */
@@ -449,11 +429,8 @@
 
   <div class="container">
 
-    <!-- Barra de botón de impresión / navegación -->
+    <!-- Barra de botón de impresión -->
     <div class="print-btn-bar">
-      <a class="btn-pdf" href="GUIA_CIENTIFICA_PYROHARMONY.html" style="background: rgba(15,23,42,0.8); border: 1px solid var(--accent-cyan);">
-        📘 Guía Científica
-      </a>
       <button class="btn-pdf" onclick="window.print()">
         <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
@@ -466,23 +443,18 @@
     <div class="hero">
       <div class="hero-info">
         <span class="hero-badge">NASA Space Apps Challenge 2026 • Submission Oficial</span>
-        <div style="margin-bottom: 10px;">
-          <span class="badge-official">SemVer v2.0.0 Production</span>
-          <span class="badge-official">NASA NPR 7150.2 Compliant</span>
-          <span class="badge-official">FAIR &amp; MIT Open Source</span>
-        </div>
         <h1 class="hero-title">PYRO-HARMONY</h1>
         <p class="hero-subtitle">Cross-Sensor Fire Anomaly Engine & Unified 20-Year Burning Activity Calendar</p>
         
         <div class="hero-meta">
-          <div class="hero-meta-item"><strong>Equipo:</strong> AlgoXplorers (Argentina) 🇦🇷</div>
+          <div class="hero-meta-item"><strong>Equipo:</strong> AlgoXplorers</div>
           <div class="hero-meta-item"><strong>Reto:</strong> Harmonization of MODIS and VIIRS Hot Spots</div>
           <div class="hero-meta-item"><strong>Categoría:</strong> Best Use of Data / Galactic Impact</div>
-          <div class="hero-meta-item"><strong>Repositorio:</strong> <code>https://github.com/algoxplorers-ctrl/PyroHarmony</code></div>
+          <div class="hero-meta-item"><strong>Dificultad:</strong> Advanced / Intermediate</div>
         </div>
       </div>
       <div class="hero-logo-box">
-        <img src="assets/icons/logo-official.png" alt="Logo de AlgoXplorers" class="team-logo" onerror="this.src='AlgoXplores.png'">
+        <img src="AlgoXplores.png" alt="Logo de AlgoXplorers" class="team-logo" onerror="this.src='C:/Users/jalfe/Downloads/AlgoXplores.png'">
       </div>
     </div>
 
@@ -506,34 +478,33 @@
       </p>
     </div>
 
-    <!-- SECCIÓN 2: FORMULACIÓN CIENTÍFICA, MATEMÁTICA Y CASO SAN LUIS -->
+    <!-- SECCIÓN 2: FORMULACIÓN CIENTÍFICA Y MATEMÁTICA -->
     <div class="section page-break">
-      <h2 class="section-title"><span class="icon">🔬</span> 2. El Modelo de Armonización Matemática & Caso de Estudio San Luis</h2>
+      <h2 class="section-title"><span class="icon">🔬</span> 2. El Modelo de Armonización Matemática</h2>
       
       <p>
-        Para responder con exactitud a la pregunta de la NASA (<em>"determine if these changes are what scientists call significant"</em>), el motor de <strong>AlgoXplorers</strong> implementa un pipeline estadístico riguroso basado en principios biofísicos:
+        Para responder con exactitud a la pregunta de la NASA (<em>"determine if these changes are what scientists call significant"</em>), el motor de <strong>AlgoXplorers</strong> implementa un pipeline estadístico riguroso:
       </p>
 
       <div class="card-grid">
         <div class="feature-card">
           <h4>📍 Grilla Espacial Homogénea (Spatial Binning)</h4>
           <p>
-            No se comparan puntos GPS aislados. Se realiza una indexación espacial mediante una malla regular (hexágonos H3 resolución 6 o cuadrícula $0.1^\circ \times 0.1^\circ \approx 11\text{ km}$). Cada celda acumula las observaciones satelitales coincidentes.
+            No se comparan puntos GPS aislados. Se realiza una indexación espacial mediante una malla regular (hexágonos H3 resolución 6 o cuadrícula 0.1° × 0.1° ≈ 11 km). Cada celda <code>C(i,j)</code> acumula las observaciones satelitales.
           </p>
         </div>
         <div class="feature-card">
-          <h4>⚡ Métrica Física: FRP vs Conteo de Píxeles</h4>
+          <h4>⚡ Métrica Física: FRP vs Conteo</h4>
           <p>
-            El conteo de píxeles está sesgado de 3 a 5 veces por la resolución óptica. El motor utiliza la <strong>Potencia Radiativa del Fuego (FRP en Megawatts)</strong>, derivada por el método de Kaufman et al. (1998) en el canal de $4\,\mu\text{m}$:
+            El conteo de píxeles está sesgado por la resolución óptica. El motor utiliza la <strong>Potencia Radiativa del Fuego (FRP, en Megawatts)</strong>, que cuantifica la tasa de consumo de biomasa y energía emitida, permitiendo calibración termodinámica.
           </p>
-          <pre>FRP = (A_pixel * σ / a) * (L_4 - L_4_fondo)</pre>
         </div>
         <div class="feature-card">
           <h4>⚖️ Calibración en Ventana Solapada (2012-2024)</h4>
           <p>
-            Durante 12 años de coexistencia co-orbital, se ajusta la regresión con preservación estricta de la escala energética ($\alpha + \beta = 1{,}00$):
+            Durante 12 años, ambos satélites pasaron por las mismas zonas. Se ajusta un modelo de regresión ponderado por cobertura de suelo (bioma forestal vs pastizal) para derivar la función de transferencia:
           </p>
-          <pre>FRP_harmonized = (α * FRP_VIIRS + β * FRP_MODIS) * γ_diurno</pre>
+          <pre>FRP_harmonized = α(bioma) * FRP_VIIRS + β(bioma) * FRP_MODIS</pre>
         </div>
       </div>
 
@@ -585,30 +556,30 @@
 
       <div class="callout callout-warning">
         <strong>La Trampa Diurna Resuelta por PyroHarmony:</strong><br>
-        Comparar una pasada matutina de Terra (10:30 AM) con una vespertina de VIIRS (01:30 PM o 02:20 PM) sin normalización introduciría un sesgo térmico artificial masivo. PyroHarmony pondera temporalmente las lecturas según el factor $\gamma_{\text{diurno}} \approx 1{,}15$.
+        Comparar una pasada matutina de Terra (10:30 AM) con una vespertina de VIIRS (01:30 PM o 02:20 PM) sin normalización introduciría un sesgo térmico artificial masivo. PyroHarmony pondera temporalmente las lecturas según la curva teórica del ciclo diurno de combustión.
       </div>
 
       <h3>Detección de Anomalías y "Significancia Científica"</h3>
       <p>Para determinar si una temporada de fuego es científicamente anormal, calculamos:</p>
       <ol>
         <li>
-          <strong>Línea Base Climatológica Semanal (26 años, 2000–2026):</strong> Para cada celda y para cada una de las 52 semanas del año se calcula la media histórica $\mu_{\text{semana}}$ y el desvío estándar $\sigma_{\text{semana}}$.
+          <strong>Línea Base Climatológica Semanal (20 años):</strong> Para cada celda y para cada una de las 52 semanas del año se calcula la media histórica <code>μ(semana)</code> y el desvío estándar <code>σ(semana)</code>.
         </li>
         <li>
           <strong>Índice de Anomalía Térmica Estandarizada (Z-Score):</strong>
-          <pre>Z = (FRP_harm - μ_semana) / σ_semana</pre>
+          <pre>Z = (FRP_actual - μ_historica) / σ_historica</pre>
         </li>
         <li>
-          <strong>Criterio de Significancia Estadística:</strong>
+          <strong>Criterio de Significancia:</strong>
           <ul>
-            <li><code>Z < 1.0</code>: Actividad de fuego dentro de la variabilidad climatológica normal.</li>
+            <li><code>Z < 1.0</code>: Actividad de fuego dentro de la variabilidad normal.</li>
             <li><code>1.0 ≤ Z < 2.0</code>: Actividad moderada / temporada seca anticipada.</li>
             <li><code>Z ≥ 2.0 (p < 0.05)</code>: <strong>Anomalía Estadísticamente Significativa</strong> (Evento extremo, alerta temprana activada).</li>
           </ul>
         </li>
       </ol>
 
-      <!-- SUBSECCIÓN SAN LUIS -->
+      <!-- CASO DE ESTUDIO TERRITORIAL: SAN LUIS -->
       <h3 style="margin-top: 32px; color: var(--accent-cyan);">🏔️ Caso de Estudio Territorial: Sierras de San Luis, Viento Zonda y Topografía Compleja</h3>
       <p>
         En la provincia de <strong>San Luis (31°50'S - 36°16'S / 64°55'O - 67°15'O)</strong>, la temporada crítica ocurre a finales de invierno y primavera (semanas 32 a 45, agosto a noviembre), cuando las heladas severas secan el pastizal y confluyen con ráfagas secas y cálidas de <strong>Viento Zonda</strong> (humedad relativa menor al 10%) en las Sierras Centrales y Comechingones (El Trapiche, Merlo, Potrero de los Funes, La Punta).
@@ -616,12 +587,12 @@
 
       <div class="callout callout-info">
         <strong>1. El sesgo instrumental resuelto en quebradas:</strong><br>
-        En quebradas y laderas escarpadas, un foco incipiente de pastizal a menudo no llenaba el píxel de $1\text{ km}^2$ de MODIS, pasando desapercibido. Al entrar en operaciones VIIRS (375m), detectó focos hasta 4.8 veces más pequeños en áreas serranas, creando la falsa ilusión estadística de que los incendios se habían cuadruplicado.
+        En quebradas y laderas escarpadas, un foco incipiente de pastizal a menudo no llenaba el píxel de 1 km² de MODIS, pasando desapercibido. Al entrar en operaciones VIIRS (375m), detectó focos hasta 4.8 veces más pequeños en áreas serranas, creando la falsa ilusión estadística de que los incendios se habían cuadruplicado.
       </div>
 
-      <div class="callout callout-success" style="border-left-width: 6px;">
+      <div class="callout callout-success">
         <strong>2. Alerta Oficial Validada para San Luis:</strong><br>
-        Convirtiendo la energía a FRP en Megawatts y aplicando los coeficientes calibrados ($\alpha = 0.44$, $\beta = 0.56$, $R^2 = 0.92$), la plataforma emite la siguiente conclusión técnica para los brigadistas y defensa civil:
+        Convirtiendo la energía a FRP en Megawatts y aplicando los coeficientes calibrados (α = 0.44, β = 0.56, R² = 0.92), la plataforma emite la siguiente conclusión técnica para los brigadistas y defensa civil:
         <div style="font-size: 1.05rem; font-style: italic; margin-top: 8px; color: #ffffff;">
           «El incremento de calor observado esta semana en San Luis no es un error óptico por cambio de satélites: el Z-Score de +2.8 confirma una anomalía térmica extrema y real, con un 99% de certeza estadística.»
         </div>
@@ -638,7 +609,7 @@
 
     <!-- SECCIÓN 3: ESPECIFICACIÓN DEL SOFTWARE (PUNTO POR PUNTO) -->
     <div class="section page-break">
-      <h2 class="section-title"><span class="icon">💻</span> 3. Especificación Técnica del Software e Infraestructura Cloud</h2>
+      <h2 class="section-title"><span class="icon">💻</span> 3. Especificación Técnica del Software (Punto por Punto)</h2>
       <p>
         El sistema fue diseñado con enfoque en alta concurrencia, procesamiento multihilo y consumo eficiente de memoria para manejar millones de registros de la NASA sin colapsar el servidor.
       </p>
@@ -873,35 +844,93 @@
       <div class="card-grid">
         <div class="feature-card">
           <h4>📅 1. The Burning Activity Calendar</h4>
-          <p>Matriz visual de calor interactiva: Eje X (52 semanas), Eje Y (2000-2026), gradientes térmicos y detección de inicio anticipado de temporadas secas.</p>
+          <p>
+            Matriz visual de calor interactiva inspirada en GitHub commits pero aplicada a biomas terrestres:
+          </p>
+          <ul>
+            <li><strong>Eje X:</strong> Semanas del año (1 a 52).</li>
+            <li><strong>Eje Y:</strong> Años históricos (2000 a 2026).</li>
+            <li><strong>Gradiente de Color:</strong> De verde (sin fuego) a naranja (fuegos normales) y púrpura oscuro pulsante (anomalías récord Z > 2.5).</li>
+            <li>Permite ver de inmediato cómo se adelantaron las temporadas de sequía en los últimos 10 años.</li>
+          </ul>
         </div>
         <div class="feature-card">
           <h4>🗺️ 2. Globo 3D &amp; Visor Georreferenciado</h4>
-          <p>Visualizador WebGL con capas de MODIS, VIIRS y Modo Armonizado AlgoXplorers, scrubber temporal y áreas protegidas.</p>
+          <p>
+            Visualizador Three.js conectado a la base espacial de Supabase:
+          </p>
+          <ul>
+            <li>Selector de Capas: [Solo MODIS], [Solo VIIRS], [Modo Armonizado AlgoXplorers].</li>
+            <li>Línea de tiempo deslizante (Timeline scrubber) con animación día a día o mes a mes.</li>
+            <li>Polígonos de Áreas Protegidas, Parques Nacionales y Provincias.</li>
+          </ul>
         </div>
         <div class="feature-card">
           <h4>🚨 3. Early Warning Anomaly Gauge</h4>
-          <p>Semáforo táctico de Z-Score con cálculo de exceso porcentual térmico frente al promedio histórico de 20 años.</p>
+          <p>
+            Semáforo de alerta temprana para brigadistas y defensa civil:
+          </p>
+          <ul>
+            <li>Indicador en aguja del Z-Score para la semana actual.</li>
+            <li>Comparativa: *"La región X presenta hoy un 230% más de energía térmica que el promedio de los últimos 20 años"*.</li>
+            <li>Botón de descarga de reporte de situación en PDF.</li>
+          </ul>
         </div>
+
         <div class="feature-card">
           <h4>⚖️ 4. Comparador de Discrepancia 2012</h4>
-          <p>Demostración visual del salto artificial de conteos en 2012 vs la serie suavizada en Megawatts biofísicos de PyroHarmony.</p>
+          <p>
+            Demostración visual del salto instrumental que resuelve el reto de la NASA:
+          </p>
+          <ul>
+            <li>Curva Roja (Datos Crudos): Evidencia el salto artificial de conteo al entrar VIIRS.</li>
+            <li>Curva Cian (PyroHarmony): Muestra la serie corregida y aplanada por bioma en Megawatts.</li>
+          </ul>
         </div>
+
         <div class="feature-card">
-          <h4>📑 5. Generador de Reportes SitRep (PDF / TXT)</h4>
-          <p>Exportación técnica inmediata con resumen ejecutivo, métricas estadísticas y despacho para comités de emergencia.</p>
+          <h4>📑 5. Generador de Reportes SitRep (PDF)</h4>
+          <p>
+            Exportación en 1 clic de informe técnico vectorizado:
+          </p>
+          <ul>
+            <li>Resumen ejecutivo de la región y fecha analizada con nivel de alerta.</li>
+            <li>Métricas estadísticas desglosadas (FRP, $\mu$, $\sigma$, Z-Score).</li>
+            <li>Recomendaciones operativas oficiales para comités de crisis.</li>
+          </ul>
         </div>
+
         <div class="feature-card">
           <h4>📍 6. Importador de AOI GeoJSON</h4>
-          <p>Carga de polígonos locales (parques nacionales, municipios) con sanitización XSS estricta y recálculo instantáneo.</p>
+          <p>
+            Flexibilidad geográfica total para brigadistas locales:
+          </p>
+          <ul>
+            <li>Carga de polígonos <code>.geojson</code> de parques nacionales o reservas provinciales.</li>
+            <li>Sanitización estricta de seguridad XSS y recálculo dinámico de la serie temporal.</li>
+          </ul>
         </div>
+
         <div class="feature-card">
           <h4>🧪 7. Validador de Integridad (Self-Test)</h4>
-          <p>Batería de tests matemáticos en el navegador en tiempo real para verificar ausencia de datos simulados y normalidad del Z-Score.</p>
+          <p>
+            Honestidad científica radical accesible por los jueces:
+          </p>
+          <ul>
+            <li>Batería de tests unitarios matemáticos en el navegador en tiempo real.</li>
+            <li>Verifica $\sum \frac{x-\mu}{\sigma} \approx 0$ y ausencia de datos hardcodeados.</li>
+          </ul>
         </div>
+
         <div class="feature-card">
           <h4>🔊 8. Audio Feedback Espacial</h4>
-          <p>Telemetría acústica táctica inspirada en misiones de la NASA con alertas sonoras en eventos de $Z \ge 2.0$.</p>
+          <p>
+            Inmersión táctica con Web Audio API:
+          </p>
+          <ul>
+            <li>Telemetría acústica inspirada en el Centro de Control de la NASA.</li>
+            <li>Alerta pulsante sonora automática ante anomalías críticas ($Z \ge 2.0$).</li>
+          </ul>
         </div>
       </div>
 
@@ -913,53 +942,79 @@
       <div class="card-grid">
         <div class="feature-card">
           <h4>⏱️ Ventana Crítica de 50 Minutos</h4>
-          <p>Aprovecha el desfase orbital entre Suomi-NPP (13:30) y NOAA-20 (14:20). Si en esos 50 minutos la energía térmica salta más de un 150% ($\Delta FRP > 150\%$), el motor detecta una <strong>tormenta de fuego convectiva explosiva</strong>.</p>
+          <p>
+            Aprovecha el desfase orbital entre Suomi-NPP (13:30) y NOAA-20 (14:20). Si en esos 50 minutos la energía térmica salta más de un 150% ($\Delta FRP > 150\%$), el motor detecta una <strong>tormenta de fuego convectiva explosiva</strong>.
+          </p>
         </div>
         <div class="feature-card">
           <h4>👁️ Visión Infrarroja a Través del Humo</h4>
-          <p>Los canales térmicos de 3.9 µm de VIIRS penetran el humo denso donde drones y humanos son ciegos, detectando <strong>focos secundarios por pavesas (spotting)</strong> que se inician a espaldas de la cuadrilla.</p>
+          <p>
+            Los canales térmicos de 3.9 µm de VIIRS penetran el humo denso donde drones y humanos son ciegos, detectando <strong>focos secundarios por pavesas (spotting)</strong> que se inician a espaldas de la cuadrilla.
+          </p>
         </div>
         <div class="feature-card">
           <h4>📢 Protocolo LACES & Baliza Física</h4>
-          <p>Disparo automático de orden de <strong>"REPLIEGUE INMEDIATO A ZONA SEGURA"</strong> a los handies y teléfonos de la cuadrilla, activando una baliza física IoT con sirena (ESP32/LoRa) en el camión de bomberos.</p>
+          <p>
+            Disparo automático de orden de <strong>"REPLIEGUE INMEDIATO A ZONA SEGURA"</strong> a los handies y teléfonos de la cuadrilla, activando una baliza física IoT con sirena (ESP32/LoRa) en el camión de bomberos.
+          </p>
         </div>
       </div>
-    </div>
 
-    <!-- SECCIÓN 4: LOS 3 PROTO-USUARIOS INSTITUCIONALES -->
-    <div class="section page-break">
-      <h2 class="section-title"><span class="icon">👥</span> 4. Los 3 Proto-usuarios Institucionales de PyroHarmony</h2>
+      <!-- PANEL DE ADMINISTRACIÓN Y MENSAJERÍA -->
+      <h3 style="margin-top: 36px;">⚙️ Consola de Administración Científica, RBAC & Notificaciones Multicanal</h3>
+      <div class="card-grid">
+        <div class="feature-card">
+          <h4>🔬 Calibrador de Fórmulas Dinámicas (0 Hardcode)</h4>
+          <p>
+            Permite a investigadores de la NASA ajustar en vivo los coeficientes $\alpha$ y $\beta$ de regresión y umbrales de Z-Score sin tocar código, con botón de restauración a la línea base oficial.
+          </p>
+        </div>
+        <div class="feature-card">
+          <h4>🛡️ Control de Acceso por Roles (RBAC)</h4>
+          <p>
+            Perfiles diferenciados: <code>SuperAdmin</code> (infraestructura), <code>Scientist</code> (fórmulas), <code>Responder</code> (brigadista/SitRep) y <code>LandManager</code> (parques y quemas).
+          </p>
+        </div>
+        <div class="feature-card">
+          <h4>📱 Despacho Multicanal de Alertas</h4>
+          <p>
+            Envío automatizado de alertas de emergencia ante anomalías críticas ($Z \ge 2.0$) a través de <strong>WhatsApp Webhook</strong>, bot oficial de <strong>Telegram</strong> (@PyroHarmonyAlertBot) y <strong>Email</strong> con SitRep adjunto.
+          </p>
+        </div>
+      </div>
+
+      <!-- LOS 3 PROTO-USUARIOS INSTITUCIONALES -->
+      <h3 style="margin-top: 36px; color: var(--accent-cyan);">👥 Los 3 Proto-usuarios Institucionales de PyroHarmony</h3>
       <p>
-        En estricto cumplimiento de los criterios de impacto y utilidad de la <strong>NASA Space Apps Challenge 2026</strong>, PyroHarmony está diseñado y calibrado para tres niveles institucionales reales y verificables:
+        PyroHarmony responde a las exigencias del <strong>NASA Space Apps Challenge 2026</strong> vinculando sus algoritmos directamente con tres niveles de toma de decisiones del mundo real:
       </p>
-
       <div class="card-grid">
         <div class="feature-card" style="border-left: 4px solid #ff6d00;">
           <h4 style="color:#ff9100;">🚒 1. Nivel Táctico: Comandante de Incidente / Brigadista de Terreno</h4>
           <p><strong>Organismos de Referencia:</strong> <em>San Luis Solidario</em>, <em>Servicio Nacional de Manejo del Fuego (SNMF)</em>, <em>US Forest Service (USFS)</em>, <em>CAL FIRE</em>, <em>CONAF (Chile)</em>.</p>
           <p><strong>Problema Real:</strong> La fragmentación de datos confunde quemas pequeñas con frentes destructivos. En quebradas con viento Zonda, una decisión tardía causa el atrapamiento fatal (<em>burnover</em>).</p>
-          <p><strong>Solución PyroHarmony:</strong> Radar LACES en la ventana de 50 min. Si $\Delta\text{FRP} > 150\%$, dispara orden de repliegue a la Zona de Seguridad y emite el reporte SitRep por radio VHF/HF.</p>
+          <p><strong>Solución PyroHarmony:</strong> Radar LACES en la ventana de 50 min. Si ΔFRP > 150%, dispara orden de repliegue a la Zona de Seguridad y emite el reporte SitRep por radio VHF/HF.</p>
         </div>
 
         <div class="feature-card" style="border-left: 4px solid var(--accent-cyan);">
           <h4 style="color:var(--accent-cyan);">🏛️ 2. Nivel Estratégico: Director de Defensa Civil y Gestión de Riesgo</h4>
           <p><strong>Organismos de Referencia:</strong> Direcciones Provinciales de Defensa Civil, Ministerios de Seguridad, Centros de Operaciones de Emergencia (COE) y enlaces del <em>Marco de Sendai (ONU)</em>.</p>
           <p><strong>Problema Real:</strong> La falsa ilusión de que los fuegos se cuadruplicaron en 2012 impide justificar presupuestos con rigurosidad científica.</p>
-          <p><strong>Solución PyroHarmony:</strong> Consulta el Z-Score Climatológico semanal. Si $Z \ge +2.0$ ($p < 0.05$), cuenta con respaldo matemático para declarar la <strong>Emergencia Ígnea Provincial</strong> y movilizar aviones hidrantes.</p>
+          <p><strong>Solución PyroHarmony:</strong> Consulta el Z-Score Climatológico semanal. Si Z ≥ +2.0 (p < 0.05), cuenta con respaldo matemático para declarar la <strong>Emergencia Ígnea Provincial</strong> y movilizar aviones hidrantes.</p>
         </div>
 
         <div class="feature-card" style="border-left: 4px solid var(--accent-emerald);">
           <h4 style="color:var(--accent-emerald);">🔬 3. Nivel Científico: Especialista en Teledetección y Emisiones</h4>
           <p><strong>Organismos de Referencia:</strong> <em>CONAE</em>, <em>NASA Earth Science Division</em>, <em>Copernicus CAMS</em>, <em>INTA / CONICET</em> y <em>Universidad de La Punta (ULP)</em>.</p>
           <p><strong>Problema Real:</strong> Reconciliar 26 años de series MODIS y VIIRS sin violar la física termodinámica ni el sesgo de Dozier.</p>
-          <p><strong>Solución PyroHarmony:</strong> Aplica regresión cruzada con conservación de escala ($\alpha + \beta = 1{,}00$) y biomasa de Wooster ($C_e = 0.368\text{ kg/MJ}$), exportando datos en GeoJSON y CSV bajo principios FAIR y NASA TOPS.</p>
+          <p><strong>Solución PyroHarmony:</strong> Aplica regresión cruzada con conservación de escala (α + β = 1.00) y biomasa de Wooster (Ce = 0.368 kg/MJ), exportando datos en GeoJSON y CSV bajo principios FAIR y NASA TOPS.</p>
         </div>
       </div>
     </div>
 
-    <!-- SECCIÓN 5: ESPECIFICACIÓN DEL VIDEO PITCH -->
+    <!-- SECCIÓN 4: ESPECIFICACIÓN DEL VIDEO PITCH -->
     <div class="section page-break">
-      <h2 class="section-title"><span class="icon">🎬</span> 5. Especificación Técnica del Video Pitch (Punto por Punto)</h2>
+      <h2 class="section-title"><span class="icon">🎬</span> 4. Especificación Técnica del Video Pitch (Punto por Punto)</h2>
       
       <div class="callout callout-warning">
         <strong>Reglas del Video de la NASA:</strong> Duración máxima estricta (no pasar de 60 segundos si es teaser o 120 segundos si la sede permite 2 minutos). Subido a YouTube en modo "Público" o "No Listado" con audio nítido, sin música con copyright y con subtítulos en inglés.
@@ -971,48 +1026,82 @@
           <tr>
             <th style="width: 100px;">Tiempo</th>
             <th style="width: 35%;">Escena / Visual en Pantalla</th>
-            <th style="width: 40%;">Voz en Off (Locución en Inglés)</th>
+            <th style="width: 40%;">Voz en Off (Locución)</th>
             <th style="width: 15%;">Efecto / Texto</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td><span class="time-badge">00:00 - 00:07</span></td>
-            <td>Imágenes satelitales dramáticas de columnas de humo e incendios forestales en la Tierra. Superposición gráfica con satélites Terra (2000) y Suomi-NPP (2012).</td>
-            <td><em>"For over two decades, NASA satellites have watched our planet burn. But when sensors evolved, our ability to compare the past with the present broke down."</em></td>
-            <td>Texto en pantalla:<br><strong>20 Years of Fire Data: Fractured.</strong></td>
+            <td>
+              Imágenes satelitales dramáticas de columnas de humo e incendios forestales en la Tierra. Superposición gráfica con satélites Terra (2000) y Suomi-NPP (2012).
+            </td>
+            <td>
+              <em>"For over two decades, NASA satellites have watched our planet burn. But when sensors evolved, our ability to compare the past with the present broke down."</em>
+            </td>
+            <td>
+              Texto en pantalla:<br>
+              <strong>20 Years of Fire Data: Fractured.</strong>
+            </td>
           </tr>
           <tr>
             <td><span class="time-badge">00:08 - 00:18</span></td>
-            <td>Pantalla dividida: a la izquierda MODIS (cuadrícula gruesa de 1 km), a la derecha VIIRS (cuadrícula nítida de 375 m). Se muestra cómo VIIRS detecta 4 veces más focos.</td>
-            <td><em>"VIIRS detects smaller fires than MODIS, creating an artificial surge in data. Emergency managers can't tell: is today's wildfire a historic anomaly, or just a new sensor effect?"</em></td>
-            <td>Gráfico comparativo:<br><strong>MODIS (1km) vs VIIRS (375m)</strong></td>
+            <td>
+              Pantalla dividida: a la izquierda MODIS (cuadrícula gruesa de 1 km), a la derecha VIIRS (cuadrícula nítida de 375 m). Se muestra cómo VIIRS detecta 4 veces más focos.
+            </td>
+            <td>
+              <em>"VIIRS detects smaller fires than MODIS, creating an artificial surge in data. Emergency managers can't tell: is today's wildfire a historic anomaly, or just a new sensor effect?"</em>
+            </td>
+            <td>
+              Gráfico comparativo:<br>
+              <strong>MODIS (1km) vs VIIRS (375m)</strong>
+            </td>
           </tr>
           <tr>
             <td><span class="time-badge">00:19 - 00:32</span></td>
-            <td>Transición con el logo de <strong>AlgoXplorers</strong>. Se abre el software <strong>PyroHarmony</strong> en pantalla completa mostrando el mapa armonizado en tiempo real.</td>
-            <td><em>"Meet PyroHarmony, created by AlgoXplorers. We engineered a cross-sensor calibration pipeline that harmonizes 20 years of NASA FIRMS records into a single thermodynamic metric: Fire Radiative Power."</em></td>
-            <td>Logo AlgoXplorers + Captura real del Software funcionando.</td>
+            <td>
+              Transición con el logo de <strong>AlgoXplorers</strong>. Se abre el software <strong>PyroHarmony</strong> en pantalla completa mostrando el mapa armonizado en tiempo real.
+            </td>
+            <td>
+              <em>"Meet PyroHarmony, created by AlgoXplorers. We engineered a cross-sensor calibration pipeline that harmonizes 20 years of NASA FIRMS records into a single thermodynamic metric: Fire Radiative Power."</em>
+            </td>
+            <td>
+              Logo AlgoXplorers + Captura real del Software funcionando.
+            </td>
           </tr>
           <tr>
             <td><span class="time-badge">00:33 - 00:46</span></td>
-            <td>Primer plano del <strong>Burning Activity Calendar</strong>: el cursor hace clic en una región (ej. Sierras de San Luis / Pantanal), se ilumina el mapa de calor con las 52 semanas y salta el semáforo rojo de anomalía Z-Score > 2.0.</td>
-            <td><em>"Our Burning Activity Calendar instantly reveals fire season onsets, historical peaks, and flags statistically significant climate anomalies with a single click."</em></td>
-            <td>Highlight en el calendario:<br><strong>Z-Score > 2.0 (Significant Anomaly)</strong></td>
+            <td>
+              Primer plano del <strong>Burning Activity Calendar</strong>: el cursor hace clic en una región (ej. Selva Amazónica / Pantanal), se ilumina el mapa de calor con las 52 semanas y salta el semáforo rojo de anomalía Z-Score > 2.0.
+            </td>
+            <td>
+              <em>"Our Burning Activity Calendar instantly reveals fire season onsets, historical peaks, and flags statistically significant climate anomalies with a single click."</em>
+            </td>
+            <td>
+              Highlight en el calendario:<br>
+              <strong>Z-Score > 2.0 (Significant Anomaly)</strong>
+            </td>
           </tr>
           <tr>
             <td><span class="time-badge">00:47 - 00:60</span></td>
-            <td>Pantalla final con el equipo AlgoXplorers, enlace al repositorio público de GitHub, enlace a la demo en vivo y agradecimientos a la NASA.</td>
-            <td><em>"Turning two decades of satellite telemetry into actionable early warnings to save ecosystems and human lives. We are AlgoXplorers, and this is PyroHarmony."</em></td>
-            <td><strong>GitHub Repo Live • Try the Demo</strong><br>NASA Space Apps 2026</td>
+            <td>
+              Pantalla final con el equipo AlgoXplorers, enlace al repositorio público de GitHub, enlace a la demo en vivo y agradecimientos a la NASA.
+            </td>
+            <td>
+              <em>"Turning two decades of satellite telemetry into actionable early warnings to save ecosystems and human lives. We are AlgoXplorers, and this is PyroHarmony."</em>
+            </td>
+            <td>
+              <strong>GitHub Repo Live • Try the Demo</strong><br>
+              NASA Space Apps 2026
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <!-- SECCIÓN 6: SUBMISSION OFICIAL A LA NASA (COPY-PASTE READY) -->
+    <!-- SECCIÓN 5: SUBMISSION OFICIAL A LA NASA (COPY-PASTE READY) -->
     <div class="section page-break">
-      <h2 class="section-title"><span class="icon">📝</span> 6. Formulario de Entrega Oficial para la Plataforma NASA</h2>
+      <h2 class="section-title"><span class="icon">📝</span> 5. Formulario de Entrega Oficial para la Plataforma NASA</h2>
       <p>
         Campos exactos redactados en inglés profesional según los requerimientos de evaluación del jurado internacional:
       </p>
@@ -1052,9 +1141,9 @@
       </div>
     </div>
 
-    <!-- SECCIÓN 7: ARQUITECTURA MVC Y DIRECTORIOS -->
+    <!-- SECCIÓN 6: ARQUITECTURA MVC Y DIRECTORIOS -->
     <div class="section page-break">
-      <h2 class="section-title"><span class="icon">📂</span> 7. Arquitectura del Repositorio MVC & Estándar Modular</h2>
+      <h2 class="section-title"><span class="icon">📂</span> 6. Arquitectura del Repositorio MVC & Estándar Modular</h2>
       <p>
         Para garantizar escalabilidad, seguridad por diseño y archivos pequeños (< 300 líneas), el proyecto en la raíz adopta el patrón Modelo - Vista - Controlador desacoplado:
       </p>
@@ -1062,76 +1151,92 @@
       <pre>
 PyroHarmony/
 ├── index.html                      # Shell HTML liviano (< 150 líneas)
-├── app.bundle.js                   # Bundle autónomo optimizado
-├── build_bundle.mjs                # Compilador local sin dependencias
+├── css/                            # Hojas de estilo modulares (main.css, hud.css, calendar.css)
 ├── src/
 │   ├── config/
 │   │   ├── constants.js            # Biomas, umbrales y coeficientes (0 HARDCODE)
 │   │   ├── security.js             # Sanitización XSS y almacenamiento seguro de MAP_KEY
 │   │   └── i18n.js                 # Diccionario reactivo [ES | EN]
 │   ├── models/
-│   │   ├── HarmonizationModel.js   # Función de transferencia MODIS + VIIRS -> FRP_harm
-│   │   ├── ClimatologyModel.js     # Cálculo climatológico de Mu, Sigma y Z-Score
+│   │   ├── HarmonizerModel.js      # Función de transferencia MODIS + VIIRS -> FRP_harm
+│   │   ├── AnomalyEngine.js        # Cálculo climatológico de Mu, Sigma y Z-Score
 │   │   ├── FirmsDataService.js     # Ingesta offline JSON y fetch en vivo NRT
-│   │   └── BiofireModel.js         # Tasas de consumo de biomasa y emisiones de CO2
+│   │   ├── IntegrityValidator.js   # Batería de self-tests matemáticos en vivo
+│   │   ├── AuthModel.js            # Roles RBAC (SuperAdmin, Scientist, Responder)
+│   │   └── TacticalBurnoverEngine.js # Detector táctico de atrapamiento (Ventana 50 min)
 │   ├── views/
-│   │   ├── GlobeView.js            # Three.js Digital Twin a 60 FPS con InstancedMesh
+│   │   ├── Globe3DView.js          # Three.js Digital Twin a 60 FPS con InstancedMesh
 │   │   ├── CalendarView.js         # The Burning Activity Calendar (52 sem x 26 años)
 │   │   ├── AnomalyGaugeView.js     # Tacómetro visual de alerta temprana para brigadistas
 │   │   ├── TimelineView.js         # Scrubber deslizante con velocidades 1x, 2x, 5x
-│   │   └── SensorDiscrepancyView.js# Gráfico comparativo Antes vs Después de 2012
-│   └── controllers/
-│       ├── AppController.js        # Despachador de eventos central
-│       ├── AOIController.js        # Manejo de cambios de Área de Interés y vuelo de cámara
-│       └── TimelineController.js   # Orquestador del tiempo y series históricas
-├── GUIA_CIENTIFICA_PYROHARMONY.html# Guía científica y matemática (Español)
-├── SCIENTIFIC_GUIDE_PYROHARMONY.html# Scientific white paper (English)
-├── COMMAND_MANUAL_4_ZONES.html     # Manual operativo de 4 zonas (Español / Inglés)
-├── VERIFICAR_Y_PUSH_SEGURO.bat     # Automatización segura de control de versiones Git
-└── README.md                       # Documentación principal en inglés y español
+│   │   ├── SensorDiscrepancyView.js# Gráfico comparativo Antes vs Después de 2012
+│   │   ├── AudioFeedbackView.js    # Síntesis acústica táctica con Web Audio API
+│   │   └── AdminPanelView.js       # Consola de administración y calibrador de fórmulas
+│   ├── controllers/
+│   │   ├── AppController.js        # Despachador de eventos central
+│   │   ├── AOIController.js        # Manejo de cambios de Área de Interés y vuelo de cámara
+│   │   └── AdminController.js      # Orquestador del panel de configuración
+│   └── services/
+│       ├── SitRepExporter.js       # Generador de reportes en PDF en 1 clic
+│       ├── CustomAOIService.js     # Importador y sanitizador de polígonos GeoJSON
+│       └── NotificationService.js  # Despachador a WhatsApp, Telegram (@PyroHarmonyAlertBot) y Email
+├── data/
+│   ├── historical_baseline.json    # 20 años de datos reales precalculados por semana
+│   └── biomes_metadata.json        # Bounding boxes y factores ecológicos
+├── lib/
+│   ├── three.min.js                # Librería WebGL 3D local
+│   └── OrbitControls.js            # Controles de cámara orbitales
+├── netlify.toml                    # Configuración de build, headers y Edge CDN
+├── supabase/                       # Migraciones PostGIS y Edge Functions Deno
+├── AGENTS.md                       # Reglas de agentes y los 5 mandamientos de oro
+├── CHALLENGE_ALIGNMENT_AND_ROADMAP.md # Especificación completa del reto
+├── USER_MANUAL.md                  # Manual del operador y brigadista
+├── REPLICATION_PLAYBOOK.md         # Bitácora viva de 9 hitos para el hackathon
+├── NASA_SUBMISSION_TEMPLATE.md     # Ficha oficial en inglés lista para enviar
+└── PITCH_VIDEO_SCRIPT.md           # Storyboard de 60 segundos para el video
       </pre>
     </div>
 
-    <!-- SECCIÓN 8: CHECKLIST Y ESTRATEGIA DE ENTREGA -->
+    <!-- SECCIÓN 7: CHECKLIST Y ESTRATEGIA PARA GANAR -->
     <div class="section">
-      <h2 class="section-title"><span class="icon">🏆</span> 8. Checklist Final de Entrega (Countdown 48 Horas)</h2>
+      <h2 class="section-title"><span class="icon">🏆</span> 7. Checklist Final de Entrega (Countdown 48 Horas)</h2>
 
       <div class="card-grid">
         <div class="feature-card">
           <h4>Viernes (Horas 0 - 12)</h4>
           <ul>
-            <li>[x] Inicializar repo GitHub: <code>https://github.com/algoxplorers-ctrl/PyroHarmony</code>.</li>
-            <li>[x] Conectar deploy continuo y modularización del bundle.</li>
-            <li>[x] Cargar matriz canónica histórica 2000–2026.</li>
+            <li>[ ] Inicializar repo GitHub: <code>AlgoXplorers/PyroHarmony</code>.</li>
+            <li>[ ] Conectar deploy automático en Netlify y proyecto en Supabase.</li>
+            <li>[ ] Cargar dataset canónico <code>historical_baseline.json</code> en <code>data/</code>.</li>
           </ul>
         </div>
         <div class="feature-card">
           <h4>Sábado (Horas 12 - 30)</h4>
           <ul>
-            <li>[x] Ensamblar Globo 3D Three.js a 60 FPS con mallas instanciadas.</li>
-            <li>[x] Renderizar Burning Calendar de 52 semanas y Anomaly Gauge.</li>
-            <li>[x] Integrar motor de Z-Score y módulo de prevención de atrapamiento (50 min).</li>
-            <li>[x] Calibrar coeficientes biofísicos para San Luis y grandes biomas.</li>
+            <li>[ ] Ensamblar Globo 3D Three.js a 60 FPS con mallas instanciadas.</li>
+            <li>[ ] Renderizar Burning Calendar de 52 semanas y Anomaly Gauge.</li>
+            <li>[ ] Integrar motor de Z-Score y módulo de prevención de atrapamiento (50 min).</li>
+            <li>[ ] Activar webhooks de Telegram y WhatsApp.</li>
           </ul>
         </div>
         <div class="feature-card">
           <h4>Domingo (Horas 30 - 48)</h4>
           <ul>
-            <li>[x] Verificar documentación bilingüe (Guía Científica, Manuales, Dossier).</li>
-            <li>[x] Validar datos públicos oficiales (IGN, NASA FIRMS, REM ULP, SNMF).</li>
-            <li>[x] Subir video a YouTube y cargar ficha oficial en la plataforma de la NASA.</li>
+            <li>[ ] Verificar rendimiento y latencia en URL pública de Netlify.</li>
+            <li>[ ] Grabar pantalla a 1080p y editar video pitch de 60s con voz en off en inglés.</li>
+            <li>[ ] Subir video a YouTube y cargar ficha oficial en la plataforma de la NASA.</li>
           </ul>
         </div>
       </div>
     </div>
 
-    <!-- SECCIÓN 9: LOS 5 MANDAMIENTOS DE ORO -->
+    <!-- SECCIÓN 8: LOS 5 MANDAMIENTOS DE ORO -->
     <div class="section page-break">
-      <h2 class="section-title"><span class="icon">🛡️</span> 9. Los 5 Mandamientos de Oro de AlgoXplorers</h2>
+      <h2 class="section-title"><span class="icon">🛡️</span> 8. Los 5 Mandamientos de Oro de AlgoXplorers</h2>
       <div class="card-grid">
         <div class="feature-card">
           <h4>1. Cero Hardcode (0 Hardcode)</h4>
-          <p>Prohibido incrustar números mágicos en el código. Todo valor de FRP, coordenadas y umbrales reside en <code>constants.js</code> o archivos de configuración.</p>
+          <p>Prohibido incrustar números mágicos en el código. Todo valor de FRP, coordenadas y umbrales reside en <code>constants.js</code> o en <code>data/</code>.</p>
         </div>
         <div class="feature-card">
           <h4>2. Honestidad Técnica Radical</h4>
@@ -1139,7 +1244,7 @@ PyroHarmony/
         </div>
         <div class="feature-card">
           <h4>3. Seguridad por Diseño</h4>
-          <p>Sanitización total contra inyecciones XSS en búsqueda de AOI o carga de GeoJSON. Gestión segura de claves de la NASA.</p>
+          <p>Sanitización total contra inyecciones XSS en búsqueda de AOI o carga de GeoJSON. Gestión segura de <code>MAP_KEY</code> de la NASA.</p>
         </div>
         <div class="feature-card">
           <h4>4. Arquitectura MVC Estricta</h4>
@@ -1152,82 +1257,47 @@ PyroHarmony/
       </div>
     </div>
 
-    <!-- SECCIÓN 10: EQUIPO OFICIAL ALGOXPLORERS -->
-    <div class="section page-break">
-      <h2 class="section-title"><span class="icon">👥</span> 10. Equipo Oficial — AlgoXplorers (Argentina) · Co-autoría en Igualdad</h2>
-      <p>
-        En estricto cumplimiento de las bases del <strong>NASA Space Apps Challenge 2026</strong>, el proyecto <strong>PyroHarmony</strong> fue concebido, investigado, programado y validado de manera multidisciplinaria por sus 5 co-autores oficiales:
-      </p>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Integrante Oficial</th>
-            <th>Usuario GitHub</th>
-            <th>Rol y Especialidad Técnica en PyroHarmony</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>José Alex Fernández Montellanos</strong></td>
-            <td><code>@fajjaf</code></td>
-            <td>Líder de Proyecto, Arquitectura de Datos Científicos y Modelo Matemático</td>
-          </tr>
-          <tr>
-            <td><strong>Carlos Vizzioli</strong></td>
-            <td><code>@cvizzioli</code></td>
-            <td>Desarrollo Full-Stack, Modelado de Datos y Algoritmos de Armonización</td>
-          </tr>
-          <tr>
-            <td><strong>Sánchez Obando Gisella Elizabeth</strong></td>
-            <td><code>@gisesanchezj</code></td>
-            <td>Comunicación Técnica, Divulgación Científica y Experiencia de Usuario (UX)</td>
-          </tr>
-          <tr>
-            <td><strong>Juan Carlos Fernandez</strong></td>
-            <td><code>@jcfernan99</code></td>
-            <td>Análisis de Sistemas, Electrónica y Telemetría de Sensores en Tierra</td>
-          </tr>
-          <tr>
-            <td><strong>Maximiliano Guevara</strong></td>
-            <td><code>@omegaredone</code></td>
-            <td>Infraestructura de Redes, Despliegue Cloud y Auditoría de Seguridad</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <h3 style="margin-top: 24px;">Matriz de Cumplimiento Legal NASA (Enmienda Wolf — 0% Tecnología Restringida)</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Componente</th>
-            <th>Qué usamos en PyroHarmony</th>
-            <th>Origen y Titularidad</th>
-            <th>Estado de Cumplimiento</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td><strong>Satélites en Órbita</strong></td><td>Terra, Aqua, Suomi-NPP, NOAA-20</td><td>NASA / NOAA (Estados Unidos)</td><td>🟢 100% Oficial USA / NASA</td></tr>
-          <tr><td><strong>Datasets de Fuego</strong></td><td>MCD14DL, VNP14IMGTDL, VJ114IMGTDL</td><td>NASA FIRMS (Goddard Space Flight Center, MD, EE.UU.)</td><td>🟢 100% Oficial NASA</td></tr>
-          <tr><td><strong>Texturas del Planeta</strong></td><td>Blue Marble / GIBS</td><td>NASA Earth Observatory (EE.UU.)</td><td>🟢 100% Oficial NASA</td></tr>
-          <tr><td><strong>Motor Gráfico 3D</strong></td><td>Three.js + OrbitControls</td><td>Código Abierto bajo Licencia MIT (Occidental / EE.UU.)</td><td>🟢 100% Aprobado Open Source</td></tr>
-          <tr><td><strong>Hosting y Despliegue</strong></td><td>Netlify</td><td>Netlify Inc. (San Francisco, California, EE.UU.)</td><td>🟢 100% Empresa USA</td></tr>
-          <tr><td><strong>Base de Datos / Backend</strong></td><td>Supabase</td><td>Supabase Inc. (San Francisco, California, EE.UU.)</td><td>🟢 100% Empresa USA</td></tr>
-        </tbody>
-      </table>
+    <!-- SECCIÓN 9: ORGANIGRAMA Y TALENTOS DEL EQUIPO -->
+    <div class="section">
+      <h2 class="section-title"><span class="icon">👥</span> 9. Estructura del Equipo AlgoXplorers (4 Actuales + 2 Refuerzos)</h2>
+      <div class="card-grid">
+        <div class="feature-card">
+          <h4>💻 Programador 1 (Lead 3D & Frontend)</h4>
+          <p>Three.js WebGL a 60 FPS, Digital Twin terrestre, The Burning Calendar (52 semanas) y Timeline Scrubber.</p>
+        </div>
+        <div class="feature-card">
+          <h4>🧠 Programador 2 (Data Science & Backend)</h4>
+          <p>Pipeline NASA FIRMS, modelo de armonización FRP, cálculo de Z-Score climatológico y Supabase PostGIS.</p>
+        </div>
+        <div class="feature-card">
+          <h4>🎬 Editora Video & RRPP (Chief Storyteller)</h4>
+          <p>Dirección del video pitch de 60s, carga oficial de la submission en inglés y campaña en redes sociales.</p>
+        </div>
+        <div class="feature-card">
+          <h4>📡 Técnico en Redes (DevOps & IoT)</h4>
+          <p>Despliegue en Netlify, pasarelas de alertas WhatsApp/Telegram y maqueta de baliza física LoRa/ESP32 de bomberos.</p>
+        </div>
+        <div class="feature-card" style="border: 1px dashed #10b981;">
+          <h4 style="color:#10b981;">🌿 Refuerzo 1: Ciencias Ambientales / SIG</h4>
+          <p>Validación ecológica de biomas en el terreno, justificación de coeficientes y perspectiva de bombero forestal.</p>
+        </div>
+        <div class="feature-card" style="border: 1px dashed #38bdf8;">
+          <h4 style="color:#38bdf8;">🎨 Refuerzo 2: Diseñador UI/UX (Figma)</h4>
+          <p>Estética visual nivel JPL/NASA, ergonomía de lectura de datos, infografías y miniaturas de YouTube.</p>
+        </div>
+      </div>
     </div>
 
-    <!-- SECCIÓN 11: REFERENCIAS ACADÉMICAS -->
+    <!-- SECCIÓN 10: REFERENCIAS CIENTÍFICAS Y CITAS ACADÉMICAS -->
     <div class="section">
-      <h2 class="section-title"><span class="icon">📚</span> 11. Referencias Académicas & Citas Científicas</h2>
+      <h2 class="section-title"><span class="icon">📚</span> 10. Referencias Académicas & Citas Científicas</h2>
       <ol style="margin-left: 24px; color: #cbd5e1; font-size: 0.95rem; line-height: 1.8;">
         <li><strong>Giglio, L., Schroeder, W., & Justice, C. O. (2016).</strong> <em>The collection 6 MODIS active fire detection algorithm and fire products.</em> Remote Sensing of Environment, 178, 31-41.</li>
         <li><strong>Schroeder, W., Oliva, P., Giglio, L., & Csiszar, I. A. (2014).</strong> <em>The New VIIRS 375 m active fire detection product—Algorithm description and initial assessment.</em> Remote Sensing of Environment, 143, 85-96.</li>
         <li><strong>Wooster, M. J., Roberts, G., Freeborn, P. H., et al. (2005).</strong> <em>Retrieval of biomass combustion rates and totals from fire radiative power (FRP) observations.</em> Journal of Geophysical Research: Atmospheres, 110(D24).</li>
-        <li><strong>Kaufman, Y. J., Justice, C. O., Flynn, L. P., et al. (1998).</strong> <em>Potential global fire monitoring from EOS-MODIS.</em> Journal of Geophysical Research: Atmospheres, 103(D24), 32215-32238.</li>
       </ol>
       <div class="callout callout-info" style="margin-top:20px;">
-        <strong>Conclusión de AlgoXplorers:</strong> PyroHarmony no es un prototipo más de mapa; es un motor termodinámico de armonización satelital con rigor científico publicado y utilidad práctica para salvar vidas y ecosistemas.
+        <strong>Conclusión de AlgoXplorers:</strong> PyroHarmony no es un prototipo más de mapa; es un motor termodinámico de armonización satelital con rigor científico publicado y utilidad práctica para salvar vidas.
       </div>
     </div>
 

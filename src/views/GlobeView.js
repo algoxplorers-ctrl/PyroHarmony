@@ -90,10 +90,10 @@ export class GlobeView {
   _buildCountryBordersAndLabels(THREE) {
     this.countryNodes = [];
     WORLD_COUNTRIES.forEach(([lat, lon, es, en, span]) => this._addCountryLabelNode(THREE, lat, lon, es, en, span || 8));
-    this.bordersMat = new THREE.LineBasicMaterial({ color: 0x7dd3fc, transparent: true, opacity: 0.75, depthTest: true });
+    this.bordersMat = new THREE.LineBasicMaterial({ color: 0x7dd3fc, transparent: true, opacity: 0.68, depthTest: true });
     const parseGeoJson = (data) => {
       if (!data || !Array.isArray(data.features)) return;
-      const verts = [], bc = document.createElement('canvas'); const isSmall = (window.innerWidth || 1024) < 1024; bc.width = isSmall ? 2048 : 4096; bc.height = isSmall ? 1024 : 2048;
+      const verts = [], bc = document.createElement('canvas'); bc.width = 4096; bc.height = 2048;
       const bctx = bc.getContext('2d'); bctx.lineJoin = 'round'; bctx.lineCap = 'round';
       const addRing = (ring) => {
         bctx.beginPath();
@@ -101,15 +101,15 @@ export class GlobeView {
           const [lon, lat] = ring[i], x = ((lon + 180) / 360) * bc.width, y = ((90 - lat) / 180) * bc.height;
           if (i === 0 || Math.abs(lon - ring[i - 1][0]) >= 150) bctx.moveTo(x, y); else bctx.lineTo(x, y);
           if (i < ring.length - 1) {
-            const [lon2, lat2] = ring[i + 1], steps = Math.max(1, Math.ceil(Math.hypot(lon2 - lon, lat2 - lat) / 2.0));
+            const [lon2, lat2] = ring[i + 1], steps = Math.max(1, Math.ceil(Math.hypot(lon2 - lon, lat2 - lat) / 1.5));
             for (let s = 0; s < steps; s++) {
               const t1 = s / steps, t2 = (s + 1) / steps;
-              const v1 = this._latLonToVec3(THREE, lat + (lat2 - lat) * t1, lon + (lon2 - lon) * t1, 1.004), v2 = this._latLonToVec3(THREE, lat + (lat2 - lat) * t2, lon + (lon2 - lon) * t2, 1.004);
+              const v1 = this._latLonToVec3(THREE, lat + (lat2 - lat) * t1, lon + (lon2 - lon) * t1, 1.0014), v2 = this._latLonToVec3(THREE, lat + (lat2 - lat) * t2, lon + (lon2 - lon) * t2, 1.0014);
               verts.push(v1.x, v1.y, v1.z, v2.x, v2.y, v2.z);
             }
           }
         }
-        bctx.strokeStyle = 'rgba(2, 6, 23, 0.85)'; bctx.lineWidth = 4.5; bctx.stroke(); bctx.strokeStyle = 'rgba(103, 232, 249, 0.95)'; bctx.lineWidth = 2.2; bctx.stroke();
+        bctx.strokeStyle = 'rgba(2, 6, 23, 0.72)'; bctx.lineWidth = 1.6; bctx.stroke(); bctx.strokeStyle = 'rgba(103, 232, 249, 0.85)'; bctx.lineWidth = 0.75; bctx.stroke();
       };
       data.features.forEach((feat) => {
         const g = feat.geometry; if (!g) return;
@@ -124,8 +124,8 @@ export class GlobeView {
           this._addCountryLabelNode(THREE, (minLat + maxLat) * 0.5, (minLon + maxLon) * 0.5, name, name, Math.hypot(maxLat - minLat, maxLon - minLon));
         }
       });
-      this.borderTexMat = new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(bc), transparent: true, opacity: 0.82, depthWrite: false });
-      this.earthGroup.add(new THREE.Mesh(new THREE.SphereGeometry(1.002, 64, 64), this.borderTexMat));
+      this.borderTexMat = new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(bc), transparent: true, opacity: 0.65, depthWrite: false });
+      this.earthGroup.add(new THREE.Mesh(new THREE.SphereGeometry(1.001, 64, 64), this.borderTexMat));
       if (verts.length > 0) {
         const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.Float32BufferAttribute(verts, 3));
         this.earthGroup.add(new THREE.LineSegments(geo, this.bordersMat));
@@ -245,8 +245,9 @@ export class GlobeView {
     this.earthGroup.rotation.y += (this.rotationTarget.y - this.earthGroup.rotation.y) * 0.1;
     this.earthGroup.rotation.x += (this.rotationTarget.x - this.earthGroup.rotation.x) * 0.1;
     if (this.cloudsMesh) { this.cloudsMesh.rotation.y += 0.00025; this.cloudsMesh.material.opacity = zDist < 2.5 ? 0.10 : 0.32; }
-    if (this.bordersMat) this.bordersMat.opacity = zDist < 2.6 ? 0.92 : 0.65;
-    if (this.borderTexMat) this.borderTexMat.opacity = zDist < 2.6 ? 0.95 : 0.72;
+    const zoomFactor = Math.max(0, Math.min(1, (zDist - 1.5) / 1.6));
+    if (this.bordersMat) this.bordersMat.opacity = 0.52 + 0.22 * zoomFactor;
+    if (this.borderTexMat) this.borderTexMat.opacity = 0.06 + 0.58 * zoomFactor;
     if (this.aoiRingMat) this.aoiRingMat.opacity = 0.65 + 0.3 * Math.sin(elapsed * 3.2);
     const w = this.container.clientWidth || window.innerWidth, h = this.container.clientHeight || window.innerHeight, projVec = new window.THREE.Vector3();
     this.satMeshes.forEach(({ sat, orbitPivot, satNode, altRadius, labelEl }, id) => {

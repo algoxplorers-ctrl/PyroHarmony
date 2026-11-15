@@ -1,8 +1,7 @@
-# Scientific Cheat Sheet & Master Formulary — AlgoXplorers
-> **Master Formulary, Mathematics & Physics of PyroHarmony**  
+# Master Formulary, Mathematics & Physics of PyroHarmony
+> **This technical guide is engineered step-by-step so the entire team (José Alex, Carlos, Gisella, Juan Carlos, and Maximiliano) masters each equation, understands the rationale behind every number, and can answer with total confidence during any technical defense.**  
 > **NASA Space Apps Challenge 2026** | *Harmonization of MODIS and VIIRS Hot Spots*  
-> **Team:** AlgoXplorers (Argentina)  
-> **Authors:** José Alex Fernández Montellanos (`@fajjaf`), Carlos Vizzioli (`@cvizzioli`), Sánchez Obando Gisella Elizabeth (`@gisesanchezj`), Juan Carlos Fernandez (`@jcfernan99`), Maximiliano Guevara (`@omegaredone`)
+> **Team:** AlgoXplorers (Argentina)
 
 ---
 

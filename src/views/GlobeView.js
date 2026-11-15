@@ -21,7 +21,7 @@ export class GlobeView {
     this.currentBins = []; this.clockStart = performance.now(); this.frameCount = 0; this.lastFpsCheck = performance.now();
     this.isContextLost = false; this.isDragging = false; this.prevMouse = { x: 0, y: 0 };
     this.rotationTarget = { x: 0.22, y: -1.35 }; this.zoomTarget = 3.25; this.zoomReadoutEl = null;
-    this.lastBiomeId = null; this.autoRotate = false; this.lastHotspotScale = 1.0;
+    this.lastBiomeId = null; this.autoRotate = true; this.lastHotspotScale = 1.0;
     this.flightState = null; this.cameraVeilEl = null;
     this.hoverTooltipEl = null; this.hoverRingEl = null; this.hoverScreenItems = []; this.activeHoverItem = null; this.lastSnapshot = null;
   }
@@ -983,6 +983,11 @@ export class GlobeView {
     });
   }
   setAutoRotate(enabled) { this.autoRotate = !!enabled; if (this.aoiRingMesh) this.aoiRingMesh.visible = !this.autoRotate; }
+  resetToGlobalView(resumeAutoRotate = true) {
+    this._resumeAutoRotateAfterFlight = resumeAutoRotate;
+    this._startCameraFlight(null, null, 3.25, 1200);
+    if (this.aoiRingMesh) this.aoiRingMesh.visible = false;
+  }
   _refreshHotspotScales(scaleMult = 1.0) {
     if (!this.hotspotSatMeshes || !this.hotspotSatMeshes.size || !window.THREE) return;
     const dummy = new window.THREE.Object3D(), zeroDummy = new window.THREE.Object3D();
@@ -1012,8 +1017,7 @@ export class GlobeView {
       if (snapshot.biome.id === 'san_luis_serrano') {
         this._startCameraFlight(-33.72, -66.02, 1.135, 1350);
       } else {
-        const nextZ = prevBiome === 'san_luis_serrano' && this.zoomTarget < 1.8 ? 2.65 : this.zoomTarget;
-        this._startCameraFlight(snapshot.biome.lat, snapshot.biome.lon, nextZ, 1250);
+        this._startCameraFlight(snapshot.biome.lat, snapshot.biome.lon, 3.15, 1300);
       }
     }
     const statusColor = snapshot.cellStats && snapshot.cellStats.classification ? snapshot.cellStats.classification.colorHex : '#00e676';
@@ -1040,6 +1044,11 @@ export class GlobeView {
       this.camera.position.z = baseZ + arcBoost;
       if (rawT >= 1) {
         this.flightState = null;
+        if (this._resumeAutoRotateAfterFlight) {
+          this.autoRotate = true;
+          this._resumeAutoRotateAfterFlight = false;
+          if (this.aoiRingMesh) this.aoiRingMesh.visible = false;
+        }
         if (this.cameraVeilEl) this.cameraVeilEl.classList.remove('veil-active');
       }
     } else {

@@ -15,12 +15,13 @@ export class AOIController {
     this.benchmarkBtn = document.getElementById(benchmarkBtnId);
     this.onBiomeChange = onBiomeChange;
     this.onBenchmarkTrigger = onBenchmarkTrigger;
-    this.activeBiomeId = APP_METADATA.BENCHMARK_CASE.biomeId;
+    this.activeBiomeId = 'auto_rotation';
   }
 
   init() {
     this.populateBiomeOptions();
     if (this.selectEl) {
+      this.selectEl.value = this.activeBiomeId;
       this.selectEl.addEventListener('change', (ev) => {
         this.activeBiomeId = ev.target.value;
         if (typeof this.onBiomeChange === 'function') {

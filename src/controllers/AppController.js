@@ -71,6 +71,7 @@ export class AppController {
     this.globeView.init();
     this.aoiController.init();
     this.timelineController.init();
+    this.globeView.setAutoRotate(true);
 
     // Check URL shortcut (?benchmark=pantanal2020)
     if (window.location.search.includes('benchmark=pantanal2020')) {
@@ -120,7 +121,7 @@ export class AppController {
 
   handleBiomeChange(biomeId) {
     if (biomeId === 'auto_rotation') {
-      this.globeView.setAutoRotate(true);
+      this.globeView.resetToGlobalView(true);
       return;
     }
     this.globeView.setAutoRotate(false);

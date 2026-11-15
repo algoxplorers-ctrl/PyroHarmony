@@ -80,6 +80,10 @@ export class SensorDiscrepancyView {
           <span class="disc-row-label">${i18n.t('left.biomass_rate')}</span>
           <span class="disc-row-val">${biomass.biomassRateKgPerSec} kg/s</span>
         </div>
+        <div class="z-simple-note">
+          <div class="z-simple-title">${i18n.t('left.z_simple_title')}</div>
+          <div class="z-simple-body">${i18n.t('left.z_simple_body')}</div>
+        </div>
       </div>
     `;
   }

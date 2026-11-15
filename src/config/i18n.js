@@ -57,7 +57,9 @@ const DICTIONARY = Object.freeze({
     'legend.title': 'SATELLITE SENSORS (NASA / NOAA)',
     'legend.tag': 'NO DANGER / NO SEMAPHORE',
     'legend.disclaimer': '⚠️ Color indicates detecting satellite & sensor (NOT danger severity)',
-    'legend.hint': 'Click satellite to isolate/highlight its hotspots'
+    'legend.hint': 'Click satellite to isolate/highlight its hotspots',
+    'left.z_simple_title': '💡 What does Z mean?',
+    'left.z_simple_body': 'Compares today\'s fire against 27 years of history: Z=0 is normal seasonal activity; Z above +2 indicates an extreme, out-of-control fire.'
   },
   es: {
     'hud.aoi_label': 'AOI:',
@@ -107,7 +109,9 @@ const DICTIONARY = Object.freeze({
     'legend.title': 'SENSORES SATELITALES (NASA / NOAA)',
     'legend.tag': 'SIN EFECTO SEMÁFORO',
     'legend.disclaimer': '⚠️ El color identifica el satélite detector (NO indica nivel de peligro)',
-    'legend.hint': 'Haz clic en un satélite para aislar/resaltar sus focos'
+    'legend.hint': 'Haz clic en un satélite para aislar/resaltar sus focos',
+    'left.z_simple_title': '💡 ¿Qué significa el valor Z?',
+    'left.z_simple_body': 'Compara el fuego de hoy con los últimos 27 años: Z=0 es lo habitual de la época; Z mayor a +2 indica un incendio grave fuera de lo común.'
   }
 });
 

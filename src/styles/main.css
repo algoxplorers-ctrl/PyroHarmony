@@ -102,16 +102,12 @@ body {
   backdrop-filter: blur(12px);
   border: 1px solid var(--border-glass);
   border-radius: 11px;
-  padding: 15px 16px;
+  padding: 11px 13px;
   box-shadow: 0 12px 34px rgba(0, 0, 0, 0.65);
   z-index: 30;
   transition: transform 0.38s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.28s ease;
 }
-.left-telemetry-panel { left: 18px; width: 325px; max-height: calc(100% - 36px); overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(56, 189, 248, 0.45) rgba(15, 23, 42, 0.5); }
-.left-telemetry-panel::-webkit-scrollbar { width: 6px; }
-.left-telemetry-panel::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.45); border-radius: 6px; }
-.left-telemetry-panel::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.45); border-radius: 6px; }
-.left-telemetry-panel::-webkit-scrollbar-thumb:hover { background: rgba(56, 189, 248, 0.75); }
+.left-telemetry-panel { left: 18px; width: 325px; max-height: calc(100% - 36px); overflow: hidden; }
 .right-tactical-panel { right: 18px; width: 345px; }
 .left-telemetry-panel.panel-collapsed { transform: translateX(calc(-100% - 28px)); opacity: 0; pointer-events: none; }
 .right-tactical-panel.panel-collapsed { transform: translateX(calc(100% + 28px)); opacity: 0; pointer-events: none; }
@@ -143,36 +139,40 @@ body {
 .right-drawer-toggle { right: 363px; border-radius: 9px 0 0 9px; border-right: none; }
 .right-drawer-toggle.drawer-collapsed { right: 0px; border-right: 1px solid rgba(56, 189, 248, 0.65); padding: 0 10px; }
 
-.panel-section-header { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 11px; }
-.panel-title-cyan { color: var(--cyan-title); font-size: 0.78rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; }
+.panel-section-header { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 7px; }
+.panel-title-cyan { color: var(--cyan-title); font-size: 0.77rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; }
 .pill-badge-green { background: rgba(6, 78, 59, 0.55); border: 1px solid #10b981; color: #34d399; font-size: 0.65rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
 .pill-badge-purple { background: rgba(88, 28, 135, 0.45); border: 1px solid #a855f7; color: #c084fc; font-size: 0.65rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
 
-.thermal-power-box { background: rgba(15, 23, 42, 0.78); border: 1px solid rgba(51, 65, 85, 0.65); border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; }
+.thermal-power-box { background: rgba(15, 23, 42, 0.78); border: 1px solid rgba(51, 65, 85, 0.65); border-radius: 8px; padding: 7px 10px; margin-bottom: 7px; }
 .power-main-row { display: flex; justify-content: space-between; align-items: baseline; }
-.power-label { font-size: 0.78rem; color: #cbd5e1; }
-.power-value { font-size: 1.18rem; font-weight: 800; color: #ffffff; }
-.power-sub-row { font-size: 0.68rem; color: #64748b; font-family: monospace; margin-top: 4px; }
+.power-label { font-size: 0.77rem; color: #cbd5e1; }
+.power-value { font-size: 1.12rem; font-weight: 800; color: #ffffff; }
+.power-sub-row { font-size: 0.65rem; color: #64748b; font-family: monospace; margin-top: 2px; }
 
 /* SEMICIRCULAR GAUGE */
-.gauge-card-block { text-align: center; margin: 4px 0 10px 0; }
-.anomaly-gauge-svg { width: 100%; max-width: 225px; height: auto; margin: 0 auto; display: block; }
-.gauge-readout-center { margin-top: -12px; }
-.gauge-z-main { font-size: 1.35rem; font-weight: 800; font-family: monospace; }
-.gauge-z-status { font-size: 0.8rem; font-weight: 700; margin-top: 2px; }
-.gauge-z-pval { font-size: 0.72rem; color: var(--text-dim); font-family: monospace; margin-top: 2px; }
+.gauge-card-block { text-align: center; margin: 2px 0 6px 0; }
+.anomaly-gauge-svg { width: 100%; max-width: 175px; height: auto; margin: 0 auto; display: block; }
+.gauge-readout-center { margin-top: -8px; }
+.gauge-z-main { font-size: 1.25rem; font-weight: 800; font-family: monospace; line-height: 1.1; }
+.gauge-z-status { font-size: 0.76rem; font-weight: 700; margin-top: 1px; }
+.gauge-z-pval { font-size: 0.61rem; color: var(--text-dim); font-family: monospace; margin-top: 1px; }
 
-.panel-divider { border: none; border-top: 1px solid rgba(51, 65, 85, 0.6); margin: 12px 0; }
-.discrepancy-list-card { background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(51, 65, 85, 0.6); border-radius: 8px; padding: 9px 11px; }
-.disc-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 4px 0; font-size: 0.75rem; }
+.panel-divider { border: none; border-top: 1px solid rgba(51, 65, 85, 0.6); margin: 7px 0; }
+.discrepancy-list-card { background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(51, 65, 85, 0.6); border-radius: 8px; padding: 6px 9px; }
+.disc-row { display: flex; justify-content: space-between; align-items: center; gap: 6px; padding: 2px 0; font-size: 0.72rem; }
 .disc-row-label { color: #94a3b8; }
 .disc-row-val { font-family: monospace; font-weight: 700; color: #f8fafc; text-align: right; }
-.val-orange { color: #f97316; font-size: 0.92rem; }
-.val-cyan { color: #22d3ee; font-size: 0.92rem; }
+.val-orange { color: #f97316; font-size: 0.86rem; }
+.val-cyan { color: #22d3ee; font-size: 0.86rem; }
 .val-amber { color: #facc15; }
 .val-green { color: #34d399; font-size: 0.68rem; }
 
-.benchmark-jump-btn { width: 100%; margin-top: 10px; padding: 8px 10px; background: rgba(245, 158, 11, 0.15); border: 1px solid #f59e0b; color: #fde68a; border-radius: 7px; font-size: 0.73rem; font-weight: 700; cursor: pointer; }
+.z-simple-note { margin-top: 5px; padding: 4px 7px; background: rgba(15, 23, 42, 0.85); border-left: 3px solid #38bdf8; border-radius: 0 5px 5px 0; }
+.z-simple-title { font-size: 0.67rem; font-weight: 700; color: #38bdf8; margin-bottom: 2px; }
+.z-simple-body { font-size: 0.62rem; line-height: 1.32; color: #cbd5e1; }
+
+.benchmark-jump-btn { width: 100%; margin-top: 7px; padding: 6px 8px; background: rgba(245, 158, 11, 0.15); border: 1px solid #f59e0b; color: #fde68a; border-radius: 7px; font-size: 0.71rem; font-weight: 700; cursor: pointer; }
 
 /* RIGHT PANEL LACES RADAR */
 .laces-alert-box { border-radius: 8px; padding: 11px 13px; margin-bottom: 10px; }

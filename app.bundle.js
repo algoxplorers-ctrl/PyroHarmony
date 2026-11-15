@@ -440,7 +440,9 @@ const DICTIONARY = Object.freeze({
     'legend.title': 'SATELLITE SENSORS (NASA / NOAA)',
     'legend.tag': 'NO DANGER / NO SEMAPHORE',
     'legend.disclaimer': '⚠️ Color indicates detecting satellite & sensor (NOT danger severity)',
-    'legend.hint': 'Click satellite to isolate/highlight its hotspots'
+    'legend.hint': 'Click satellite to isolate/highlight its hotspots',
+    'left.z_simple_title': '💡 What does Z mean?',
+    'left.z_simple_body': 'Compares today\'s fire against 27 years of history: Z=0 is normal seasonal activity; Z above +2 indicates an extreme, out-of-control fire.'
   },
   es: {
     'hud.aoi_label': 'AOI:',
@@ -490,7 +492,9 @@ const DICTIONARY = Object.freeze({
     'legend.title': 'SENSORES SATELITALES (NASA / NOAA)',
     'legend.tag': 'SIN EFECTO SEMÁFORO',
     'legend.disclaimer': '⚠️ El color identifica el satélite detector (NO indica nivel de peligro)',
-    'legend.hint': 'Haz clic en un satélite para aislar/resaltar sus focos'
+    'legend.hint': 'Haz clic en un satélite para aislar/resaltar sus focos',
+    'left.z_simple_title': '💡 ¿Qué significa el valor Z?',
+    'left.z_simple_body': 'Compara el fuego de hoy con los últimos 27 años: Z=0 es lo habitual de la época; Z mayor a +2 indica un incendio grave fuera de lo común.'
   }
 });
 
@@ -1307,7 +1311,7 @@ class GlobeView {
     this.currentBins = []; this.clockStart = performance.now(); this.frameCount = 0; this.lastFpsCheck = performance.now();
     this.isContextLost = false; this.isDragging = false; this.prevMouse = { x: 0, y: 0 };
     this.rotationTarget = { x: 0.22, y: -1.35 }; this.zoomTarget = 3.25; this.zoomReadoutEl = null;
-    this.lastBiomeId = null; this.autoRotate = false; this.lastHotspotScale = 1.0;
+    this.lastBiomeId = null; this.autoRotate = true; this.lastHotspotScale = 1.0;
     this.flightState = null; this.cameraVeilEl = null;
     this.hoverTooltipEl = null; this.hoverRingEl = null; this.hoverScreenItems = []; this.activeHoverItem = null; this.lastSnapshot = null;
   }
@@ -2269,6 +2273,11 @@ class GlobeView {
     });
   }
   setAutoRotate(enabled) { this.autoRotate = !!enabled; if (this.aoiRingMesh) this.aoiRingMesh.visible = !this.autoRotate; }
+  resetToGlobalView(resumeAutoRotate = true) {
+    this._resumeAutoRotateAfterFlight = resumeAutoRotate;
+    this._startCameraFlight(null, null, 3.25, 1200);
+    if (this.aoiRingMesh) this.aoiRingMesh.visible = false;
+  }
   _refreshHotspotScales(scaleMult = 1.0) {
     if (!this.hotspotSatMeshes || !this.hotspotSatMeshes.size || !window.THREE) return;
     const dummy = new window.THREE.Object3D(), zeroDummy = new window.THREE.Object3D();
@@ -2298,8 +2307,7 @@ class GlobeView {
       if (snapshot.biome.id === 'san_luis_serrano') {
         this._startCameraFlight(-33.72, -66.02, 1.135, 1350);
       } else {
-        const nextZ = prevBiome === 'san_luis_serrano' && this.zoomTarget < 1.8 ? 2.65 : this.zoomTarget;
-        this._startCameraFlight(snapshot.biome.lat, snapshot.biome.lon, nextZ, 1250);
+        this._startCameraFlight(snapshot.biome.lat, snapshot.biome.lon, 3.15, 1300);
       }
     }
     const statusColor = snapshot.cellStats && snapshot.cellStats.classification ? snapshot.cellStats.classification.colorHex : '#00e676';
@@ -2326,6 +2334,11 @@ class GlobeView {
       this.camera.position.z = baseZ + arcBoost;
       if (rawT >= 1) {
         this.flightState = null;
+        if (this._resumeAutoRotateAfterFlight) {
+          this.autoRotate = true;
+          this._resumeAutoRotateAfterFlight = false;
+          if (this.aoiRingMesh) this.aoiRingMesh.visible = false;
+        }
         if (this.cameraVeilEl) this.cameraVeilEl.classList.remove('veil-active');
       }
     } else {
@@ -2715,6 +2728,10 @@ class SensorDiscrepancyView {
           <span class="disc-row-label">${i18n.t('left.biomass_rate')}</span>
           <span class="disc-row-val">${biomass.biomassRateKgPerSec} kg/s</span>
         </div>
+        <div class="z-simple-note">
+          <div class="z-simple-title">${i18n.t('left.z_simple_title')}</div>
+          <div class="z-simple-body">${i18n.t('left.z_simple_body')}</div>
+        </div>
       </div>
     `;
   }
@@ -2997,12 +3014,13 @@ class AOIController {
     this.benchmarkBtn = document.getElementById(benchmarkBtnId);
     this.onBiomeChange = onBiomeChange;
     this.onBenchmarkTrigger = onBenchmarkTrigger;
-    this.activeBiomeId = APP_METADATA.BENCHMARK_CASE.biomeId;
+    this.activeBiomeId = 'auto_rotation';
   }
 
   init() {
     this.populateBiomeOptions();
     if (this.selectEl) {
+      this.selectEl.value = this.activeBiomeId;
       this.selectEl.addEventListener('change', (ev) => {
         this.activeBiomeId = ev.target.value;
         if (typeof this.onBiomeChange === 'function') {
@@ -3272,6 +3290,7 @@ class AppController {
     this.globeView.init();
     this.aoiController.init();
     this.timelineController.init();
+    this.globeView.setAutoRotate(true);
 
     // Check URL shortcut (?benchmark=pantanal2020)
     if (window.location.search.includes('benchmark=pantanal2020')) {
@@ -3321,7 +3340,7 @@ class AppController {
 
   handleBiomeChange(biomeId) {
     if (biomeId === 'auto_rotation') {
-      this.globeView.setAutoRotate(true);
+      this.globeView.resetToGlobalView(true);
       return;
     }
     this.globeView.setAutoRotate(false);
